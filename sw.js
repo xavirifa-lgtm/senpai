@@ -1,11 +1,12 @@
 // Service worker: guarda toda la app para jugar sin conexión.
 // Sube VERSION cada vez que cambies index.html o las imágenes, para que los móviles descarguen lo nuevo.
-const VERSION='v2';
+const VERSION='v3';
 const CACHE='senpai-'+VERSION;
 const FILES=[
  "./",
  "index.html",
  "manifest.webmanifest",
+ "config.js",
  "img/app.webp",
  "img/av_chica15.webp",
  "img/av_chico15.webp",

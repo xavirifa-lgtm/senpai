@@ -1,9 +1,16 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<script src="config.js"></script>
 <title>Senpai de la Semana</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#1A1A1A">
 <link rel="apple-touch-icon" href="img/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap">
 <style>
@@ -16,10 +23,13 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{height:100%;touch-action:manipulation;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+html{padding-top:env(safe-area-inset-top,0px)}
+body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+@media (max-width:481px){.app{border-inline:0}}
 body{background:var(--paper2);color:var(--ink);font-family:var(--body);font-weight:500;font-size:15px;line-height:1.45}
 .app{max-width:480px;margin:0 auto;min-height:100%;background:var(--paper);position:relative;border-inline:3px solid var(--ink);padding-bottom:84px}
-.screen{display:none;position:relative;padding-block:18px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-height:calc(100vh - 84px)}
+.screen{display:none;position:relative;padding-block:18px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-height:calc(100vh - 84px);min-height:calc(100dvh - 84px)}
 .screen.on{display:block}
 .screen.bg{background-size:cover;background-position:center top}
 h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;letter-spacing:.01em}
@@ -170,6 +180,8 @@ input[type=range]{accent-color:var(--red)}
 .cv{width:100%;max-width:360px;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);touch-action:none;display:block;background:var(--paper)}
 </style>
 
+</head>
+<body>
 <div class="app">
 
   <!-- HOY -->
@@ -288,10 +300,9 @@ input[type=range]{accent-color:var(--red)}
 (function(){
 "use strict";
 // ===== CONFIGURACIÓN SUPABASE =====
-// Déjalo vacío para el modo demo (rivales de ejemplo). Rellénalo con Project URL y la clave "anon public"
-// de Supabase → Project Settings → API. La clave anon es pública por diseño; la seguridad la ponen las políticas RLS.
-const CONFIG={supabaseUrl:'https://cnztlmfkzxnopehczvuf.supabase.co',supabaseAnonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuenRsbWZrenhub3BlaGN6dnVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3ODQ3OTEsImV4cCI6MjEwODM2MDc5MX0.zB-QfXLh6glZA6CbsVvr5dJRPwP6tWXbqRn6cvCAJHA'};
-const ONLINE=!!(CONFIG.supabaseUrl&&CONFIG.supabaseAnonKey);
+// Se lee de config.js (window.SENPAI_CONFIG). Sin config.js: modo demo con rivales de ejemplo.
+const CONFIG=Object.assign({supabaseUrl:'',supabaseAnonKey:''},window.SENPAI_CONFIG||{});
+const ONLINE=!!(CONFIG.supabaseUrl&&CONFIG.supabaseAnonKey&&!/^PEGA/.test(CONFIG.supabaseAnonKey));
 // ---------- utilidades ----------
 const $=s=>document.querySelector(s);
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -516,7 +527,7 @@ function renderPerfil(){
   const nRes=results.length; $('#p-radar-note').textContent=nRes?`Notas 0–100. Memoria y Percepción usan tus ${nRes} partidas (con 3 o más por juego); el resto, valores de ejemplo.`:'Notas 0–100 de ejemplo. Juega Simon y Cronómetro 3 veces para que Memoria y Percepción salgan de tus partidas.';
   const st2=['victoria','burla','sorpresa','aura','llanto'].map(e=>exp(me,e)).concat((CHIBI[me]||[]).map(k=>`img/chibi_${me}_${k}.webp`));
   $('#p-stickers').innerHTML=st2.map(s=>`<img src="${s}" alt="" loading="lazy">`).join('');
-  $('#picker').innerHTML=PLAYERS.map(p=>`<button class="pick ${p.id===me?'on':''}" data-pick="${p.id}"><div class="ava" style="--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div>${p.name}</button>`).join('');
+  $('#picker').innerHTML=PLAYERS.map(p=>`<button class="pick ${p.id===me?'on':''}" data-pick="${p.id}"><div class="ava" style="--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div></button>`).join('');
 }
 let moteIdx=0;
 function renderMote(){
@@ -1032,7 +1043,7 @@ async function sync(){
 function joinScreen(players,err){
   const taken=new Set(players.map(p=>p.avatar));
   openOv(`<h1>¿Quién eres?</h1><p class="note" style="margin:0">Elige tu personaje y escribe el código del grupo que te ha pasado el admin.</p>
-   <div class="picker" id="j-pick">${DEMO_PLAYERS.map(p=>`<button class="pick" data-pick="${p.id}" ${taken.has(p.id)?'disabled style="opacity:.3"':''}><div class="ava" style="--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div>${taken.has(p.id)?'Cogido':p.name}</button>`).join('')}</div>
+   <div class="picker" id="j-pick">${DEMO_PLAYERS.map(p=>`<button class="pick" data-pick="${p.id}" ${taken.has(p.id)?'disabled style="opacity:.3"':''}><div class="ava" style="--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div>${taken.has(p.id)?'Cogido':''}</button>`).join('')}</div>
    <div class="stack" style="width:100%;text-align:left;gap:8px"><label for="j-name">Tu apodo</label><input id="j-name" maxlength="20" autocomplete="nickname" style="font:700 16px var(--body);border:3px solid var(--ink);padding:10px;background:var(--paper);color:var(--ink)">
    <label for="j-code">Código del grupo</label><input id="j-code" maxlength="20" autocapitalize="characters" style="font:700 16px var(--body);border:3px solid var(--ink);padding:10px;background:var(--paper);color:var(--ink);text-transform:uppercase"></div>
    <p class="note" id="j-err" style="margin:0;color:var(--red);font-weight:900">${err||''}</p><button class="btn red" id="j-go">Entrar</button>`,'img/bg_reveal.webp');
@@ -1063,6 +1074,12 @@ async function boot(){
     else{joinScreen([])}
   }catch(e){$('#net-txt').textContent='No se pudo conectar con el servidor';}
 }
+// sin zoom con los dedos (iOS ignora user-scalable=no en Safari)
+['gesturestart','gesturechange'].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});
 boot();
 })();
 </script>
+
+</body>
+</html>
