@@ -1042,16 +1042,22 @@ async function sync(){
 }
 function joinScreen(players,err){
   const taken=new Set(players.map(p=>p.avatar));
-  openOv(`<h1>¿Quién eres?</h1><p class="note" style="margin:0">Elige tu personaje y escribe el código del grupo que te ha pasado el admin.</p>
+  openOv(`<h1>¿Quién eres?</h1><p class="note" style="margin:0">Elige tu personaje, tu apodo, un PIN y el código del grupo. Si ya jugabas, pon el mismo personaje, apodo y PIN para recuperarlo.</p>
    <div class="picker" id="j-pick">${DEMO_PLAYERS.map(p=>`<button class="pick" data-pick="${p.id}" ${taken.has(p.id)?'disabled style="opacity:.3"':''}><div class="ava" style="--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div>${taken.has(p.id)?'Cogido':''}</button>`).join('')}</div>
    <div class="stack" style="width:100%;text-align:left;gap:8px"><label for="j-name">Tu apodo</label><input id="j-name" maxlength="20" autocomplete="nickname" style="font:700 16px var(--body);border:3px solid var(--ink);padding:10px;background:var(--paper);color:var(--ink)">
+   <label for="j-pin">PIN de 4 números</label><input id="j-pin" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" style="font:700 16px var(--body);border:3px solid var(--ink);padding:10px;background:var(--paper);color:var(--ink);letter-spacing:.3em">
+   <p class="note" style="margin:0">Apúntalo: sirve para recuperar tu personaje si cambias de móvil o de navegador.</p>
    <label for="j-code">Código del grupo</label><input id="j-code" maxlength="20" autocapitalize="characters" style="font:700 16px var(--body);border:3px solid var(--ink);padding:10px;background:var(--paper);color:var(--ink);text-transform:uppercase"></div>
    <p class="note" id="j-err" style="margin:0;color:var(--red);font-weight:900">${err||''}</p><button class="btn red" id="j-go">Entrar</button>`,'img/bg_reveal.webp');
   let pick=null;$('#j-pick').onclick=e=>{const b=e.target.closest('.pick');if(!b||b.disabled)return;pick=b.dataset.pick;document.querySelectorAll('#j-pick .pick').forEach(x=>x.classList.toggle('on',x===b))};
-  $('#j-go').onclick=async()=>{const name=$('#j-name').value.trim(),code=$('#j-code').value.trim();
+  $('#j-go').onclick=async()=>{const name=$('#j-name').value.trim(),code=$('#j-code').value.trim(),pin=$('#j-pin').value.trim();
     if(!pick||!name||!code){$('#j-err').textContent='Elige personaje, apodo y código.';return}
-    $('#j-go').disabled=true;const {data,error}=await sb.rpc('join_group',{p_code:code,p_name:name,p_avatar:pick});
+    if(!/^[0-9]{4}$/.test(pin)){$('#j-err').textContent='El PIN tiene que ser de 4 números.';return}
+    $('#j-go').disabled=true;const args={p_code:code,p_name:name,p_avatar:pick,p_pin:pin};
+    let {data,error}=await sb.rpc('join_group',args);
+    if(error&&/cogido/.test(error.message||'')){({data,error}=await sb.rpc('claim_player',args))}
     if(error){$('#j-go').disabled=false;$('#j-err').textContent=(error.message||'No se ha podido entrar').replace(/^.*?: /,'');return}
+    data=Array.isArray(data)?data[0]:data;
     myPid=data.id;me=data.avatar;store.set('rdm_pid',myPid);closeOv();sync()};
 }
 async function boot(){
