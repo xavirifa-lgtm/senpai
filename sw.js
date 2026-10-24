@@ -1,6 +1,6 @@
 // Service worker: guarda toda la app para jugar sin conexión.
 // Sube VERSION cada vez que cambies index.html o las imágenes, para que los móviles descarguen lo nuevo.
-const VERSION='v3';
+const VERSION='v4';
 const CACHE='senpai-'+VERSION;
 const FILES=[
  "./",
@@ -117,6 +117,10 @@ self.addEventListener('fetch',e=>{
   const u=new URL(e.request.url);
   if(e.request.method!=='GET')return;
   if(u.hostname.endsWith('supabase.co'))return; // datos siempre en directo
+  const fresh=/\/(manifest\.webmanifest|config\.js|sw\.js)$/.test(u.pathname);
+  if(u.origin===location.origin&&fresh){
+    // manifest y configuración: red primero, caché solo sin cobertura
+    e.respondWith(fetch(e.request,{cache:'no-cache'}).then(r=>{const cp=r.clone();caches.open(CACHE).then(c=>c.put(e.request,cp));return r}).catch(()=>caches.match(e.request)));return}
   if(u.origin===location.origin&&e.request.mode==='navigate'){
     // la página: red primero (para coger versiones nuevas), caché si no hay cobertura
     e.respondWith(fetch(e.request).then(r=>{const cp=r.clone();caches.open(CACHE).then(c=>c.put('index.html',cp));return r}).catch(()=>caches.match('index.html')));return}
