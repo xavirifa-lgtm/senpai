@@ -1100,7 +1100,7 @@ async function sync(){
     for(const r of pending.slice()){
       const {error}=await sb.from('results').insert({client_id:r.cid,player_id:myPid,game:r.game,date:r.date,score:r.score,official:!!r.official,client_ts:new Date(r.ts).toISOString()});
       if(!error||error.code==='23505'){pending=pending.filter(x=>x.cid!==r.cid)}
-      else if(error.code||/Fecha|plazo|violates|invalid/i.test(error.message||'')){pending=pending.filter(x=>x.cid!==r.cid);lastErr=error.message;console.warn('Resultado descartado',r,error)}
+      else if(/^(22|23)/.test(error.code||'')||/Fecha futura|fuera de plazo/.test(error.message||'')){pending=pending.filter(x=>x.cid!==r.cid);lastErr=error.message;console.warn('Resultado descartado',r,error)}
       else {lastErr=error.message;break}
       saveAll();
     }
