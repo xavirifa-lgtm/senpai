@@ -214,7 +214,7 @@ input[type=range]{accent-color:var(--red)}
 
       <h2 style="margin-top:10px">Minijuegos</h2>
       <div class="games" id="games"></div>
-      <p class="note" style="margin:0">Los 21 se pueden practicar. Cada día el reto sale de una de estas categorías: Memoria, Lógica, Habilidad o Percepción. Laberinto, Bola equilibrio y Magic Tiles quedan para práctica. Los iconos de los 11 últimos son provisionales.</p>
+      <p class="note" style="margin:0">Todos se pueden practicar sin límite. El reto del día sale de cualquiera de los 21, el mismo para todos.</p>
     </div>
   </section>
 
@@ -350,9 +350,9 @@ const GAMES=[
  {id:'tarta',name:'Divide la tarta',cat:'percepcion',desc:'Corta la fracción exacta de la tarta.',better:'low',label:'error %',short:s=>String(s).replace('.',',')+' %',long:s=>`${String(s).replace('.',',')} % de error total`,pts:[[60,0],[30,40],[18,70],[9,95],[5,100]],round:0.1},
  {id:'fruta',name:'Cortar fruta',cat:'habilidad',desc:'Corta toda la fruta que puedas en 30 s. Ojo con las bombas.',better:'high',label:'frutas',short:s=>String(s),long:s=>`${s} frutas`,pts:[[0,0],[15,40],[28,70],[40,95],[50,100]],round:1},
  {id:'minigolf',name:'Minigolf',cat:'habilidad',desc:'Tres hoyos con el mínimo de golpes.',better:'low',label:'golpes',short:s=>String(s),long:s=>`${s} golpes`,pts:[[24,0],[12,40],[9,70],[6,95],[4,100]],round:1},
- {id:'tiles',name:'Magic Tiles',cat:'habilidad',desc:'Toca cada tecla al cruzar la línea roja. Solo práctica.',better:'high',label:'teclas',short:s=>String(s),long:s=>`${s} teclas`,pts:[[0,0],[30,40],[60,70],[100,95],[140,100]],round:1,practice:true}
+ {id:'tiles',name:'Magic Tiles',cat:'habilidad',desc:'Toca cada tecla al cruzar la línea roja.',better:'high',label:'teclas',short:s=>String(s),long:s=>`${s} teclas`,pts:[[0,0],[30,40],[60,70],[100,95],[140,100]],round:1}
 ];
-GAMES.forEach(g=>{g.play=true;if(g.cat==='equilibrio')g.practice=true});
+GAMES.forEach(g=>{g.play=true});
 const G=Object.fromEntries(GAMES.map(g=>[g.id,g]));
 // puntos (resultado bruto -> nota 0-100); umbrales del documento: normal=40, bueno=70, élite=95
 function interp(pts,v,from,to){const a=pts.slice().sort((p,q)=>p[from]-q[from]);if(v<=a[0][from])return a[0][to];if(v>=a[a.length-1][from])return a[a.length-1][to];
@@ -426,8 +426,8 @@ function title(cats,id){
 }
 
 // ---------- reto del día ----------
-const playable=GAMES.filter(g=>!g.practice); // equilibrio y Magic Tiles: solo práctica
-const RETOCATS=['memoria','logica','habilidad','percepcion'];
+const playable=GAMES.slice();
+const RETOCATS=['memoria','logica','habilidad','percepcion','equilibrio'];
 function pickGame(date){const c=RETOCATS[hash('cat'+date)%4];const pool=playable.filter(g=>g.cat===c);return pool[hash('reto'+date)%pool.length]}
 const todayGame=pickGame(TODAY);
 function seqFor(date,len=40){const r=mulberry32(hash('simon'+date));return Array.from({length:len},()=>Math.floor(r()*4))}
@@ -1024,11 +1024,11 @@ function minigolf(official){
     if(!sinking&&!dimg(x,'bolagolf',b.x,b.y,BR*2.3,BR*2.3)){x.fillStyle=PAPER;x.strokeStyle=INK;x.beginPath();x.arc(b.x,b.y,BR,0,7);x.fill();x.stroke()}});
 }
 
-// --- Magic Tiles (solo práctica) ---
+// --- Magic Tiles ---
 const ODE=[64,64,65,67,67,65,64,62,60,60,62,64,64,62,62,64,64,65,67,67,65,64,62,60,60,62,64,62,60,60];
 function tiles(official){
-  const W=320,H=520,LANES=4,TH=120;const r=rngFor('tiles',false);
-  openOv(header('tiles',official)+`<div class="big" id="g-sc" style="font-size:40px">0</div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca cada tecla negra justo cuando cruce la línea roja. Antes de tiempo o tarde, pierdes. Sube el volumen: cada tecla suena (Himno de la alegría, de Beethoven). Solo práctica.</p>`,'img/bg_menu.webp');
+  const W=320,H=520,LANES=4,TH=120;const r=rngFor('tiles',official);
+  openOv(header('tiles',official)+`<div class="big" id="g-sc" style="font-size:40px">0</div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca cada tecla negra justo cuando cruce la línea roja. Antes de tiempo o tarde, pierdes. Sube el volumen: cada tecla suena (Himno de la alegría, de Beethoven).</p>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);let rows=[],speed=240,score=0,started=false,over=false,next=0,lane=-1,notes=[];const LY=H-120,TOL=26;
   const note=m=>{try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.type='triangle';o.frequency.value=440*Math.pow(2,(m-69)/12);g.gain.setValueAtTime(.15,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.5);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.5)}catch(e){}};
