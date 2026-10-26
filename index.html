@@ -76,6 +76,8 @@ h3{font-size:16px}
 .game.lock{cursor:default;color:var(--ink2)}
 .game.lock img{filter:grayscale(1);opacity:.45}
 .game small{font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.grp-btn{font:900 12px var(--body);border:2px solid var(--ink);background:var(--yellow,#FFD23F);color:var(--ink);padding:3px 9px;box-shadow:2px 2px 0 var(--ink);cursor:pointer;max-width:55vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grp-item{display:flex;align-items:center;gap:10px;width:100%;font:inherit;color:var(--ink);cursor:pointer;background:var(--paper);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:8px 10px}.grp-item .tag{flex:none}.grp-item .ava{flex:none}.grp-item.on{outline:3px solid var(--red)}
 .sync{display:flex;gap:8px;align-items:center;font-size:12px;font-weight:700}
 .dot{width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid var(--ink)}
 .dot.off{background:var(--red)}
@@ -223,7 +225,7 @@ input[type=range]{accent-color:var(--red)}
         <span class="date" id="today-label">—</span>
         <span class="row" style="gap:8px"><span class="sync"><span class="dot" id="net-dot"></span><span id="net-txt">Con conexión</span></span><button class="snd" id="snd" aria-label="Silenciar">🔊</button></span>
       </div>
-      <span class="eyebrow" style="color:var(--red)">Senpai de la Semana</span>
+      <div class="row" style="justify-content:space-between;gap:8px"><span class="eyebrow" style="color:var(--red)">Senpai de la Semana</span><button class="grp-btn" hidden><span class="grp-name">Grupo</span> ▾</button></div>
       <h1>Reto de hoy</h1>
       <div class="panel challenge">
         <img id="ch-icon" src="img/ic_simon.webp" alt="">
@@ -250,7 +252,7 @@ input[type=range]{accent-color:var(--red)}
   <section class="screen" id="s-rank">
     <div class="stack">
       <div class="row" style="justify-content:space-between;flex-wrap:wrap">
-        <h1>Ranking</h1>
+        <h1>Ranking <button class="grp-btn" hidden style="vertical-align:middle"><span class="grp-name">Grupo</span> ▾</button></h1>
         <div class="seg"><button class="chip on" data-r="day" id="r-day">Hoy</button><button class="chip" data-r="week" id="r-week">Semana</button><button class="chip" data-r="fame" id="r-fame">Récords</button></div>
       </div>
       <div class="fame-bar" id="fame-bar" hidden><label for="fame-game">Salón de la fama</label><select id="fame-game"></select></div>
@@ -293,7 +295,8 @@ input[type=range]{accent-color:var(--red)}
         <h3>¿Quién eres?</h3>
         <div class="picker" id="picker"></div>
       </div>
-      <div class="panel stack" id="adm-panel" style="gap:8px" hidden><h3>Administración</h3><p class="note" style="margin:0">Jugadores, juegos del reto, objetivo semanal y código del grupo.</p><button class="btn" id="btn-admin">Abrir panel</button></div>
+      <div class="panel stack" id="grp-panel" style="gap:8px" hidden><h3>Grupos y cuenta</h3><p class="note" style="margin:0">Cambia de grupo, invita con el código, crea otro o cierra sesión.</p><button class="btn" id="btn-groups">Mis grupos</button></div>
+      <div class="panel stack" id="adm-panel" style="gap:8px" hidden><h3>Administración</h3><p class="note" style="margin:0">Jugadores, nombre, código y objetivo semanal del grupo.</p><button class="btn" id="btn-admin">Abrir panel</button></div>
       <div class="panel stack" style="gap:10px">
         <label for="state-sim">Probar estado (demo)</label>
         <select id="state-sim">
@@ -558,41 +561,50 @@ function retoIntro(gid,next){
 
 // ===== Ajustes del grupo y administración =====
 function saveGroup(){store.set('rdm_group',GROUP)}
-function isAdmin(){return ONLINE?!!(P[me]&&P[me].admin):true}
+function isAdmin(){if(!ONLINE)return true;const m=curMemb();return !!((m&&m.admin)||OWNER)}
 async function adminCall(fn,args){if(!ONLINE){return null}const {error}=await sb.rpc(fn,args);return error?error.message:null}
 function openAdmin(){
-  const rows=ONLINE?PLAYERS:[];
+  const m=ONLINE?curMemb():null,gAdmin=!ONLINE||!!(m&&m.admin),owner=!ONLINE||OWNER,rows=ONLINE&&gAdmin?PLAYERS:[];
+  const fld=(id,val,extra='')=>`<input id="${id}" value="${val}" ${extra} style="font:700 16px var(--body);border:3px solid var(--ink);padding:8px;width:100%;background:var(--paper);color:var(--ink)">`;
   openOv(`<div class="row" style="justify-content:space-between;width:100%"><h1>Administración</h1><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
    ${ONLINE?'':'<p class="note" style="margin:0">Modo demo: los ajustes se guardan solo en este móvil.</p>'}
-   <div class="panel stack" style="width:100%;text-align:left;gap:8px"><h3>Juegos del reto diario</h3><p class="note" style="margin:0">Desmarca los que no quieras que salgan en el reto. Se pueden seguir practicando.</p>
-     <div class="adm-games">${GAMES.map(g=>`<label><input type="checkbox" data-g="${g.id}" ${GROUP.disabled.includes(g.id)?'':'checked'}> ${g.name}</label>`).join('')}</div></div>
+   ${owner?`<div class="panel stack" style="width:100%;text-align:left;gap:8px"><h3>Juegos del reto diario</h3><p class="note" style="margin:0">${ONLINE?'Ajuste global: afecta al reto de todos los grupos. ':''}Desmarca los que no quieras que salgan. Se pueden seguir practicando.</p>
+     <div class="adm-games">${GAMES.map(g=>`<label><input type="checkbox" data-g="${g.id}" ${GROUP.disabled.includes(g.id)?'':'checked'}> ${g.name}</label>`).join('')}</div></div>`:''}
+   ${gAdmin?`${ONLINE?`<div class="panel stack" style="width:100%;text-align:left;gap:8px"><h3>Nombre del grupo</h3>${fld('adm-name',(m&&m.gname)||'','maxlength="30"')}</div>`:''}
    <div class="panel stack" style="width:100%;text-align:left;gap:8px"><h3>Objetivo semanal del grupo</h3>
-     <div class="row"><input id="adm-goal" type="number" min="5" max="500" value="${GROUP.goal||''}" placeholder="${Math.max(10,PLAYERS.length*6)} (automático)" style="font:700 16px var(--body);border:3px solid var(--ink);padding:8px;width:100%;background:var(--paper);color:var(--ink)"></div>
+     ${fld('adm-goal',GROUP.goal||'',`type="number" min="5" max="500" placeholder="${Math.max(10,PLAYERS.length*6)} (automático)"`)}
      <p class="note" style="margin:0">Partidas entre todos por semana. Vacío = 6 por jugador.</p></div>
-   ${ONLINE?`<div class="panel stack" style="width:100%;text-align:left;gap:8px"><h3>Código del grupo</h3>
-     <div class="row"><input id="adm-code" maxlength="20" value="${GROUP.code||''}" style="font:700 16px var(--body);border:3px solid var(--ink);padding:8px;width:100%;text-transform:uppercase;background:var(--paper);color:var(--ink)"></div>
-     <p class="note" style="margin:0">Quien ya juega no lo necesita. Solo sirve para entrar por primera vez.</p></div>
+   ${ONLINE?`<div class="panel stack" style="width:100%;text-align:left;gap:8px"><h3>Código del grupo</h3>${fld('adm-code',(m&&m.code)||'','maxlength="20" autocapitalize="characters"')}
+     <p class="note" style="margin:0">Solo sirve para entrar. Si lo cambias, el antiguo deja de valer.</p></div>
    <div class="panel stack" style="width:100%;text-align:left;gap:8px"><h3>Jugadores</h3>
      ${rows.map(p=>`<div class="adm-pl"><div class="ava" style="--s:40px;--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div><span><b>${p.name}</b>${p.admin?' · admin':''}</span>
-       <button class="btn ghost" data-unlock="${p.pid}" style="font-size:12px;padding:4px 8px">Desbloquear PIN</button>${p.id===me?'':`<button class="btn ghost" data-del="${p.pid}" data-n="${p.name}" style="font-size:12px;padding:4px 8px;color:var(--red)">Eliminar</button>`}</div>`).join('')}
-     <p class="note" style="margin:0">Eliminar borra al jugador con todas sus partidas y libera su personaje. No se puede deshacer.</p></div>`:''}
+       ${p.id===me?'':`<button class="btn ghost" data-adm="${p.pid}" data-on="${p.admin?0:1}" style="font-size:12px;padding:4px 8px">${p.admin?'Quitar admin':'Hacer admin'}</button><button class="btn ghost" data-unlock="${p.pid}" style="font-size:12px;padding:4px 8px">Desbloquear PIN</button><button class="btn ghost" data-del="${p.pid}" data-n="${p.name}" style="font-size:12px;padding:4px 8px;color:var(--red)">Sacar</button>`}</div>`).join('')}
+     <p class="note" style="margin:0">«Sacar» lo quita del grupo y libera su personaje; sus partidas siguen siendo suyas. «Desbloquear PIN» solo hace falta para recuperar personajes antiguos.</p></div>`:''}`:''}
    <p class="note" id="adm-msg" style="margin:0;font-weight:900"></p>
    <button class="btn red" id="adm-save">Guardar ajustes</button>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;const msg=t=>{$('#adm-msg').textContent=t};
   $('#adm-save').onclick=async()=>{
-    const dis=[...document.querySelectorAll('.adm-games input')].filter(i=>!i.checked).map(i=>i.dataset.g);
-    const cats=new Set(GAMES.filter(g=>!dis.includes(g.id)).map(g=>g.cat));if(!cats.size){msg('Deja al menos un juego en el reto.');return}
-    const gv=parseInt($('#adm-goal').value,10);const goal=gv>=5?gv:null;
-    if(ONLINE){$('#adm-save').disabled=true;let e=await adminCall('admin_update_settings',{p_disabled:dis,p_goal:goal});
-      const code=($('#adm-code').value||'').trim();if(!e&&code&&code.toUpperCase()!==(GROUP.code||'').toUpperCase())e=await adminCall('admin_set_join_code',{p_code:code});
-      $('#adm-save').disabled=false;if(e){msg('Error: '+e);return}if(code)GROUP.code=code.toUpperCase()}
+    let dis=GROUP.disabled.slice();
+    if(owner){dis=[...document.querySelectorAll('.adm-games input')].filter(i=>!i.checked).map(i=>i.dataset.g);
+      if(!GAMES.some(g=>!dis.includes(g.id))){msg('Deja al menos un juego en el reto.');return}}
     const changed=JSON.stringify(dis.slice().sort())!==JSON.stringify(GROUP.disabled.slice().sort());
+    let goal=GROUP.goal;if(gAdmin){const gv=parseInt($('#adm-goal').value,10);goal=gv>=5?gv:null}
+    if(ONLINE){
+      if(!sb||!navigator.onLine){msg('Necesitas conexión.');return}
+      $('#adm-save').disabled=true;let e=null;
+      if(owner&&changed)e=await adminCall('owner_set_disabled_games',{p_disabled:dis});
+      if(!e&&gAdmin&&goal!==(m.goal||null))e=await adminCall('admin_set_goal',{p_group:GID,p_goal:goal});
+      const name=gAdmin?($('#adm-name').value||'').trim():'';if(!e&&name&&name!==m.gname)e=await adminCall('admin_rename_group',{p_group:GID,p_name:name});
+      const code=gAdmin?($('#adm-code').value||'').trim().toUpperCase():'';if(!e&&code&&code!==(m.code||'').toUpperCase())e=await adminCall('admin_set_code',{p_group:GID,p_code:code});
+      $('#adm-save').disabled=false;if(e){msg('Error: '+e);return}
+      if(gAdmin){m.goal=goal;if(name)m.gname=name;if(code)m.code=code;store.set('rdm_memb',MEMB);grpLabel()}}
     GROUP.disabled=dis;GROUP.goal=goal;saveGroup();msg('Guardado.');sfx('ok');
     if(changed)timers.push(setTimeout(()=>location.reload(),700));else renderAll()};
-  ovIn.querySelectorAll('[data-unlock]').forEach(b=>b.onclick=async()=>{const e=await adminCall('admin_unlock_player',{p_player:b.dataset.unlock});msg(e?'Error: '+e:'PIN desbloqueado.')});
+  ovIn.querySelectorAll('[data-unlock]').forEach(b=>b.onclick=async()=>{const e=await adminCall('admin_unlock',{p_group:GID,p_player:b.dataset.unlock});msg(e?'Error: '+e:'PIN desbloqueado.')});
+  ovIn.querySelectorAll('[data-adm]').forEach(b=>b.onclick=async()=>{const e=await adminCall('admin_set_admin',{p_group:GID,p_player:b.dataset.adm,p_admin:b.dataset.on==='1'});if(e){msg('Error: '+e);return}await sync();openAdmin()});
   ovIn.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{
     if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='¿Seguro? Toca otra vez';b.style.background='var(--red)';b.style.color='var(--paper)';return}
-    const e=await adminCall('admin_delete_player',{p_player:b.dataset.del});if(e){msg('Error: '+e);return}msg(`${b.dataset.n} eliminado.`);await sync();openAdmin()});
+    const e=await adminCall('admin_remove',{p_group:GID,p_player:b.dataset.del});if(e){msg('Error: '+e);return}msg(`${b.dataset.n} ya no está en el grupo.`);await sync();openAdmin()});
 }
 
 // ===== Reacciones =====
@@ -610,17 +622,17 @@ async function sendReact(to,kind){
   if(allReacts().some(r=>r.from===me&&r.to===to&&r.kind===kind&&r.date===TODAY))return 'Ya le has mandado ese sticker hoy.';
   if(!ONLINE){const own=store.get('rdm_reacts',[]);own.push({from:me,to,kind,date:TODAY});store.set('rdm_reacts',own);return null}
   if(!sb||!navigator.onLine)return 'Necesitas conexión para mandar stickers.';
-  const {error}=await sb.from('reactions').insert({from_player:myPid,to_player:P[to].pid,kind,date:TODAY});
+  const {error}=await sb.from('reactions').insert({group_id:GID,from_player:myPid,to_player:P[to].pid,kind,date:TODAY});
   if(error&&error.code!=='23505')return 'No se pudo enviar: '+error.message;
   await loadReacts();return null;
 }
 async function loadReacts(){
-  if(!ONLINE||!sb)return;
-  const {data,error}=await sb.from('reactions').select('from_player,to_player,kind,date').gte('date',addDays(TODAY,-1)).limit(500);
+  if(!ONLINE||!sb||!GID)return;
+  const {data,error}=await sb.from('reactions').select('from_player,to_player,kind,date').eq('group_id',GID).gte('date',addDays(TODAY,-1)).limit(500);
   if(error){console.warn('reacciones',error);return}
   const av=Object.fromEntries(PLAYERS.map(p=>[p.pid,p.id]));
   reactsRemote=data.filter(r=>av[r.from_player]&&av[r.to_player]).map(r=>({from:av[r.from_player],to:av[r.to_player],kind:r.kind,date:r.date}));
-  store.set('rdm_reacts_cache',reactsRemote);
+  store.set('rdm_reacts_cache_'+GID,reactsRemote);
 }
 const reactImg=(from,kind)=>exp(from,(REACT_KINDS.find(k=>k[0]===kind)||REACT_KINDS[0])[1]);
 function openPlayer(id){
@@ -730,17 +742,17 @@ async function createDuel(to,gid){
   if(allDuels().some(d=>d.from===me&&d.to===to&&d.game===gid&&duelState(d).st==='open'))return 'Ya hay un duelo abierto igual.';
   if(!ONLINE){const own=store.get('rdm_duels',[]);own.push({id:uuid(),from:me,to,game:gid,score:sc,created:Date.now()});store.set('rdm_duels',own);return null}
   if(!sb||!navigator.onLine)return 'Necesitas conexión para retar.';
-  const {error}=await sb.from('duels').insert({from_player:myPid,to_player:P[to].pid,game:gid,score:sc});
+  const {error}=await sb.from('duels').insert({group_id:GID,from_player:myPid,to_player:P[to].pid,game:gid,score:sc});
   if(error)return 'No se pudo crear el duelo: '+error.message;
   await loadDuels();return null;
 }
 async function loadDuels(){
-  if(!ONLINE||!sb)return;
-  const {data,error}=await sb.from('duels').select('id,from_player,to_player,game,score,created_at').gte('created_at',new Date(Date.now()-8*DAY).toISOString()).limit(300);
+  if(!ONLINE||!sb||!GID)return;
+  const {data,error}=await sb.from('duels').select('id,from_player,to_player,game,score,created_at').eq('group_id',GID).gte('created_at',new Date(Date.now()-8*DAY).toISOString()).limit(300);
   if(error){console.warn('duelos',error);return}
   const av=Object.fromEntries(PLAYERS.map(p=>[p.pid,p.id]));
   duelsRemote=data.filter(d=>av[d.from_player]&&av[d.to_player]).map(d=>({id:d.id,from:av[d.from_player],to:av[d.to_player],game:d.game,score:+d.score,created:Date.parse(d.created_at)}));
-  store.set('rdm_duels_cache',duelsRemote);
+  store.set('rdm_duels_cache_'+GID,duelsRemote);
 }
 function duelLine(d){
   const s=duelState(d),g=G[d.game],A=P[d.from].name,B=P[d.to].name,mark=fmtShort(d.game,d.score);
@@ -861,7 +873,7 @@ function renderHoy(){
 function fmt(game,s){return G[game].long(s)}
 function fmtShort(game,s){return G[game].short(s)}
 function net(){const on=navigator.onLine;$('#net-dot').classList.toggle('off',!on);
-  $('#net-txt').textContent=on?(pending.length?`Enviando ${pending.length}…`:'Sincronizado'):`Sin conexión · ${pending.length} pendiente${pending.length===1?'':'s'}`;
+  $('#net-txt').textContent=on?(needLogin?`Sin cuenta · Entrar${pending.length?` (${pending.length} pendiente${pending.length===1?'':'s'})`:''}`:pending.length?`Enviando ${pending.length}…`:'Sincronizado'):`Sin conexión · ${pending.length} pendiente${pending.length===1?'':'s'}`;
   if(!ONLINE&&on&&pending.length){setTimeout(()=>{pending=[];saveAll();net()},900)}}
 window.addEventListener('online',()=>{net();if(typeof connect==='function'&&!sb)connect();else sync()});window.addEventListener('offline',net);
 
@@ -912,7 +924,7 @@ function radarSVG(cats){
   return s;
 }
 function renderPerfil(){
-  $('#adm-panel').hidden=!isAdmin();
+  $('#adm-panel').hidden=!isAdmin();$('#grp-panel').hidden=!ONLINE;
   const cats=myCats(); const T=title(cats,me); const pw=powerOf(me); const st=stateOf(me);
   $('#p-ava').outerHTML=`<div id="p-ava">${avatarHTML(me,{size:'150px'})}</div>`;
   $('#p-name').textContent=P[me].name; $('#p-mote').textContent=T.t;
@@ -1480,88 +1492,256 @@ document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{rmode=c.dataset.r;d
 $('#rank-list').addEventListener('click',e=>{const b=e.target.closest('.item');if(!b)return;openPlayer(b.dataset.p)});
 $('#picker').addEventListener('click',e=>{const b=e.target.closest('.pick');if(!b)return;me=b.dataset.pick;saveAll();renderAll()});
 $('#snd').onclick=()=>{SND.on=!SND.on;store.set('rdm_sound',SND.on);sndBtn();if(SND.on)sfx('ok')};sndBtn();
-$('#btn-admin').onclick=openAdmin;
+$('#btn-admin').onclick=openAdmin;$('#btn-groups').onclick=()=>openGroups();document.querySelectorAll('.grp-btn').forEach(b=>b.onclick=()=>openGroups());
 $('#fame-game').onchange=e=>{fameGame=e.target.value;renderRank()};
 $('#state-sim').onchange=renderAll;$('#power-sim').onchange=renderAll;
 $('#m-summary').onclick=()=>openSummary(new Date(TODAY+'T12:00:00').getDay()===1);
 $('#m-prev').onclick=()=>{moteIdx--;renderMote()};$('#m-next').onclick=()=>{moteIdx++;renderMote()};
 $('#m-share').onclick=()=>{const txt=$('#m-text').dataset.share;const done=m=>{const n=$('#m-copied');n.textContent=m;n.hidden=false};
   try{navigator.clipboard.writeText(txt).then(()=>done('Copiado. Pégalo en el grupo.'),()=>done(txt))}catch(e){done(txt)}};
-// ===== sincronización con Supabase =====
-let sb=null,myPid=null,syncing=false,netErr=null;
+// ===== sincronización con Supabase (cuenta por email, varios grupos) =====
+var needLogin=false;let sb=null,myPid=null,myUid=null,myEmail='',syncing=false,netErr=null;
+var MEMB=store.get('rdm_memb',[]),GID=store.get('rdm_gid',null),OWNER=store.get('rdm_owner',false);
+function curMemb(){return MEMB.find(m=>m.gid===GID)||null}
 function loadScript(src){return new Promise((ok,ko)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
+const inputCss='font:700 16px var(--body);border:3px solid var(--ink);padding:10px;background:var(--paper);color:var(--ink);width:100%;box-sizing:border-box';
+const cleanErr=e=>((e&&e.message)||String(e||'Error')).replace(/^.*?: /,'');
+function grpLabel(){const m=curMemb();document.querySelectorAll('.grp-name').forEach(el=>el.textContent=m?m.gname:'Grupo');document.querySelectorAll('.grp-btn').forEach(b=>b.hidden=!ONLINE)}
+// pone en pantalla el grupo elegido usando lo guardado en el móvil (funciona sin conexión)
+function applyGroup(){
+  const m=curMemb();
+  if(!m){myPid=null;grpLabel();return}
+  myPid=m.pid;me=m.avatar;
+  GROUP=Object.assign(GROUP,{goal:m.goal||null,code:m.code||'',name:m.gname});saveGroup();
+  const c=store.get('rdm_cache_'+GID,null);
+  if(c){setPlayers(c.pl);remote=c.remote||[]}else{setPlayers([{id:m.pid,user_id:myUid,name:m.name,avatar:m.avatar,is_admin:m.admin}]);remote=[]}
+  duelsRemote=store.get('rdm_duels_cache_'+GID,[]);reactsRemote=store.get('rdm_reacts_cache_'+GID,[]);
+  grpLabel();
+}
+function switchGroup(gid){if(gid===GID)return;GID=gid;store.set('rdm_gid',GID);applyGroup();saveAll();renderAll();sync()}
+// fichas del usuario en todos sus grupos + ajustes globales
+async function loadMemberships(){
+  const [{data:mine,error:e1},{data:grs,error:e2},{data:cfg}]=await Promise.all([
+    sb.from('players').select('id,group_id,name,avatar,is_admin').eq('user_id',myUid),
+    sb.from('groups').select('id,name,join_code,weekly_goal'),
+    sb.rpc('app_config')]);
+  if(e1||e2)throw (e1||e2);
+  const gmap=Object.fromEntries((grs||[]).map(g=>[g.id,g]));
+  MEMB=(mine||[]).filter(p=>gmap[p.group_id]).map(p=>({gid:p.group_id,pid:p.id,avatar:p.avatar,name:p.name,admin:!!p.is_admin,gname:gmap[p.group_id].name,code:gmap[p.group_id].join_code,goal:gmap[p.group_id].weekly_goal}));
+  store.set('rdm_memb',MEMB);
+  if(!curMemb()){GID=MEMB[0]?MEMB[0].gid:null;store.set('rdm_gid',GID)}
+  if(cfg){OWNER=!!cfg.is_owner;store.set('rdm_owner',OWNER);
+    const nd=cfg.disabled_games||[];const changed=JSON.stringify(nd.slice().sort())!==JSON.stringify(GROUP.disabled.slice().sort());
+    GROUP.disabled=nd;saveGroup();if(changed&&ov.classList.contains('hidden')){location.reload();return false}}
+  return true;
+}
 async function sync(){
-  if(!ONLINE||!sb||!myPid||syncing||!navigator.onLine)return; syncing=true;
+  if(!ONLINE||!sb||!myUid||syncing||!navigator.onLine)return; syncing=true;
   try{
+    // 1) subir lo jugado (las partidas son de la persona y cuentan en todos sus grupos)
     pending.forEach(r=>{if(!r.cid)r.cid=uuid();if(!r.ts)r.ts=Date.now()});
     let lastErr=null;
     for(const r of pending.slice()){
-      const {error}=await sb.from('results').insert({client_id:r.cid,player_id:myPid,game:r.game,date:r.date,score:r.score,official:!!r.official,client_ts:new Date(r.ts).toISOString()});
+      const {error}=await sb.from('results').insert({client_id:r.cid,game:r.game,date:r.date,score:r.score,official:!!r.official,client_ts:new Date(r.ts).toISOString()});
       if(!error||error.code==='23505'){pending=pending.filter(x=>x.cid!==r.cid)}
       else if(/^(22|23)/.test(error.code||'')||/Fecha futura|fuera de plazo/.test(error.message||'')){pending=pending.filter(x=>x.cid!==r.cid);lastErr=error.message;console.warn('Resultado descartado',r,error)}
       else {lastErr=error.message;break}
       saveAll();
     }
     if(lastErr)netErr='No enviado: '+lastErr;
-    const since=madrid(new Date(Date.now()-35*864e5));
-    const [{data:pl,error:e1},{data:rs,error:e2}]=await Promise.all([sb.from('players').select('id,user_id,name,avatar,is_admin'),sb.from('results').select('player_id,game,date,score,official,suspicious,client_ts,created_at').gte('date',since).limit(5000)]);
-    if(!e1&&pl){setPlayers(pl);const mine=pl.find(x=>x.id===myPid);if(mine)me=mine.avatar;const av=Object.fromEntries(pl.map(x=>[x.id,x.avatar]));
-      if(!e2&&rs)remote=rs.filter(x=>!x.suspicious).map(x=>({...x,avatar:av[x.player_id],score:+x.score,ts:Date.parse(x.client_ts||x.created_at)||0}));
-      store.set('rdm_cache',{pl,remote});}
-  }catch(e){}
-  try{await loadDuels()}catch(e){}
-  try{await loadReacts()}catch(e){}
-  try{const {data:gr}=await sb.from('groups').select('disabled_games,weekly_goal,join_code').limit(1);
-    if(gr&&gr[0]){const nd=gr[0].disabled_games||[];const changed=JSON.stringify(nd.slice().sort())!==JSON.stringify(GROUP.disabled.slice().sort());
-      GROUP={disabled:nd,goal:gr[0].weekly_goal||null,code:gr[0].join_code||''};saveGroup();if(changed&&ov.classList.contains('hidden')){location.reload();return}}}catch(e){}
-  syncing=false; saveAll(); renderAll(); net();
+    // 2) mis partidas jugadas en otro móvil (la primera vez, todo el historial)
+    const fullKey='rdm_full_'+myUid,since=madrid(new Date(Date.now()-35*864e5));
+    let q=sb.from('results').select('client_id,game,date,score,official,client_ts,created_at').eq('user_id',myUid).limit(5000);
+    if(store.get(fullKey,false))q=q.gte('date',since);
+    const {data:own,error:eo}=await q;
+    if(!eo&&own){const have=new Set(results.map(r=>r.cid).filter(Boolean));
+      const sig=new Set(results.map(r=>[r.date,r.game,+r.score,!!r.official].join('|')));let add=0;
+      own.forEach(x=>{if(have.has(x.client_id)||sig.has([x.date,x.game,+x.score,!!x.official].join('|')))return;
+        results.push({date:x.date,game:x.game,score:+x.score,official:!!x.official,ts:Date.parse(x.client_ts||x.created_at)||0,cid:x.client_id});add++});
+      if(add){results.sort((a,b)=>(a.ts||0)-(b.ts||0));saveAll()}store.set(fullKey,true)}
+    // 3) grupo actual: jugadores y partidas de los demás
+    if(GID){
+      const {data:pl,error:e1}=await sb.from('players').select('id,user_id,name,avatar,is_admin').eq('group_id',GID);
+      if(!e1&&pl){
+        if(!pl.some(x=>x.user_id===myUid)){await loadMemberships();applyGroup()} // me han sacado del grupo
+        else{setPlayers(pl);const mine=pl.find(x=>x.user_id===myUid);me=mine.avatar;myPid=mine.id;
+          const m=curMemb();if(m){m.admin=!!mine.is_admin;m.avatar=mine.avatar;m.name=mine.name;store.set('rdm_memb',MEMB)}
+          const others=pl.filter(x=>x.user_id!==myUid),av=Object.fromEntries(others.map(x=>[x.user_id,x.avatar]));
+          let rs=[];if(others.length){const {data,error:e2}=await sb.from('results').select('user_id,game,date,score,official,suspicious,client_ts,created_at').in('user_id',others.map(x=>x.user_id)).gte('date',since).limit(5000);if(!e2&&data)rs=data}
+          remote=rs.filter(x=>!x.suspicious&&av[x.user_id]).map(x=>({...x,avatar:av[x.user_id],score:+x.score,ts:Date.parse(x.client_ts||x.created_at)||0}));
+          store.set('rdm_cache_'+GID,{pl,remote})}
+      }
+      try{const {data:g}=await sb.from('groups').select('name,join_code,weekly_goal').eq('id',GID).maybeSingle();
+        const m=curMemb();if(g&&m){m.gname=g.name;m.code=g.join_code;m.goal=g.weekly_goal;store.set('rdm_memb',MEMB);GROUP.goal=g.weekly_goal||null;GROUP.code=g.join_code;GROUP.name=g.name;saveGroup()}}catch(e){}
+      try{await loadDuels()}catch(e){}
+      try{await loadReacts()}catch(e){}
+    }
+  }catch(e){console.warn('sync',e)}
+  syncing=false; saveAll(); grpLabel(); renderAll(); net();
   if(netErr){const e=netErr;netErr=null;$('#net-txt').textContent=e.slice(0,60);setTimeout(net,8000)}
 }
-function joinScreen(players,err){
-  const taken=new Set(players.map(p=>p.avatar));
-  openOv(`<h1>¿Quién eres?</h1><p class="note" style="margin:0">Elige tu personaje, tu apodo, un PIN y el código del grupo. Si ya jugabas, pon el mismo personaje, apodo y PIN para recuperarlo.</p>
-   <div class="picker" id="j-pick">${DEMO_PLAYERS.map(p=>`<button class="pick" data-pick="${p.id}" ${taken.has(p.id)?'disabled style="opacity:.3"':''}><div class="ava" style="--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div>${taken.has(p.id)?'Cogido':''}</button>`).join('')}</div>
-   <div class="stack" style="width:100%;text-align:left;gap:8px"><label for="j-name">Tu apodo</label><input id="j-name" maxlength="20" autocomplete="nickname" style="font:700 16px var(--body);border:3px solid var(--ink);padding:10px;background:var(--paper);color:var(--ink)">
-   <label for="j-pin">PIN de 4 números</label><input id="j-pin" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" style="font:700 16px var(--body);border:3px solid var(--ink);padding:10px;background:var(--paper);color:var(--ink);letter-spacing:.3em">
-   <p class="note" style="margin:0">Apúntalo: sirve para recuperar tu personaje si cambias de móvil o de navegador.</p>
-   <label for="j-code">Código del grupo</label><input id="j-code" maxlength="20" autocapitalize="characters" style="font:700 16px var(--body);border:3px solid var(--ink);padding:10px;background:var(--paper);color:var(--ink);text-transform:uppercase"></div>
-   <p class="note" id="j-err" style="margin:0;color:var(--red);font-weight:900">${err||''}</p><button class="btn red" id="j-go">Entrar</button>`,'img/bg_reveal.webp');
-  let pick=null;$('#j-pick').onclick=e=>{const b=e.target.closest('.pick');if(!b||b.disabled)return;pick=b.dataset.pick;document.querySelectorAll('#j-pick .pick').forEach(x=>x.classList.toggle('on',x===b))};
-  $('#j-go').onclick=async()=>{const name=$('#j-name').value.trim(),code=$('#j-code').value.trim(),pin=$('#j-pin').value.trim();
-    if(!pick||!name||!code){$('#j-err').textContent='Elige personaje, apodo y código.';return}
-    if(!/^[0-9]{4}$/.test(pin)){$('#j-err').textContent='El PIN tiene que ser de 4 números.';return}
-    $('#j-go').disabled=true;const args={p_code:code,p_name:name,p_avatar:pick,p_pin:pin};
-    let {data,error}=await sb.rpc('join_group',args);
-    if(error&&/cogido/.test(error.message||'')){({data,error}=await sb.rpc('claim_player',args))}
-    if(error){$('#j-go').disabled=false;$('#j-err').textContent=(error.message||'No se ha podido entrar').replace(/^.*?: /,'');return}
-    data=Array.isArray(data)?data[0]:data;
-    myPid=data.id;me=data.avatar;store.set('rdm_pid',myPid);closeOv();sync()};
+
+// ---------- entrar con email (código de un solo uso) ----------
+function loginScreen(err){
+  const last=store.get('rdm_email','');
+  openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Cuenta</span><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Ahora no</button></div>
+   <h1>Entra con tu email</h1>
+   <p class="note" style="margin:0">Te mandamos un código de un solo uso. Con la misma cuenta juegas en todos tus grupos y recuperas tus partidas en cualquier móvil.</p>
+   <div class="stack" style="width:100%;text-align:left;gap:8px" id="l-step1">
+     <label for="l-email">Email</label><input id="l-email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" value="${last}" style="${inputCss}">
+     <button class="btn red" id="l-send">Mandarme el código</button></div>
+   <div class="stack" style="width:100%;text-align:left;gap:8px" id="l-step2" hidden>
+     <p class="note" style="margin:0" id="l-sent"></p>
+     <label for="l-code">Código del email</label><input id="l-code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" style="${inputCss};letter-spacing:.3em;text-align:center;font-size:22px">
+     <button class="btn red" id="l-verify">Entrar</button>
+     <button class="btn ghost" id="l-back" style="font-size:13px;padding:6px 10px">Cambiar email o reenviar</button></div>
+   <p class="note" id="l-err" style="margin:0;color:var(--red);font-weight:900">${err||''}</p>
+   <p class="note" style="margin:0">Mira también en spam. Sin cuenta puedes practicar; tus partidas se guardan y se envían al entrar.</p>`,'img/bg_reveal.webp');
+  const E=t=>{$('#l-err').textContent=t};
+  $('#g-close').onclick=()=>{closeOv();net()};
+  $('#l-send').onclick=async()=>{const email=$('#l-email').value.trim().toLowerCase();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){E('Ese email no parece válido.');return}
+    if(!navigator.onLine){E('Necesitas conexión para entrar.');return}
+    $('#l-send').disabled=true;E('');
+    const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:true}});
+    $('#l-send').disabled=false;
+    if(error){E(/rate|limit|seconds/i.test(error.message)?'Demasiados intentos: espera un minuto y vuelve a probar.':cleanErr(error));return}
+    store.set('rdm_email',email);$('#l-step1').hidden=true;$('#l-step2').hidden=false;$('#l-sent').innerHTML=`Código enviado a <b>${email}</b>.`;$('#l-code').focus()};
+  $('#l-back').onclick=()=>{$('#l-step1').hidden=false;$('#l-step2').hidden=true;E('')};
+  $('#l-verify').onclick=async()=>{const token=$('#l-code').value.replace(/\D/g,'');const email=store.get('rdm_email','');
+    if(token.length<6){E('El código tiene al menos 6 números.');return}
+    $('#l-verify').disabled=true;E('');
+    const {data,error}=await sb.auth.verifyOtp({email,token,type:'email'});
+    $('#l-verify').disabled=false;
+    if(error||!data.session){E(/expired|invalid/i.test((error&&error.message)||'')?'Código incorrecto o caducado. Pide otro.':cleanErr(error));return}
+    closeOv();await afterLogin(data.session)};
 }
+async function afterLogin(session){
+  myUid=session.user.id;myEmail=session.user.email||'';needLogin=false;
+  if(store.get('rdm_uid',null)!==myUid){store.set('rdm_uid',myUid)}
+  try{if(await loadMemberships()===false)return}catch(e){$('#net-txt').textContent='No se pudo cargar tus grupos';return}
+  applyGroup();
+  if(!MEMB.length){renderAll();groupStart();return}
+  sync();
+}
+
+// ---------- grupos: unirse, crear, recuperar, cambiar ----------
+function avatarPicker(taken,sel){return `<div class="picker" id="j-pick">${DEMO_PLAYERS.map(p=>`<button class="pick${p.id===sel&&!taken.has(p.id)?' on':''}" data-pick="${p.id}" ${taken.has(p.id)?'disabled style="opacity:.3"':''}><div class="ava" style="--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div>${taken.has(p.id)?'Cogido':''}</button>`).join('')}</div>`}
+function bindPicker(onPick){$('#j-pick').onclick=e=>{const b=e.target.closest('.pick');if(!b||b.disabled)return;document.querySelectorAll('#j-pick .pick').forEach(x=>x.classList.toggle('on',x===b));onPick(b.dataset.pick)}}
+function groupStart(){
+  const legacy=!!store.get('rdm_pid',null)&&!store.get('rdm_legacy_done',false);
+  openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Grupos</span>${MEMB.length?'<button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button>':''}</div>
+   <h1>${MEMB.length?'Otro grupo':'¿Con quién juegas?'}</h1>
+   <p class="note" style="margin:0">Cada grupo tiene su ranking, sus duelos y sus stickers. El reto del día es el mismo para todos y tu partida cuenta en todos tus grupos.</p>
+   ${legacy?`<button class="btn red" id="gs-legacy" style="width:100%">Ya jugaba antes: recuperar mi personaje</button>`:''}
+   <button class="btn ${legacy?'':'red'}" id="gs-join" style="width:100%">Tengo un código de grupo</button>
+   <button class="btn" id="gs-create" style="width:100%">Crear un grupo nuevo</button>`,'img/bg_reveal.webp');
+  if($('#g-close'))$('#g-close').onclick=closeOv;
+  if(legacy)$('#gs-legacy').onclick=()=>legacyScreen();
+  $('#gs-join').onclick=()=>memberScreen('join');$('#gs-create').onclick=()=>memberScreen('create');
+}
+function memberScreen(mode,err){
+  const old=MEMB[0];const sel=old?old.avatar:store.get('rdm_me',null);
+  openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">${mode==='join'?'Unirme':'Crear grupo'}</span><button class="btn ghost" id="g-back" style="font-size:14px;padding:6px 10px">Atrás</button></div>
+   <h1>${mode==='join'?'Entra en un grupo':'Grupo nuevo'}</h1>
+   <div class="stack" style="width:100%;text-align:left;gap:8px">
+   ${mode==='join'?`<label for="j-code">Código del grupo</label><input id="j-code" maxlength="20" autocapitalize="characters" style="${inputCss};text-transform:uppercase">`
+     :`<label for="j-gname">Nombre del grupo</label><input id="j-gname" maxlength="30" placeholder="Primos, Oficina, Clase 2.ºB…" style="${inputCss}">`}
+   <label>Tu personaje en este grupo</label>${avatarPicker(new Set(),sel)}
+   <label for="j-name">Tu apodo en este grupo</label><input id="j-name" maxlength="20" autocomplete="nickname" value="${old?old.name:''}" style="${inputCss}"></div>
+   <p class="note" id="j-err" style="margin:0;color:var(--red);font-weight:900">${err||''}</p>
+   <button class="btn red" id="j-go">${mode==='join'?'Entrar':'Crear'}</button>`,'img/bg_reveal.webp');
+  let pick=sel;bindPicker(p=>pick=p);$('#g-back').onclick=groupStart;
+  const E=t=>{$('#j-err').textContent=t};
+  $('#j-go').onclick=async()=>{const name=$('#j-name').value.trim();
+    if(!pick||!name){E('Elige personaje y apodo.');return}
+    if(!navigator.onLine||!sb){E('Necesitas conexión.');return}
+    $('#j-go').disabled=true;let r;
+    if(mode==='join'){const code=$('#j-code').value.trim();if(!code){$('#j-go').disabled=false;E('Pon el código.');return}
+      r=await sb.rpc('join_by_code',{p_code:code,p_name:name,p_avatar:pick})}
+    else{const gname=$('#j-gname').value.trim();if(gname.length<2){$('#j-go').disabled=false;E('Ponle nombre al grupo.');return}
+      r=await sb.rpc('create_group',{p_group_name:gname,p_name:name,p_avatar:pick})}
+    if(r.error){$('#j-go').disabled=false;E(cleanErr(r.error));return}
+    await enterGroup(r.data.group_id);
+    if(mode==='create')shareCode(r.data.code,true);else closeOv()};
+}
+function legacyScreen(err){
+  const oldAv=store.get('rdm_me',null),oldCode=(store.get('rdm_group',{})||{}).code||'';
+  openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Recuperar</span><button class="btn ghost" id="g-back" style="font-size:14px;padding:6px 10px">Atrás</button></div>
+   <h1>Recupera tu personaje</h1>
+   <p class="note" style="margin:0">Pon el código del grupo, tu personaje y el PIN de 4 números que elegiste. Tu ficha y tus partidas pasan a tu email.</p>
+   <div class="stack" style="width:100%;text-align:left;gap:8px">
+   <label for="j-code">Código del grupo</label><input id="j-code" maxlength="20" value="${oldCode}" autocapitalize="characters" style="${inputCss};text-transform:uppercase">
+   <label>Tu personaje</label>${avatarPicker(new Set(),oldAv)}
+   <label for="j-pin">PIN</label><input id="j-pin" maxlength="4" inputmode="numeric" autocomplete="off" style="${inputCss};letter-spacing:.3em"></div>
+   <p class="note" id="j-err" style="margin:0;color:var(--red);font-weight:900">${err||''}</p>
+   <button class="btn red" id="j-go">Recuperar</button>`,'img/bg_reveal.webp');
+  let pick=oldAv;bindPicker(p=>pick=p);$('#g-back').onclick=groupStart;
+  $('#j-go').onclick=async()=>{const code=$('#j-code').value.trim(),pin=$('#j-pin').value.trim();const E=t=>{$('#j-err').textContent=t};
+    if(!code||!pick){E('Pon el código y elige personaje.');return}if(!/^[0-9]{4}$/.test(pin)){E('El PIN tiene 4 números.');return}
+    $('#j-go').disabled=true;const {data,error}=await sb.rpc('claim_legacy',{p_code:code,p_avatar:pick,p_pin:pin});
+    if(error){$('#j-go').disabled=false;E(cleanErr(error));return}
+    store.set('rdm_legacy_done',true);store.set('rdm_full_'+myUid,false);await enterGroup(data.group_id);closeOv()};
+}
+async function enterGroup(gid){
+  try{await loadMemberships()}catch(e){}
+  GID=gid;store.set('rdm_gid',GID);applyGroup();saveAll();renderAll();await sync();
+}
+function shareCode(code,fresh){
+  const m=curMemb();const txt=`Únete a «${m?m.gname:'mi grupo'}» en Senpai de la Semana: ${location.origin+location.pathname}\nCódigo del grupo: ${code}`;
+  openOv(`<span class="tag">${fresh?'Grupo creado':'Invitar'}</span><h1>${m?m.gname:''}</h1>
+   <p class="note" style="margin:0">Pásales este código. Entran con su email y lo ponen en «Tengo un código de grupo».</p>
+   <div class="count" style="font-size:44px;letter-spacing:.12em;position:static">${code}</div>
+   <button class="btn red" id="sh-copy">${navigator.share?'Compartir':'Copiar invitación'}</button>
+   <p class="note" id="sh-msg" style="margin:0;font-weight:900"></p><button class="btn ghost" id="g-close">Listo</button>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  $('#sh-copy').onclick=async()=>{try{if(navigator.share){await navigator.share({text:txt});return}await navigator.clipboard.writeText(txt);$('#sh-msg').textContent='Copiado.'}catch(e){$('#sh-msg').textContent=txt}};
+}
+function openGroups(){
+  if(!ONLINE)return;
+  if(needLogin||!myUid){if(sb)loginScreen();return}
+  openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Tus grupos</span><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
+   <div class="stack" style="width:100%;gap:8px">${MEMB.map(m=>`<button class="grp-item${m.gid===GID?' on':''}" data-g="${m.gid}"><div class="ava" style="--s:44px;--c:${AVC[m.avatar]||'#3A86FF'}"><div class="face"><img src="img/av_${m.avatar}.webp" alt=""></div></div>
+     <span style="flex:1;text-align:left"><b>${m.gname}</b><br><small>${m.name}${m.admin?' · admin':''}</small></span>${m.gid===GID?'<span class="tag">Ahora</span>':''}</button>`).join('')}</div>
+   <div class="row" style="flex-wrap:wrap;justify-content:center"><button class="btn red" id="gr-new">Unirme o crear</button>${curMemb()?'<button class="btn" id="gr-share">Invitar</button>':''}</div>
+   ${curMemb()?`<button class="btn ghost" id="gr-leave" style="font-size:13px;padding:6px 10px;color:var(--red)">Salir de «${curMemb().gname}»</button>`:''}
+   <p class="note" id="gr-msg" style="margin:0;font-weight:900;color:var(--red)"></p>
+   <p class="note" style="margin:0">Cuenta: <b>${myEmail||'—'}</b> · <a href="#" id="gr-out">cerrar sesión</a></p>`,'img/bg_menu.webp');
+  $('#g-close').onclick=closeOv;const msg=t=>{$('#gr-msg').textContent=t};
+  ovIn.querySelectorAll('.grp-item').forEach(b=>b.onclick=()=>{switchGroup(b.dataset.g);closeOv()});
+  $('#gr-new').onclick=groupStart;
+  if($('#gr-share'))$('#gr-share').onclick=()=>shareCode(curMemb().code,false);
+  if($('#gr-leave'))$('#gr-leave').onclick=async e=>{const b=e.currentTarget;
+    if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='¿Seguro? Toca otra vez';return}
+    const {error}=await sb.rpc('leave_group',{p_group:GID});if(error){msg(cleanErr(error));return}
+    localStorage.removeItem('rdm_cache_'+GID);GID=null;await loadMemberships();applyGroup();renderAll();closeOv();if(!MEMB.length)groupStart();else sync()};
+  $('#gr-out').onclick=async e=>{e.preventDefault();
+    if(pending.length){msg(`Tienes ${pending.length} partida${pending.length===1?'':'s'} sin enviar. Espera a tener conexión.`);return}
+    try{await sb.auth.signOut()}catch(x){}
+    Object.keys(localStorage).filter(k=>/^rdm_/.test(k)&&!/^rdm_(sound|tut|email)/.test(k)).forEach(k=>localStorage.removeItem(k));
+    location.reload()};
+}
+
 async function boot(){
   try{if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
   if(!ONLINE){renderAll();return}
   document.querySelector('#picker').closest('.panel').hidden=true;
   $('#rank-note').textContent='Ranking del grupo. Los resultados jugados sin conexión aparecen al sincronizar.';
-  const cache=store.get('rdm_cache',null);myPid=store.get('rdm_pid',null);
-  duelsRemote=store.get('rdm_duels_cache',[]);reactsRemote=store.get('rdm_reacts_cache',[]);
-  if(cache){setPlayers(cache.pl);remote=cache.remote||[];const mine=cache.pl.find(x=>x.id===myPid);if(mine)me=mine.avatar}
-  renderAll();
+  myUid=store.get('rdm_uid',null);
+  applyGroup();renderAll();
+  $('#net-txt').parentElement.onclick=()=>{if(needLogin&&sb)loginScreen()};
   connect();
 }
 let connecting=false;
 async function connect(){
-  if(!ONLINE||sb||connecting||!navigator.onLine)return; // sin cobertura: se juega con la caché y se conecta al volver
+  if(!ONLINE||sb||connecting||!navigator.onLine)return; // sin cobertura: se juega con lo guardado y se conecta al volver
   connecting=true;
   try{
     if(!window.supabase)await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js');
-    sb=window.supabase.createClient(CONFIG.supabaseUrl,CONFIG.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true}});
-    let {data:{session}}=await sb.auth.getSession();
-    if(!session){const {data,error}=await sb.auth.signInAnonymously();if(error)throw error;session=data.session}
-    const {data:pl,error:plErr}=await sb.from('players').select('id,user_id,name,avatar');
-    const mine=(pl||[]).find(x=>x.user_id===session.user.id);
-    if(plErr)throw plErr;
-    if(mine){myPid=mine.id;me=mine.avatar;store.set('rdm_pid',myPid);sync()}
-    else{joinScreen([])}
+    sb=window.supabase.createClient(CONFIG.supabaseUrl,CONFIG.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session||session.user.is_anonymous||!session.user.email){needLogin=true;myUid=null;net();loginScreen()}
+    else await afterLogin(session);
   }catch(e){sb=null;$('#net-txt').textContent='No se pudo conectar con el servidor';}
   connecting=false;
 }
