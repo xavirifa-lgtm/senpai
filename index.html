@@ -157,7 +157,7 @@ label{font-weight:900;font-size:12px;letter-spacing:.06em;text-transform:upperca
 .rx-send{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.rx-btn{border:3px solid var(--ink);background:var(--paper);padding:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font:900 12px var(--body);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
 .rx-btn img{width:100%;aspect-ratio:1;object-fit:cover;object-position:top}.rx-btn.sent{background:var(--green)}
 .rx-mini{width:22px;height:22px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid var(--ink);margin-left:4px;vertical-align:middle;background:var(--paper2)}
-.gh-tag{background:#EFE6FF;border:2px solid var(--ink);font-size:13px;padding:4px 10px;width:100%;text-align:left}.gh-tag .ahead{color:var(--green);font-weight:900}.gh-tag .behind{color:var(--red);font-weight:900}
+.gh-tag{background:#EFE6FF no-repeat 6px center/20px 20px;border:2px solid var(--ink);font-size:13px;padding:4px 10px 4px 32px;width:100%;text-align:left}.gh-tag .ahead{color:var(--green);font-weight:900}.gh-tag .behind{color:var(--red);font-weight:900}
 .gh-res{width:100%;text-align:left;border:3px solid var(--ink);background:#EFE6FF;padding:8px 10px;font-weight:900;font-size:14px}.gh-res.win{background:#CDEFD9}.gh-res.lose{background:#FFD9DC}
 .gh-opt{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:3px solid var(--ink);background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:8px 10px;font:inherit;color:var(--ink);cursor:pointer}.gh-opt img{width:44px;height:44px;border-radius:50%;border:2px solid var(--ink);object-fit:cover;object-position:top;background:var(--yellow);flex:none}.gh-opt b{display:block;font-family:var(--display);font-weight:400}.gh-opt small{font-size:12px}
 .mod-tag{background:var(--ink);color:var(--yellow);font-size:12px;padding:4px 10px;border:2px solid var(--ink);width:100%;text-align:left}.mod-tag b{font-family:var(--display);margin-right:4px;color:var(--paper)}
@@ -183,8 +183,9 @@ label{font-weight:900;font-size:12px;letter-spacing:.06em;text-transform:upperca
 .ava.sk5 .face{box-shadow:0 0 0 4px var(--gold),0 0 0 7px var(--ink),0 0 20px 8px var(--gold)}
 .ava.sk5::before{background:conic-gradient(from 0deg,rgba(244,180,0,0),rgba(244,180,0,.9),rgba(255,255,255,.9),rgba(244,180,0,0),rgba(244,180,0,.9),rgba(244,180,0,0));-webkit-mask:radial-gradient(circle,transparent 52%,#000 54%,#000 68%,transparent 70%);mask:radial-gradient(circle,transparent 52%,#000 54%,#000 68%,transparent 70%);animation:skspin 4s linear infinite}
 @keyframes skspin{to{transform:rotate(360deg)}}
-.hero.skbg{background:radial-gradient(circle at 50% 38%,rgba(142,68,255,.35),rgba(142,68,255,0) 60%),repeating-conic-gradient(from 0deg at 50% 38%,rgba(142,68,255,.12) 0 6deg,transparent 6deg 14deg);border-radius:8px}
-.tiers{display:flex;flex-direction:column;gap:6px}.tier{display:flex;gap:10px;align-items:center;font-size:13px;opacity:.5}.tier.ok{opacity:1}.tier b{font-family:var(--display);min-width:46px;text-align:center;border:2px solid var(--ink);background:var(--paper);padding:2px 4px}.tier.ok b{background:var(--yellow)}
+.hero.skbg{background:url(img/bg_racha.webp) center top/cover no-repeat;border-radius:8px}
+.hero.skbg-old{background:radial-gradient(circle at 50% 38%,rgba(142,68,255,.35),rgba(142,68,255,0) 60%),repeating-conic-gradient(from 0deg at 50% 38%,rgba(142,68,255,.12) 0 6deg,transparent 6deg 14deg);border-radius:8px}
+.tiers{display:flex;flex-direction:column;gap:6px}.tier{display:flex;gap:10px;align-items:center;font-size:13px;opacity:.5}.tier.ok{opacity:1}.tier:not(.ok) img{filter:grayscale(1)}.hic{object-fit:contain;vertical-align:middle;display:inline-block}.tier b{font-family:var(--display);min-width:46px;text-align:center;border:2px solid var(--ink);background:var(--paper);padding:2px 4px}.tier.ok b{background:var(--yellow)}
 .streak{display:flex;gap:12px;align-items:center;background:var(--ink);color:var(--paper);padding:10px 14px;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--red)}
 .streak small{color:#d8d2c4;font-size:12px}.streak .flame{font-family:var(--display);font-size:30px;min-width:54px;height:54px;border-radius:50%;background:var(--red);color:var(--yellow);display:flex;align-items:center;justify-content:center;border:3px solid var(--yellow)}
 .streak.zero .flame{background:#55524C;color:var(--paper);border-color:var(--paper)}
@@ -584,7 +585,7 @@ function retoIntro(gid,next){
     <img src="img/ic_${gid}.webp" alt="" style="width:120px;height:120px;object-fit:contain" class="pop"><h1>${g.name}</h1>
     <div class="panel stack" style="width:100%;gap:6px;text-align:left">
       ${top?`<div class="row"><div class="ava" style="--s:48px;--c:${P[top.id].c}"><div class="face"><img src="img/av_${top.id}.webp" alt=""></div></div><span><small class="eyebrow">Marca a batir</small><br><b>${P[top.id].name}</b>: ${fmt(gid,top.score)}</span></div>`:'<b>Eres el primero en jugar el reto de hoy.</b>'}
-      ${todayMod&&gid===todayGame.id?`<span class="note"><b>Modificador de hoy: ${todayMod.name}.</b> ${todayMod.desc}</span>`:''}
+      ${todayMod&&gid===todayGame.id?`<span class="note"><img class="hic" src="img/mod_${todayMod.k}.webp" alt="" style="width:24px;height:24px"> <b>Modificador de hoy: ${todayMod.name}.</b> ${todayMod.desc}</span>`:''}
       <span class="note">${mine!=null?`Tu récord en este juego: ${fmt(gid,mine)}`:'Aún no tienes marca en este juego.'}${revanchaToday(me)?' · <b>Revancha ×2 activa</b>':''}</span></div>
     <div class="count" id="cd" hidden></div>
     <button class="btn red" id="cd-go" style="font-size:22px;padding:14px 30px">¡Empezar!</button>
@@ -901,7 +902,7 @@ function modFor(date){
 const todayMod=modFor(TODAY);
 function applyMod(m){
   if(!m)return;ovIn.dataset.mod=m.k;
-  const first=ovIn.firstElementChild;const tag=document.createElement('div');tag.className='mod-tag';tag.innerHTML=`<b>${m.name}</b> ${m.desc}`;
+  const first=ovIn.firstElementChild;const tag=document.createElement('div');tag.className='mod-tag';tag.innerHTML=`<img class="hic" src="img/mod_${m.k}.webp" alt="" style="width:22px;height:22px;margin-right:4px"><b>${m.name}</b> ${m.desc}`;
   if(first)first.after(tag);else ovIn.prepend(tag);
   if(m.k==='niebla'){const f=document.createElement('div');f.className='mod-fog';ovIn.appendChild(f);
     const target=()=>{let best=null,ba=0;[...ovIn.children].slice(1).forEach(el=>{if(el.classList.contains('mod-tag')||el===f)return;const r=el.getBoundingClientRect(),A=r.width*r.height;if(A>ba){ba=A;best=r}});const cv=ovIn.querySelector('#g-cv');return cv?cv.getBoundingClientRect():best};
@@ -941,7 +942,7 @@ function bossState(wk=WEEKKEY){
   return BOSSC[wk]={b:bossOf(wk),hp,tot:Math.min(tot,hp),dead,killer,per,perDay,mvp:mvp&&mvp[1]>0?mvp[0]:null};
 }
 function bossesBeaten(id){let n=0;for(let k=1;k<=4;k++){const s=bossState(addDays(WEEKKEY,-7*k));if(s.dead&&s.per[id]>0)n++}const s=bossState();if(s.dead&&s.per[id]>0)n++;return n}
-function bossSVG(b,dead,size=96){
+function bossSVG(b,dead,size=96){const bi=BOSSES.indexOf(b);if(bi>=0)return `<img src="img/${dead?'bossd':'boss'}_${bi}.webp" alt="" style="width:${size}px;height:${size}px;object-fit:contain;display:block">`;
   const c=b.c,eye=dead?`<path d="M38 50l12 12M50 50L38 62M70 50l12 12M82 50L70 62" stroke="#1A1A1A" stroke-width="5" stroke-linecap="round"/>`
     :`<path d="M34 46l18 8M86 46l-18 8" stroke="#1A1A1A" stroke-width="5" stroke-linecap="round"/><circle cx="45" cy="60" r="7" fill="#FAF7F0" stroke="#1A1A1A" stroke-width="3"/><circle cx="75" cy="60" r="7" fill="#FAF7F0" stroke="#1A1A1A" stroke-width="3"/><circle cx="46" cy="61" r="3" fill="#1A1A1A"/><circle cx="74" cy="61" r="3" fill="#1A1A1A"/>`;
   return `<svg viewBox="0 0 120 120" width="${size}" height="${size}" aria-hidden="true" style="${dead?'filter:grayscale(1);opacity:.75':''}">
@@ -1019,13 +1020,13 @@ function renderNews(){
      <div class="bar hp"><i style="width:${100-pct}%"></i></div>
      <small>${B.dead?`¡Derrotado! Golpe final de <b>${P[B.killer].name}</b>.`:`Vida ${B.hp-B.tot}/${B.hp}. ${B.b.q}`}</small>
      <small>Tu daño: <b>${mine}</b>${B.mvp?` · Más daño: <b>${P[B.mvp].name}</b> (${B.per[B.mvp]})`:''}</small></div></div>
-   <div class="panel stack news" style="gap:6px"><div class="row" style="justify-content:space-between"><h3>Crónica</h3>
+   <div class="panel stack news" style="gap:6px"><div class="row" style="justify-content:space-between"><h3><img class="hic" src="img/ic_cronica.webp" alt="" style="width:30px;height:30px"> Crónica</h3>
      <div class="seg"><button class="chip ${d!==TODAY?'on':''}" id="cn-ay">Ayer</button><button class="chip ${d===TODAY?'on':''}" id="cn-hoy">Hoy</button></div></div>
      ${c.lines.map((l,i)=>`<p style="margin:0" class="${i?'':'lead'}">${l}</p>`).join('')}
      <div class="row"><button class="btn" id="cn-share" style="font-size:14px;padding:6px 12px">Compartir crónica</button></div><p class="note" id="cn-ok" style="margin:0" hidden></p></div>
    ${sk.next||gs?`<div class="panel stack" style="gap:6px">${sk.next?`<div class="row" style="justify-content:space-between"><h3>Próxima recompensa</h3><span class="eyebrow">${sk.best}/${sk.next.d} días</span></div>
-     <div class="bar"><i style="width:${Math.min(100,sk.best/sk.next.d*100)}%"></i></div><p class="note" style="margin:0"><b>${sk.next.t}</b>: ${sk.next.r}. Se gana con tu mejor racha y no se pierde nunca.</p>`:''}
-     ${gs?`<p class="note" style="margin:0"><b>Racha de grupo: ${gs} ${gs===1?'día':'días'}</b> jugando todos el reto.${gs>=7?' ¡Sello de grupo imparable!':gs>=3?' ¡Seguid así!':''}</p>`:''}</div>`:''}`;
+     <div class="bar"><i style="width:${Math.min(100,sk.best/sk.next.d*100)}%"></i></div><p class="note" style="margin:0"><img class="hic" src="img/md_${SK_TIERS.indexOf(sk.next)}.webp" alt="" style="width:30px;height:30px;filter:grayscale(.85);opacity:.7"> <b>${sk.next.t}</b>: ${sk.next.r}. Se gana con tu mejor racha y no se pierde nunca.</p>`:''}
+     ${gs?`<p class="note" style="margin:0"><img class="hic" src="img/ic_grupo.webp" alt="" style="width:24px;height:24px"> <b>Racha de grupo: ${gs} ${gs===1?'día':'días'}</b> jugando todos el reto.${gs>=7?' ¡Sello de grupo imparable!':gs>=3?' ¡Seguid así!':''}</p>`:''}</div>`:''}`;
   $('#cn-ay').onclick=()=>{chronDay=addDays(TODAY,-1);renderNews()};$('#cn-hoy').onclick=()=>{chronDay=TODAY;renderNews()};
   $('#cn-share').onclick=()=>shareText(chronicleText(c),$('#cn-ok'));
   if($('#pn-yes')){$('#pn-yes').onclick=async()=>{const e=await enablePush();if(e){store.set('rdm_push_nudge',1);alertBox(e)}renderNews();renderPush()};$('#pn-no').onclick=()=>{store.set('rdm_push_nudge',1);renderNews()}}
@@ -1067,7 +1068,7 @@ function renderPorra(){
   const el=$('#hoy-porra');if(!el)return;
   if(PLAYERS.length<2){el.innerHTML='';return}
   const mb=myBet(TOMORROW),y=betDay(addDays(TODAY,-1)),others=allBets().filter(b=>b.date===TOMORROW&&b.from!==me&&P[b.from]&&P[b.pick]);
-  el.innerHTML=`<div class="panel stack" style="gap:8px"><div class="row" style="justify-content:space-between"><h3>Porra de mañana</h3><span class="eyebrow">${betPoints(WEEK)[me]||0} pts esta semana</span></div>
+  el.innerHTML=`<div class="panel stack" style="gap:8px"><div class="row" style="justify-content:space-between"><h3><img class="hic" src="img/ic_porra.webp" alt="" style="width:30px;height:30px"> Porra de mañana</h3><span class="eyebrow">${betPoints(WEEK)[me]||0} pts esta semana</span></div>
     <p class="note" style="margin:0">¿Quién ganará el reto de mañana? Acertar da 2 puntos, 3 si eres el único. Puedes cambiarla hasta medianoche.</p>
     <div class="picker porra" id="bt-pick">${PLAYERS.map(p=>`<button class="pick ${mb&&mb.pick===p.id?'on':''}" data-pick="${p.id}"><div class="ava" style="--s:46px;--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div><small>${p.name}</small></button>`).join('')}</div>
     <p class="note" id="bt-msg" style="margin:0;font-weight:900">${mb?`Tu apuesta: <b>${P[mb.pick].name}</b>${mb.pick===me?' (¡confianza ciega!)':''}.`:'Aún no has apostado.'}</p>
@@ -1171,14 +1172,14 @@ function ghPosAt(){const g=GH&&GH.ghost;if(!g||!g.ps||!g.ps.length||GH.t0==null)
   const a=ps[lo],b=ps[hi];if(a[3]!==b[3])return a;const k=(t-a[0])/((b[0]-a[0])||1);return [t,a[1]+(b[1]-a[1])*k,a[2]+(b[2]-a[2])*k,a[3]]}
 const GHLAB={minigolf:v=>`hoyo ${Math.floor(v/100)+1} · ${v%100} golpes`,equilibrio:v=>`${v} s`,zip:v=>`${v}/25 casillas`,flood:v=>`${v}/100 pintadas`,lightsout:v=>`${v}/25 apagadas`,tuberias:v=>`${v}/25 con agua`,deslizante:v=>`${v}/8 en su sitio`,parejas:v=>`${v}/8 parejas`,sopa:v=>`${v}/6 palabras`,angulo:v=>`ronda ${v}`,tarta:v=>`ronda ${v}`,intruso:v=>`ronda ${v}`,cuantos:v=>`${v} puntos`,simon:v=>`${v} rondas`};
 function ghBadge(){
-  if(!GH||!GH.ghost)return;const g=GH.ghost,el=document.createElement('div');el.className='gh-tag';
+  if(!GH||!GH.ghost)return;const g=GH.ghost,el=document.createElement('div');el.className='gh-tag';el.style.backgroundImage='url(img/ic_fantasma.webp)';
   const first=ovIn.firstElementChild;if(first)first.after(el);else ovIn.prepend(el);
   const lab=v=>v==null?'—':(GHLAB[GH.gid]?GHLAB[GH.gid](v):String(v));
   const tick=()=>{if(!el.isConnected)return;const s=ghVal();
-    if(!g.tr||!g.tr.length)el.innerHTML=`👻 <b>${g.n}</b> · marca a batir: ${fmtShort(GH.gid,g.s)}`;
-    else if(s&&s.done)el.innerHTML=`👻 <b>${g.n}</b> terminó: ${fmtShort(GH.gid,g.s)}`;
+    if(!g.tr||!g.tr.length)el.innerHTML=`<b>${g.n}</b> · marca a batir: ${fmtShort(GH.gid,g.s)}`;
+    else if(s&&s.done)el.innerHTML=`<b>${g.n}</b> terminó: ${fmtShort(GH.gid,g.s)}`;
     else{const me_=GH.last,gv=s?s.v:null;let d='';if(GH.gid!=='minigolf'&&me_!=null&&gv!=null){const df=me_-gv;d=df>0?` · <span class="ahead">vas por delante</span>`:df<0?` · <span class="behind">vas por detrás</span>`:' · empatados'}
-      el.innerHTML=`👻 <b>${g.n}</b>: ${lab(gv)}${d}`}
+      el.innerHTML=`<b>${g.n}</b>: ${lab(gv)}${d}`}
     timers.push(setTimeout(tick,150))};tick();
 }
 // dibujo del fantasma en los juegos con algo que se mueve
@@ -1217,12 +1218,12 @@ async function openPractice(gid){
   try{const rows=(await ghostsFor(gid)).filter(ghFair);rows.forEach(r=>{if(r.id===me){if(!mine||ghBetter(gid,r.s,mine.s))mine=r}else others.push(r)})}catch(e){}
   others.sort((a,b)=>G[gid].better==='high'?b.s-a.s:a.s-b.s);const top=others[0];
   if(!mine&&!top){startGame(gid,false);return}
-  const opt=(k,img,t,sub)=>`<button class="gh-opt" data-k="${k}"><img src="${img}" alt=""><span><b>${t}</b><small>${sub}</small></span></button>`;
+  const opt=(k,img,t,sub)=>`<button class="gh-opt" data-k="${k}"><img src="${img}" alt="">${k==='solo'?'':'<img class="hic" src="img/ic_fantasma.webp" alt="" style="width:30px;height:30px;border:0;background:none;border-radius:0;margin-left:-22px;margin-top:22px">'}<span><b>${t}</b><small>${sub}</small></span></button>`;
   openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Práctica</span><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
     <img src="img/ic_${gid}.webp" alt="" style="width:90px;height:90px;object-fit:contain"><h1>${G[gid].name}</h1>
     <div class="stack" style="width:100%;gap:8px">${opt('solo',`img/av_${me}.webp`,'Jugar sin fantasma','Práctica normal')}
-    ${mine?opt('mine',`img/av_${me}.webp`,'👻 Contra tu fantasma',`Tu mejor partida grabada: ${fmtShort(gid,mine.s)} · mismo nivel`):''}
-    ${top?opt('top',`img/av_${top.id}.webp`,`👻 Contra ${P[top.id].name}`,`${fmtShort(gid,top.s)}${fameRanking(gid)[0]&&fameRanking(gid)[0].id===top.id?' · récord del grupo':''} · mismo nivel`):''}</div>
+    ${mine?opt('mine',`img/av_${me}.webp`,'Contra tu fantasma',`Tu mejor partida grabada: ${fmtShort(gid,mine.s)} · mismo nivel`):''}
+    ${top?opt('top',`img/av_${top.id}.webp`,`Contra ${P[top.id].name}`,`${fmtShort(gid,top.s)}${fameRanking(gid)[0]&&fameRanking(gid)[0].id===top.id?' · récord del grupo':''} · mismo nivel`):''}</div>
     <p class="note" style="margin:0">El fantasma repite su partida a tu lado, en el mismo nivel. Solo en práctica: el reto oficial siempre es a pelo.</p>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   ovIn.querySelectorAll('.gh-opt').forEach(b=>b.onclick=()=>{const k=b.dataset.k;
@@ -1231,7 +1232,7 @@ async function openPractice(gid){
 }
 // resultado contra el fantasma, para la pantalla final
 function ghVerdict(gid,score){const g=GH&&GH.gid===gid&&GH.ghost;if(!g)return '';const win=ghBetter(gid,score,g.s)&&score!==g.s,tie=score===g.s;
-  return `<div class="gh-res ${win?'win':tie?'':'lose'}">👻 ${tie?'Empate':win?'Has ganado':'Has perdido'} contra ${g.n==='Tu fantasma'?'tu fantasma':g.n}: ${fmtShort(gid,score)} contra ${fmtShort(gid,g.s)}.</div>`}
+  return `<div class="gh-res ${win?'win':tie?'':'lose'}"><img class="hic" src="img/ic_fantasma.webp" alt="" style="width:26px;height:26px"> ${tie?'Empate':win?'Has ganado':'Has perdido'} contra ${g.n==='Tu fantasma'?'tu fantasma':g.n}: ${fmtShort(gid,score)} contra ${fmtShort(gid,g.s)}.</div>`}
 function ghForDuel(gid){const m=myGhosts()[gid];const b=bestOf(me,gid);if(m&&ghFair(m)&&b!=null&&+m.s===+b){const {up,...d}=m;return d}return null}
 
 // ---------- avatar compuesto ----------
@@ -1273,7 +1274,7 @@ function renderHoy(){
   const m=myOfficial(TODAY);
   $('#btn-reto').disabled=!!m; $('#btn-reto').textContent=m?'Reto hecho':'Jugar reto';
   $('#reto-status').textContent=m?`Tu resultado de hoy: ${fmt(todayGame.id,m.score)}. Mañana, nuevo reto.`:'Un intento oficial por día. El mismo reto para todos.';
-  {const cm=$('#ch-mod');cm.hidden=!todayMod;if(todayMod)cm.innerHTML=`<b>Modificador: ${todayMod.name}</b>${todayMod.desc} Igual para todos, también al practicarlo.`}
+  {const cm=$('#ch-mod');cm.hidden=!todayMod;if(todayMod)cm.innerHTML=`<img class="hic" src="img/mod_${todayMod.k}.webp" alt="" style="width:34px;height:34px;float:left;margin-right:8px"><b>Modificador: ${todayMod.name}</b>${todayMod.desc} Igual para todos, también al practicarlo.`}
   $('#games').innerHTML=GAMES.map(g=>`<button class="game ${g.play?'':'lock'}" data-g="${g.id}" ${g.play?'':'aria-disabled="true"'}><img src="img/ic_${g.id}.webp" alt=""><span>${g.name}</span><small>${CATNAME[g.cat]}${g.practice?' · práctica':''}</small></button>`).join('');
   net();
 }
@@ -1312,14 +1313,14 @@ function renderRank(){
   }
   else if(rmode==='day'){const R=dayRanking(TODAY);rows=R.rows;unitGame=R.game.id}else if(rmode==='prog'){rows=progressRanking(TODAY);unitGame=todayGame.id}else if(rmode==='month'){rows=seasonOf(monthKey(TODAY)).rows}else rows=weekRanking();
   if(rmode==='month'){const S=seasonOf(monthKey(TODAY)),pk=prevMonth(monthKey(TODAY)),pv=palmares()[pk];
-    $('#fame-note').hidden=false;$('#fame-note').innerHTML=`<b>Temporada de ${monthName(S.k)}</b>: ${S.left?`quedan ${S.left} ${S.left===1?'día':'días'}`:'último día'}. Al acabar el mes se corona al Senpai del Mes y se empieza de cero.${pv?`<br>Campeón de ${monthName(pk)}: <b>${P[pv.champ]?P[pv.champ].name:'—'}</b>${pv.mej&&P[pv.mej]?` · más mejorado: ${P[pv.mej].name}`:''}${pv.porra&&P[pv.porra]?` · adivino: ${P[pv.porra].name}`:''}.`:''}`}
-  $('#rank-note').innerHTML=rmode==='month'?'Puntos del mes: en cada reto suma 1 punto por cada jugador al que superas, más 1 por jugar.':rmode==='prog'?'<b>Progreso:</b> cada uno contra su propia media en el juego de hoy (nota 0–100). Gana quien más mejora, no quien más sabe. * = aún sin media en este juego: se compara con su nivel de la categoría.':(ONLINE?'Ranking del grupo. Los resultados jugados sin conexión aparecen al sincronizar.':'Rivales con resultados de ejemplo generados para el prototipo. Tus partidas son reales y se guardan en este navegador.');
+    $('#fame-note').hidden=false;$('#fame-note').innerHTML=`<img class="hic" src="img/ic_temporada.webp" alt="" style="width:26px;height:26px"> <b>Temporada de ${monthName(S.k)}</b>: ${S.left?`quedan ${S.left} ${S.left===1?'día':'días'}`:'último día'}. Al acabar el mes se corona al Senpai del Mes y se empieza de cero.${pv?`<br>Campeón de ${monthName(pk)}: <b>${P[pv.champ]?P[pv.champ].name:'—'}</b>${pv.mej&&P[pv.mej]?` · más mejorado: ${P[pv.mej].name}`:''}${pv.porra&&P[pv.porra]?` · adivino: ${P[pv.porra].name}`:''}.`:''}`}
+  $('#rank-note').innerHTML=rmode==='month'?'Puntos del mes: en cada reto suma 1 punto por cada jugador al que superas, más 1 por jugar.':rmode==='prog'?'<img class="hic" src="img/ic_mejora.webp" alt="" style="width:24px;height:24px"> <b>Progreso:</b> cada uno contra su propia media en el juego de hoy (nota 0–100). Gana quien más mejora, no quien más sabe. * = aún sin media en este juego: se compara con su nivel de la categoría.':(ONLINE?'Ranking del grupo. Los resultados jugados sin conexión aparecen al sincronizar.':'Rivales con resultados de ejemplo generados para el prototipo. Tus partidas son reales y se guardan en este navegador.');
   const senpai=(rmode==='week'||rmode==='month')&&rows[0]&&rows[0].score>0?rows[0].id:null;
   const top=rows.slice(0,3); const pos=[[50,6,'84px'],[22,24,'70px'],[78,30,'66px']];
   $('#podium').innerHTML=top.map((r,i)=>r.score==null?'':`<div class="spot" style="left:${pos[i][0]}%;top:${pos[i][1]}%">${avatarHTML(r.id,{size:pos[i][2]})}<b>${i===0&&senpai?(rmode==='month'?'Senpai del mes · ':'Senpai · '):''}${P[r.id].name}</b></div>`).join('');
   $('#rank-list').innerHTML=rows.map((r,i)=>{const T=title(catsOf(r.id),r.id);const st=stateOf(r.id);
     const sc=r.score==null?`—<small>no ha jugado</small>`:rmode==='prog'?`${fmtDelta(r.score)}${r.est?'*':''}<small style="display:block">${fmtShort(unitGame,r.raw)}</small>`:(rmode!=='week'&&rmode!=='month'?`${fmtShort(unitGame,r.score)}<small style="display:block">${rmode==='fame'&&r.date?r.date.slice(8)+'/'+r.date.slice(5,7):G[unitGame].label}</small>`:`${r.score}<small>puntos</small>`);
-    return `<button class="item ${r.id===me?'me':''}" data-p="${r.id}"><span class="pos">${r.score==null?'·':i+1}</span>${avatarHTML(r.id)}<span style="min-width:0"><span class="nm">${P[r.id].name}${r.id===me?' (tú)':''}</span>${reactsTo(r.id).slice(0,3).map(x=>`<img class="rx-mini" src="${reactImg(x.from,x.kind)}" alt="">`).join('')}<br><span class="mt">${T.t}${st?' · '+STATE_TXT[st]:''}${(()=>{const k=skInfo(r.id);return (k.tier?' · '+k.tier.t:'')+(k.cur>=3?` · racha ${k.cur}`:'')})()}${r.rev?' · revancha ×2':''}</span></span><span class="sc">${sc}</span></button>`}).join('');
+    return `<button class="item ${r.id===me?'me':''}" data-p="${r.id}"><span class="pos">${r.score==null?'·':i+1}</span>${avatarHTML(r.id)}<span style="min-width:0"><span class="nm">${P[r.id].name}${r.id===me?' (tú)':''}</span>${(()=>{const t=skInfo(r.id).tier;return t?`<img class="hic" src="img/md_${SK_TIERS.indexOf(t)}.webp" alt="${t.t}" title="${t.t}" style="width:20px;height:20px;margin-left:4px">`:''})()}${reactsTo(r.id).slice(0,3).map(x=>`<img class="rx-mini" src="${reactImg(x.from,x.kind)}" alt="">`).join('')}<br><span class="mt">${T.t}${st?' · '+STATE_TXT[st]:''}${(()=>{const k=skInfo(r.id);return (k.tier?' · '+k.tier.t:'')+(k.cur>=3?` · racha ${k.cur}`:'')})()}${r.rev?' · revancha ×2':''}</span></span><span class="sc">${sc}</span></button>`}).join('');
 }
 
 function radarSVG(cats){
@@ -1340,8 +1341,8 @@ function renderPerfil(){
   $('#p-name').textContent=P[me].name; $('#p-mote').textContent=T.t;
   {const sk=skInfo(me);document.querySelector('#s-perfil .hero').classList.toggle('skbg',sk.best>=30);
     $('#p-sk').innerHTML=`<div class="row" style="justify-content:space-between"><h3>Recompensas de racha</h3><span class="eyebrow">Mejor: ${sk.best} ${sk.best===1?'día':'días'}</span></div>
-     <div class="tiers">${SK_TIERS.map(t=>`<div class="tier ${sk.best>=t.d?'ok':''}"><b>${t.d}</b><span><b style="border:0;background:none;padding:0;min-width:0">${t.t}</b> · ${t.r}</span></div>`).join('')}</div>
-     <p class="note" style="margin:0">${sk.next?`Te faltan ${sk.next.d-sk.best} días de racha para «${sk.next.t}».`:'Lo tienes todo. Leyenda.'} Lo que ganas se queda aunque pierdas la racha.${bossesBeaten(me)?` · Jefes derrotados: ${bossesBeaten(me)}`:''}</p>
+     <div class="tiers">${SK_TIERS.map(t=>`<div class="tier ${sk.best>=t.d?'ok':''}"><img src="img/md_${SK_TIERS.indexOf(t)}.webp" alt="" style="width:40px;height:40px;object-fit:contain;flex:none"><b>${t.d}</b><span><b style="border:0;background:none;padding:0;min-width:0">${t.t}</b> · ${t.r}</span></div>`).join('')}</div>
+     <p class="note" style="margin:0">${sk.next?`Te faltan ${sk.next.d-sk.best} días de racha para «${sk.next.t}».`:'Lo tienes todo. Leyenda.'} Lo que ganas se queda aunque pierdas la racha.${bossesBeaten(me)?` · <img class="hic" src="img/ic_jefes.webp" alt="" style="width:22px;height:22px"> Jefes derrotados: ${bossesBeaten(me)}`:''}</p>
      ${(()=>{const t=titlesOf(me);const a=[t.champ&&`Senpai del Mes ×${t.champ}`,t.mej&&`Más mejorado ×${t.mej}`,t.porra&&`Adivino ×${t.porra}`].filter(Boolean);return a.length?`<p class="note" style="margin:0"><b>Títulos de temporada:</b> ${a.join(' · ')}</p>`:''})()}`;
     $('#p-rank').textContent=(T.rank?'Rango '+T.t:'Sin rango todavía')+(st?' · '+STATE_TXT[st]:'')+(sk.tier?' · '+sk.tier.t:'')+` · Racha ${sk.cur} (mejor ${sk.best})`+(groupGoal(WEEK).done?' · Sello de equipo':'')}
   $('#p-form').textContent=FORMS[pw]; $('#p-formbar').innerHTML=FORMS.map((_,i)=>`<span class="${i<=pw?'f':''}"></span>`).join('');
