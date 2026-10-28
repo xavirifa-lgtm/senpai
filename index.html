@@ -451,7 +451,7 @@ const EXP={ // expresiones disponibles
 
 };
 function exp(id,e){ if(EXP[id]&&EXP[id][e]) return EXP[id][e]; return `img/ex_${id}_${e}.webp` }
-const CHIBI={nina7:['win','lose'],nino12:['win','lose'],nina12:['win','lose'],chica15:['win'],chico15:['win','lose'],hombre46:['win','lose'],mujer47:['win','lose','aura','burla'],nino7:['win','lose','aura','burla']};
+const CHIBI=Object.fromEntries(['nino7','nina7','nino12','nina12','chico15','chica15','hombre46','mujer47'].map(a=>[a,['win','lose','aura','burla']]));
 const FORMS=['Novato','Entrenado','Despertado','Ascendido','Forma final'];
 const FORMLAYER=[null,'entrenado','despertado','ascendido','final'];
 
@@ -1150,6 +1150,8 @@ function pushNudgeHTML(){
 // ===== Fantasma: graba cada partida y permite repetirla contra otra (nunca en el reto oficial) =====
 let GH=null,GHNEXT=null;
 const GHOST_VIS={laberinto:1,minigolf:1,apilar:1};
+const GH_FR={equilibrio:1,encestar:1,apilar:1,fruta:1,tiles:1}; // juegos cuyo fantasma se dibuja con «fotogramas»
+const ghHasMoves=(gid,g)=>!GH_FR[gid]||!!(g&&g.fr&&g.fr.length);
 function ghBegin(gid,official){
   const nx=!official&&GHNEXT&&GHNEXT.g===gid?GHNEXT:null;GHNEXT=null;
   GH={gid,official,seed:official?hash(gid+TODAY):(nx?nx.seed:(Math.random()*4294967296)>>>0),t0:null,tr:[],ps:[],fr:[],last:null,ghost:nx};
@@ -1158,7 +1160,7 @@ function ghT(){return GH&&GH.t0!=null?performance.now()-GH.t0:0}
 function ghMark(v){if(!GH)return;if(GH.t0==null)GH.t0=performance.now();if(GH.last===v)return;GH.last=v;if(GH.tr.length<600)GH.tr.push([Math.round(ghT()),v])}
 function ghPos(x,y,h){if(!GH||GH.t0==null)return;const t=ghT(),L=GH.ps[GH.ps.length-1];if(L&&t-L[0]<100)return;if(L&&Math.abs(L[1]-x)<1&&Math.abs(L[2]-y)<1&&L[3]===h)return;if(GH.ps.length<1500)GH.ps.push(h==null?[Math.round(t),Math.round(x),Math.round(y)]:[Math.round(t),Math.round(x),Math.round(y),h])}
 // fotogramas del fantasma: valores numéricos (ángulo, posición…) unas 10-25 veces por segundo
-const GHA=0.28;
+const GHA=0.4;
 function ghFrame(vals,minDt=100,force){if(!GH||GH.t0==null)return;const t=ghT(),L=GH.fr[GH.fr.length-1];if(!force&&L&&t-L[0]<minDt)return;if(GH.fr.length<2500)GH.fr.push([Math.round(t),...vals.map(v=>Math.round(v))])}
 function ghFrameAt(){const g=GH&&GH.ghost;if(!g||!g.fr||!g.fr.length||GH.t0==null)return null;const t=ghT(),f=g.fr;if(t>f[f.length-1][0]+400)return null;if(t<=f[0][0])return f[0];
   let lo=0,hi=f.length-1;if(t>=f[hi][0])return f[hi];while(hi-lo>1){const m=(lo+hi)>>1;if(f[m][0]<=t)lo=m;else hi=m}
@@ -1191,7 +1193,9 @@ function ghBetter(gid,a,b){return b==null||(G[gid].better==='high'?a>b:a<b)}
 function ghSave(gid,score){
   if(!GH||GH.gid!==gid)return;const all=myGhosts(),cur=all[gid];
   const run={g:gid,s:score,seed:GH.seed,o:GH.official?1:0,d:TODAY,tr:GH.tr,ps:GH.ps,fr:GH.fr,du:Math.round(ghT())};
-  if(cur&&!ghBetter(gid,score,cur.s))return;run.up=0;all[gid]=run;store.set('rdm_ghosts',all);ghUpload();
+  // una partida grabada antes de que se guardaran los movimientos se sustituye por la nueva, aunque sea peor
+  const old=GH_FR[gid]&&cur&&!(cur.fr&&cur.fr.length);
+  if(cur&&!old&&!ghBetter(gid,score,cur.s))return;run.up=0;all[gid]=run;store.set('rdm_ghosts',all);ghUpload();
 }
 async function ghUpload(){
   if(!ONLINE||!sb||!myUid||!navigator.onLine)return;const all=myGhosts();let ch=false;
@@ -1215,15 +1219,15 @@ async function ghostsFor(gid){
 const ghFair=g=>g&&!(g.o&&g.d===TODAY);
 async function openPractice(gid){
   let mine=ghFair(myGhosts()[gid])?myGhosts()[gid]:null;const others=[];
-  try{const rows=(await ghostsFor(gid)).filter(ghFair);rows.forEach(r=>{if(r.id===me){if(!mine||ghBetter(gid,r.s,mine.s))mine=r}else others.push(r)})}catch(e){}
+  try{const rows=(await ghostsFor(gid)).filter(ghFair);rows.forEach(r=>{if(r.id===me){const hm=ghHasMoves(gid,r),mm=ghHasMoves(gid,mine);if(!mine||(hm&&!mm)||(hm===mm&&ghBetter(gid,r.s,mine.s)))mine=r}else others.push(r)})}catch(e){}
   others.sort((a,b)=>G[gid].better==='high'?b.s-a.s:a.s-b.s);const top=others[0];
   if(!mine&&!top){startGame(gid,false);return}
   const opt=(k,img,t,sub)=>`<button class="gh-opt" data-k="${k}"><img src="${img}" alt="">${k==='solo'?'':'<img class="hic" src="img/ic_fantasma.webp" alt="" style="width:30px;height:30px;border:0;background:none;border-radius:0;margin-left:-22px;margin-top:22px">'}<span><b>${t}</b><small>${sub}</small></span></button>`;
   openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Práctica</span><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
     <img src="img/ic_${gid}.webp" alt="" style="width:90px;height:90px;object-fit:contain"><h1>${G[gid].name}</h1>
     <div class="stack" style="width:100%;gap:8px">${opt('solo',`img/av_${me}.webp`,'Jugar sin fantasma','Práctica normal')}
-    ${mine?opt('mine',`img/av_${me}.webp`,'Contra tu fantasma',`Tu mejor partida grabada: ${fmtShort(gid,mine.s)} · mismo nivel`):''}
-    ${top?opt('top',`img/av_${top.id}.webp`,`Contra ${P[top.id].name}`,`${fmtShort(gid,top.s)}${fameRanking(gid)[0]&&fameRanking(gid)[0].id===top.id?' · récord del grupo':''} · mismo nivel`):''}</div>
+    ${mine?opt('mine',`img/av_${me}.webp`,'Contra tu fantasma',`Tu mejor partida grabada: ${fmtShort(gid,mine.s)} · mismo nivel${ghHasMoves(gid,mine)?'':' · grabada antes de los movimientos: solo verás el marcador'}`):''}
+    ${top?opt('top',`img/av_${top.id}.webp`,`Contra ${P[top.id].name}`,`${fmtShort(gid,top.s)}${ghHasMoves(gid,top)?'':' · sin movimientos grabados'}${fameRanking(gid)[0]&&fameRanking(gid)[0].id===top.id?' · récord del grupo':''} · mismo nivel`):''}</div>
     <p class="note" style="margin:0">El fantasma repite su partida a tu lado, en el mismo nivel. Solo en práctica: el reto oficial siempre es a pelo.</p>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   ovIn.querySelectorAll('.gh-opt').forEach(b=>b.onclick=()=>{const k=b.dataset.k;
