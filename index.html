@@ -2859,9 +2859,9 @@ function ordena(official){if(muNoAudio())return;
 // --- Concierto: toca la melodía al compás ---
 function concierto(official){if(muNoAudio())return;
   const r=rngFor('concierto',official),W=340,H=480,LY=408,FALL=1.8,COL=['#E63946','#FFC93C','#3A86FF'];
-  const pool=['alegria','cucaracha','turca','cascabel','granja','martinillo','gruta','danubio','tell','estrellita'].map(id=>MELI[id]);const two=shuffle(pool.slice(),r).slice(0,2);
+  const pool=['alegria','cucaracha','turca','cumple','granja','martinillo','gruta','danubio','estrellita','primavera'].map(id=>MELI[id]);const two=shuffle(pool.slice(),r).slice(0,2);
   const notes=[],beats=[],songs=[];let T=2.2;
-  two.forEach((M,si)=>{const bpm=M.bpm*(si?1.15:1),ev=muEvents(M,bpm),ms=ev.map(e=>e.m).sort((a,b)=>a-b),lo=ms[Math.floor(ms.length/3)],hi=ms[Math.floor(ms.length*2/3)];let last=-9;
+  two.forEach((M,si)=>{const bpm=M.bpm*(si?1.15:1),ev=muEvents(M,bpm),ms=[...new Set(ev.map(e=>e.m))].sort((a,b)=>a-b),lo=ms[Math.floor(ms.length/3)],hi=ms[Math.floor(ms.length*2/3)];let last=-9;
     songs.push({t:T,M});ev.forEach(e=>{if(e.t-last<.15)return;last=e.t;notes.push({t:T+e.t,m:e.m,lane:e.m<lo?0:e.m<hi||lo===hi?1:2,st:0})});
     const L=ev[ev.length-1],end=L.t+L.d,sp=60/bpm;for(let b=0;b*sp<end;b++)beats.push({t:T+b*sp,sp});T+=end+sp*2});
   const END=notes[notes.length-1].t+1;
