@@ -269,6 +269,44 @@ label{font-weight:900;font-size:12px;letter-spacing:.06em;text-transform:upperca
 .slide button{border:0;background:url(img/sp_ficha.webp) center/100% 100% no-repeat;font-family:var(--display);font-size:38px;cursor:pointer;border-radius:8px;-webkit-text-stroke:1.5px var(--ink);padding:0}
 input[type=range]{accent-color:var(--red)}
 .cv{max-width:100%;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);touch-action:none;display:block;background:var(--paper)}
+/* ===== juegos musicales ===== */
+.mu-art{width:var(--s);height:var(--s);border-radius:50%;background:radial-gradient(circle,#fff 0 38%,var(--yellow) 39% 100%);border:4px solid var(--ink);display:grid;place-items:center;position:relative;flex:none}
+.mu-art img{width:112%;height:112%;object-fit:contain;grid-area:1/1;position:relative;z-index:1}.mu-art .mu-ph{grid-area:1/1;font-style:normal;font-size:calc(var(--s)*.42)}
+.mu-art:has(img){background:none;border-color:transparent}.mu-art:has(img) .mu-ph{display:none}
+.mu-art.beat{animation:mubeat .16s ease-out}@keyframes mubeat{50%{transform:scale(1.09)}}
+.mu-art.spin img,.mu-art.spin .mu-ph,.yt-cover.on .mu-art img,.yt-cover.on .mu-art .mu-ph{animation:muspin 1.6s linear infinite}@keyframes muspin{to{transform:rotate(360deg)}}
+.mu-drum{background:none;border:0;padding:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--display);color:var(--ink)}
+.mu-drum:disabled{opacity:.75}.mu-drum.beat .mu-art,.mu-drum.beat{animation:mubeat .14s ease-out}
+.mu-pad{border:4px solid var(--ink);background:var(--paper);box-shadow:4px 4px 0 var(--ink);padding:14px 26px;border-radius:18px;font-size:18px}
+.mu-dots{display:flex;gap:6px;min-height:14px;flex-wrap:wrap;justify-content:center}.mu-dots i{width:14px;height:14px;border-radius:50%;background:var(--ink)}
+.mu-beats{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;width:min(320px,100%)}.mu-beats i{aspect-ratio:1;border-radius:50%;border:3px solid var(--ink);background:var(--paper)}
+.mu-beats i:nth-child(n+9){border-style:dashed}.mu-beats i.on{background:var(--yellow)}.mu-beats i.me{background:var(--green)}
+.mu-lives{color:var(--red);font-size:22px;letter-spacing:2px}
+.mu-ans{font-size:17px;padding:12px 14px}
+.mu-xilo{display:flex;align-items:flex-end;justify-content:center;gap:8px;width:min(340px,100%);height:210px}
+.mu-xilo button{flex:1;height:var(--h);background:var(--c);border:4px solid var(--ink);border-radius:10px;box-shadow:0 6px 0 var(--ink);position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none!important}
+.mu-xilo button::before,.mu-xilo button::after{content:"";position:absolute;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#C9C2B4;border:2px solid var(--ink)}.mu-xilo button::before{top:10px}.mu-xilo button::after{bottom:10px}
+.mu-xilo button.lit{filter:brightness(1.4) saturate(1.2);transform:translateY(4px);box-shadow:0 2px 0 var(--ink)}.mu-xilo button:disabled{opacity:1;cursor:default}
+.mu-slide{position:relative;width:min(330px,100%);height:64px;border:4px solid var(--ink);border-radius:32px;background:linear-gradient(90deg,#3A86FF,#2BB673 50%,#E63946);touch-action:none;cursor:pointer}
+.mu-slide .mu-lo,.mu-slide .mu-hi{position:absolute;top:50%;transform:translateY(-50%);font-weight:900;font-size:12px;color:#fff;text-shadow:0 1px 2px #0008;pointer-events:none}.mu-lo{left:14px}.mu-hi{right:14px}
+.mu-knob{position:absolute;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:var(--yellow);border:4px solid var(--ink);box-shadow:0 3px 0 var(--ink);pointer-events:none}
+.mu-nums{display:flex;gap:10px}.mu-nums .btn{font-size:30px;min-width:64px;padding:10px}
+.mu-opts{display:flex;flex-direction:column;gap:8px;width:100%}.mu-opts .btn{font-size:15px;padding:10px 12px;text-align:left}
+.mu-opts .btn.ok,.duo-ops button.ok{background:var(--green);color:#fff}.mu-opts .btn.bad{background:var(--red);color:#fff}.mu-opts .btn.meh{background:var(--yellow)}
+#yg-o{display:grid;grid-template-columns:1fr 1fr}#yg-o .btn{text-align:center}
+.mu-chunks,.mu-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:min(340px,100%)}
+.mu-chunk{display:flex;flex-direction:column;border:3px solid var(--ink);background:var(--c);box-shadow:3px 3px 0 var(--ink)}.mu-chunk.used{opacity:.35}
+.mu-chunk button{font:inherit;border:0;background:none;cursor:pointer;color:var(--ink)}.mu-play{font-size:26px;padding:10px 0}.mu-put{font-weight:900;font-size:13px;background:var(--paper)!important;border-top:3px solid var(--ink)!important;padding:6px 0}
+.mu-slot{aspect-ratio:1;border:3px dashed var(--ink);background:var(--paper);font-family:var(--display);font-size:22px;color:#0005}.mu-slot.full{border-style:solid;background:var(--c);color:var(--ink);font-size:30px;cursor:pointer}
+.yt-box{position:relative;width:min(300px,100%);aspect-ratio:16/9;flex:none}.yt-box iframe,.yt-box>div:first-child{position:absolute;inset:0;width:100%;height:100%}
+.yt-cover{position:absolute;inset:0;pointer-events:none;background:var(--paper);border:4px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;z-index:2;text-align:center;padding:6px}
+.yt-cover b{display:none;font-family:var(--display);font-size:16px}.yt-cover.wait .yt-wait,.yt-cover.tap .yt-tap,.yt-cover.on .yt-on{display:block}.yt-cover.tap{background:var(--yellow);animation:mubeat 1s infinite}
+.sg-row{display:flex;align-items:center;gap:8px;border:3px solid var(--ink);background:var(--paper);padding:6px}.sg-row img{width:64px;height:48px;object-fit:cover;border:2px solid var(--ink)}.sg-row span{flex:1;min-width:0;display:flex;flex-direction:column}.sg-row small{color:var(--ink2)}.sg-row .btn{padding:4px 10px;font-size:14px}
+.inp{font:700 16px var(--body);border:3px solid var(--ink);padding:8px;width:100%;background:var(--paper);color:var(--ink);min-width:0}
+.mu-buzz{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--display);font-size:24px;color:var(--ink);cursor:pointer}
+.mu-dops{flex-direction:column;width:100%}.mu-dops button{font-size:15px!important;text-align:left;width:100%}
+.duo-mid .yt-box{width:200px}
+#du-src .btn.on{background:var(--ink);color:var(--yellow)}
 </style>
 
 </head>
@@ -427,6 +465,8 @@ const WEEKKEY=WEEK[0];
 const CATS=['memoria','logica','habilidad','percepcion','equilibrio'];
 const CATNAME={memoria:'Memoria',logica:'Lógica',habilidad:'Habilidad',percepcion:'Percepción',equilibrio:'Equilibrio'};
 const sec=ms=>(ms/1000).toFixed(1).replace('.',',')+' s';
+// los juegos musicales entran en el sorteo del reto desde este día (antes de esa fecha el reto de cada día no cambia)
+const MUSIC_FROM='2026-11-02';
 const GAMES=[
  {id:'simon',name:'Simon',cat:'memoria',desc:'Repite la secuencia de colores. Cada ronda añade uno.',better:'high',label:'rondas',short:s=>String(s),long:s=>`${s} ${s===1?'ronda':'rondas'}`,pts:[[0,0],[8,40],[13,70],[18,95],[22,100]],round:1},
  {id:'parejas',name:'Parejas',cat:'memoria',desc:'Encuentra las 8 parejas de cartas lo antes posible.',better:'low',label:'tiempo',short:sec,long:sec,pts:[[120000,0],[60000,40],[40000,70],[28000,95],[20000,100]],round:100},
@@ -461,7 +501,19 @@ const GAMES=[
  {id:'montones',name:'¿Dónde hay más?',cat:'percepcion',desc:'Dos montones de estrellas un instante. ¿Cuál tenía más?',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[500,40],[800,70],[1100,95],[1350,100]],round:10},
  {id:'camarero',name:'Camarero',cat:'equilibrio',desc:'Lleva la bandeja por el restaurante sin que se caiga nada.',better:'high',label:'€ de propina',short:s=>s+' €',long:s=>`${s} € de propina`,pts:[[0,0],[40,40],[80,70],[115,95],[130,100]],round:1},
  {id:'burbuja',name:'Nivel de burbuja',cat:'equilibrio',desc:'Mantén la burbuja en el centro mientras el suelo se mueve.',better:'high',label:'en el centro',short:s=>s.toFixed(1).replace('.',',')+' s',long:s=>`${s.toFixed(1).replace('.',',')} s en el centro`,pts:[[0,0],[10,40],[17,70],[24,95],[27,100]],round:0.1},
- {id:'esquiva',name:'Esquiva',cat:'equilibrio',desc:'Inclina el móvil para esquivar los obstáculos.',better:'high',label:'metros',short:s=>s+' m',long:s=>`${s} metros`,pts:[[0,0],[150,40],[300,70],[500,95],[650,100]],round:1}
+ {id:'esquiva',name:'Esquiva',cat:'equilibrio',desc:'Inclina el móvil para esquivar los obstáculos.',better:'high',label:'metros',short:s=>s+' m',long:s=>`${s} metros`,pts:[[0,0],[150,40],[300,70],[500,95],[650,100]],round:1},
+ {id:'ritmo',name:'Repite el ritmo',cat:'memoria',mus:1,since:MUSIC_FROM,desc:'Escucha un ritmo de tambor y repítelo igual.',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[350,40],[580,70],[780,95],[880,100]],round:1},
+ {id:'tono',name:'¿Más aguda o más grave?',cat:'percepcion',mus:1,since:MUSIC_FROM,desc:'Dos notas: ¿la segunda sube o baja? Cada vez se parecen más.',better:'high',label:'nivel',short:s=>'nivel '+s,long:s=>`nivel ${s}`,pts:[[0,0],[6,40],[10,70],[14,95],[17,100]],round:1},
+ {id:'ciegas',name:'Melodía a ciegas',cat:'memoria',mus:1,since:MUSIC_FROM,desc:'Repite de oído la melodía del xilófono, sin luces.',better:'high',label:'rondas',short:s=>String(s),long:s=>`${s} ${s===1?'ronda':'rondas'}`,pts:[[0,0],[4,40],[7,70],[10,95],[13,100]],round:1},
+ {id:'afina',name:'Afina la nota',cat:'percepcion',mus:1,since:MUSIC_FROM,desc:'Mueve el dedo hasta que suene igual que la nota.',better:'low',label:'cents',short:s=>s+' cents',long:s=>`${s} cents de error total`,pts:[[700,0],[300,40],[150,70],[70,95],[35,100]],round:1},
+ {id:'metronomo',name:'Metrónomo interior',cat:'percepcion',mus:1,since:MUSIC_FROM,desc:'Sigue el ritmo cuando el metrónomo se calla.',better:'low',label:'ms',short:s=>s+' ms',long:s=>`${s} ms de desfase`,pts:[[300,0],[130,40],[80,70],[45,95],[28,100]],round:1},
+ {id:'concierto',name:'Concierto',cat:'habilidad',mus:1,since:MUSIC_FROM,desc:'Toca las notas al compás de piezas clásicas.',better:'high',label:'precisión',short:s=>s+' %',long:s=>`${s} % de precisión`,pts:[[0,0],[50,40],[70,70],[88,95],[95,100]],round:1},
+ {id:'acordes',name:'¿Cuántas notas?',cat:'percepcion',mus:1,since:MUSIC_FROM,desc:'Suenan varias notas a la vez. ¿Cuántas son?',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[500,40],[800,70],[1100,95],[1350,100]],round:10},
+ {id:'melodia',name:'Adivina la melodía',cat:'memoria',mus:1,since:MUSIC_FROM,desc:'Reconoce la melodía con el menor número de notas.',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[300,40],[500,70],[700,95],[800,100]],round:1},
+ {id:'notafalsa',name:'La nota falsa',cat:'percepcion',mus:1,since:MUSIC_FROM,desc:'Pulsa justo cuando suene la nota desafinada.',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[350,40],[600,70],[850,95],[1000,100]],round:1},
+ {id:'ordena',name:'Ordena la melodía',cat:'logica',mus:1,since:MUSIC_FROM,desc:'Coloca los 4 trozos de la melodía en orden.',better:'low',label:'tiempo',short:sec,long:sec,pts:[[240000,0],[120000,40],[75000,70],[45000,95],[30000,100]],round:100},
+ {id:'cancion',name:'Adivina la canción',cat:'memoria',mus:1,yt:1,practice:1,desc:'Canciones de vuestra lista de YouTube. ¿Cuál es?',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[400,40],[700,70],[950,95],[1100,100]],round:1},
+ {id:'decada',name:'¿De qué década es?',cat:'memoria',mus:1,yt:1,practice:1,desc:'Suena una canción de vuestra lista. ¿De qué década es?',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[300,40],[550,70],[800,95],[950,100]],round:1}
 ];
 GAMES.forEach(g=>{g.play=true});
 const G=Object.fromEntries(GAMES.map(g=>[g.id,g]));
@@ -540,8 +592,8 @@ function title(cats,id){
 const playable=GAMES.slice();
 const RETOCATS=['memoria','logica','habilidad','percepcion','equilibrio'];
 let GROUP=Object.assign({disabled:[],goal:null,code:''},store.get('rdm_group',{}));
-function pickGame(date){const pool0=playable.filter(g=>!GROUP.disabled.includes(g.id));const src=pool0.length?pool0:playable;const cats=RETOCATS.filter(c=>src.some(g=>g.cat===c));
-  const c=cats[hash('cat'+date)%cats.length];const pool=src.filter(g=>g.cat===c);return pool[hash('reto'+date)%pool.length]}
+function pickGame(date){const base=playable.filter(g=>!g.yt&&(!g.since||date>=g.since));const pool0=base.filter(g=>!GROUP.disabled.includes(g.id));const src=pool0.length?pool0:base;const cats=RETOCATS.filter(c=>src.some(g=>g.cat===c));
+  const c=cats[hash('cat'+date)%cats.length];let pool=src.filter(g=>g.cat===c);if(pool.some(g=>!g.mus)&&hash('mus'+date)%2)pool=pool.filter(g=>!g.mus);return pool[hash('reto'+date)%pool.length]}
 const todayGame=pickGame(TODAY);
 function seqFor(date,len=40){const r=mulberry32(hash('simon'+date));return Array.from({length:len},()=>Math.floor(r()*4))}
 // resultados simulados de rivales
@@ -658,7 +710,7 @@ function openAdmin(){
   openOv(`<div class="row" style="justify-content:space-between;width:100%"><h1>Administración</h1><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
    ${ONLINE?'':'<p class="note" style="margin:0">Modo demo: los ajustes se guardan solo en este móvil.</p>'}
    ${owner?`<div class="panel stack" style="width:100%;text-align:left;gap:8px"><h3>Juegos del reto diario</h3><p class="note" style="margin:0">${ONLINE?'Ajuste global: afecta al reto de todos los grupos. ':''}Desmarca los que no quieras que salgan. Se pueden seguir practicando.</p>
-     <div class="adm-games">${GAMES.map(g=>`<label><input type="checkbox" data-g="${g.id}" ${GROUP.disabled.includes(g.id)?'':'checked'}> ${g.name}</label>`).join('')}</div></div>`:''}
+     <div class="adm-games">${GAMES.filter(g=>!g.yt).map(g=>`<label><input type="checkbox" data-g="${g.id}" ${GROUP.disabled.includes(g.id)?'':'checked'}> ${g.name}</label>`).join('')}</div></div>`:''}
    ${gAdmin?`${ONLINE?`<div class="panel stack" style="width:100%;text-align:left;gap:8px"><h3>Nombre del grupo</h3>${fld('adm-name',(m&&m.gname)||'','maxlength="30"')}</div>`:''}
    <div class="panel stack" style="width:100%;text-align:left;gap:8px"><h3>Objetivo semanal del grupo</h3>
      ${fld('adm-goal',GROUP.goal||'',`type="number" min="5" max="500" placeholder="${Math.max(10,PLAYERS.length*6)} (automático)"`)}
@@ -942,7 +994,7 @@ const fmtDelta=v=>(v>0?'+':v<0?'−':'±')+Math.abs(v);
 const MODS={
   niebla:{name:'Niebla',desc:'Solo se ve bien el centro de la pantalla.',no:['crono']},
   temblor:{name:'Terremoto',desc:'La pantalla no para de temblar.',no:[]},
-  apagon:{name:'Apagones',desc:'La luz se va cada pocos segundos.',no:['simon','cuantos','crono','parejas','cambio','montones','semaforo']},
+  apagon:{name:'Apagones',desc:'La luz se va cada pocos segundos.',no:['simon','cuantos','crono','parejas','cambio','montones','semaforo','concierto']},
   mini:{name:'Modo hormiga',desc:'Todo se ve más pequeño.',no:['crono']},
   ciego:{name:'A ciegas',desc:'No ves el cronómetro.',only:g=>g.label==='tiempo'}
 };
@@ -1423,7 +1475,7 @@ const GYRO=new Set(['laberinto','equilibrio','camarero','burbuja','esquiva']);le
 function askGyro(gid){if(!GYRO.has(gid)||GYRO_OK)return Promise.resolve();
   try{if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')return DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')GYRO_OK=true}).catch(()=>{})}catch(e){}
   GYRO_OK=true;return Promise.resolve()}
-const stepsHTML=gid=>`<div class="tut">${(HOWTO[gid]||[G[gid].desc]).map((t,i)=>`<div class="tut-step"><b>${i+1}</b><span>${t}</span></div>`).join('')}</div>`;
+const stepsHTML=gid=>`<div class="tut">${(HOWTO[gid]||[G[gid].desc]).map((t,i)=>`<div class="tut-step"><b>${i+1}</b><span>${t}</span></div>`).join('')}</div>${G[gid].mus?'<div class="note" style="margin:0">🎧 <b>Juego con sonido.</b> Sube el volumen o ponte cascos.</div>':''}`;
 function countdown(next){openOv(`<div class="count" id="cd"></div>`,'img/bg_reveal.webp');let n=3;const el=$('#cd');
   const step=()=>{if(n>0){el.textContent=n;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');sfx('count');n--;timers.push(setTimeout(step,700))}
     else{el.textContent='¡YA!';el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');sfx('go');timers.push(setTimeout(next,500))}};step()}
@@ -1448,16 +1500,17 @@ async function openPractice(gid){
       ${mine?opt('mine',`img/av_${me}.webp`,'Contra tu fantasma',`Tu mejor partida: ${fmtShort(gid,mine.s)}${ghHasMoves(gid,mine)?'':' · solo marcador'}`):''}
       ${top?opt('top',`img/av_${top.id}.webp`,`Contra ${P[top.id].name}`,`${fmtShort(gid,top.s)}${ghHasMoves(gid,top)?'':' · solo marcador'}${fameRanking(gid)[0]&&fameRanking(gid)[0].id===top.id?' · récord del grupo':''}`):''}</div>`:'';
   openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Práctica</span><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
-    <img src="img/ic_${gid}.webp" alt="" style="width:96px;height:96px;object-fit:contain" class="pop"><h1>${G[gid].name}</h1>${stepsHTML(gid)}${rivals}
+    <img src="img/ic_${gid}.webp" alt="" style="width:96px;height:96px;object-fit:contain" class="pop"><h1>${G[gid].name}</h1>${stepsHTML(gid)}${G[gid].yt?'<div id="yt-intro" style="width:100%"></div>':''}${rivals}
     ${gid===todayGame.id&&todayMod?`<span class="note"><img class="hic" src="img/mod_${todayMod.k}.webp" alt="" style="width:24px;height:24px"> <b>Modificador de hoy: ${todayMod.name}.</b> ${todayMod.desc}</span>`:''}
     <button class="btn red" id="pr-go" style="font-size:22px;padding:14px 30px">¡Empezar!</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;let pick=pre;
   ovIn.querySelectorAll('.gh-opt').forEach(b=>b.onclick=()=>{ovIn.querySelectorAll('.gh-opt').forEach(x=>x.classList.toggle('on',x===b));const k=b.dataset.k;pick=k==='mine'?{...mine,n:'Tu fantasma'}:k==='top'?{...top,n:P[top.id].name}:null});
   $('#pr-go').onclick=()=>{const t=tutSeen();t[gid]=1;store.set('rdm_tut',t);askGyro(gid).then(()=>countdown(()=>{GHNEXT=pick?{...pick,g:gid}:null;launch(gid,false)}))};
+  if(G[gid].yt)ytIntro(gid);
 }
 function runGame(gid,official){
   ghBegin(gid,official);
-  ({simon,crono,parejas,zip,flood,stroop,encestar,apilar,laberinto,equilibrio,sopa,cuantos,intruso,fruta,lightsout,tuberias,deslizante,angulo,tarta,minigolf,tiles,cambio,sudoku,mastermind,topos,flappy,arco,semaforo,tabla,montones,camarero,burbuja,esquiva})[gid](official);
+  ({simon,crono,parejas,zip,flood,stroop,encestar,apilar,laberinto,equilibrio,sopa,cuantos,intruso,fruta,lightsout,tuberias,deslizante,angulo,tarta,minigolf,tiles,cambio,sudoku,mastermind,topos,flappy,arco,semaforo,tabla,montones,camarero,burbuja,esquiva,ritmo,tono,ciegas,afina,metronomo,concierto,acordes,melodia,notafalsa,ordena,cancion,decada})[gid](official);
   if(gid===todayGame.id&&todayMod)applyMod(todayMod);
   ghBadge();
 }
@@ -2294,7 +2347,7 @@ function duoEnd(d,A,B,sa,sb){
     <div class="row" style="flex-wrap:wrap;justify-content:center"><button class="btn red" id="du-again">Revancha</button><button class="btn ghost" id="du-menu">Otro juego</button><button class="btn ghost" id="g-close">Salir</button></div>`,'img/bg_results.webp');
   $('#g-close').onclick=closeOv;$('#du-again').onclick=()=>runDuo(d,B,A);$('#du-menu').onclick=openDuo;
 }
-function runDuo(d,A,B){({semaforo:duoSemaforo,cuerda:duoCuerda,hockey:duoHockey,pregunta:duoPregunta})[d](A,B)}
+function runDuo(d,A,B){({semaforo:duoSemaforo,cuerda:duoCuerda,hockey:duoHockey,pregunta:duoPregunta,cancion:duoCancion})[d](A,B)}
 const duoTap=(el,fn)=>el.addEventListener('pointerdown',e=>{e.preventDefault();fn(e)});
 
 // --- Duelo de semáforo ---
@@ -2408,7 +2461,7 @@ function lvCreate(){
   if(!sb||!navigator.onLine||!myUid){alertBox('Necesitas conexión y haber entrado con tu email para una carrera en directo.');return}
   openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Carrera en directo</span><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
     <h1>¿A qué jugáis?</h1><p class="note" style="margin:0">Todos con el mismo nivel y a la vez. No cuenta para el ranking del día, pero sí para tus récords.</p>
-    <div class="games" id="lv-g">${GAMES.map(g=>`<button class="game" data-g="${g.id}"><img src="img/ic_${g.id}.webp" alt=""><span>${g.name}</span></button>`).join('')}</div>`,'img/bg_menu.webp');
+    <div class="games" id="lv-g">${GAMES.filter(g=>!g.yt).map(g=>`<button class="game" data-g="${g.id}"><img src="img/ic_${g.id}.webp" alt=""><span>${g.name}</span></button>`).join('')}</div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   $('#lv-g').onclick=e=>{const b=e.target.closest('.game');if(!b)return;const me_=lvMe();
     lvEnter({rid:uuid().slice(0,8),g:b.dataset.g,seed:(Math.random()*4294967296)>>>0,host:myUid,hostName:me_.name},true)};
@@ -2522,6 +2575,471 @@ $('#m-summary').onclick=()=>openSummary(new Date(TODAY+'T12:00:00').getDay()===1
 $('#m-prev').onclick=()=>{moteIdx--;renderMote()};$('#m-next').onclick=()=>{moteIdx++;renderMote()};
 $('#m-share').onclick=()=>{const txt=$('#m-text').dataset.share;const done=m=>{const n=$('#m-copied');n.textContent=m;n.hidden=false};
   try{navigator.clipboard.writeText(txt).then(()=>done('Copiado. Pégalo en el grupo.'),()=>done(txt))}catch(e){done(txt)}};
+// ===== Tanda musical: juegos con sonido (melodías de dominio público tocadas por la app) =====
+// En iPhone, 'playback' hace que suene aunque el interruptor de silencio esté puesto (Safari 16.4+).
+try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+const MUS={a:null,out:null,nb:null,buses:new Set()};const MUT=window.__MUT||null;if(MUT)MUT.now=()=>muNow(); // ganchos solo para las pruebas automáticas
+// motor propio: suena aunque los efectos (🔊) estén apagados, porque sin sonido estos juegos no tienen sentido
+function muCtx(){const a=actxGet();if(!a)return null;if(MUS.a!==a){MUS.a=a;const c=a.createDynamicsCompressor();c.threshold.value=-12;c.knee.value=10;c.ratio.value=5;c.attack.value=.003;c.release.value=.2;
+  const g=a.createGain();g.gain.value=.85;g.connect(c);c.connect(a.destination);MUS.out=g;MUS.nb=null}return a}
+function muUnlock(){const a=muCtx();if(!a)return;try{const s=a.createBufferSource();s.buffer=a.createBuffer(1,1,22050);s.connect(a.destination);s.start(0)}catch(e){}
+  if(a.state==='running')['pointerdown','touchend','keydown'].forEach(k=>document.removeEventListener(k,muUnlock,true))}
+['pointerdown','touchend','keydown'].forEach(k=>document.addEventListener(k,muUnlock,true));
+function muBus(){const a=muCtx();const g=a?a.createGain():null;if(g)g.connect(MUS.out);
+  const b={node:g,on:true,stop(f=.03){if(!b.on)return;b.on=false;MUS.buses.delete(b);if(!g)return;try{g.gain.setTargetAtTime(0,a.currentTime,f);setTimeout(()=>{try{g.disconnect()}catch(e){}},400)}catch(e){}}};
+  MUS.buses.add(b);return b}
+function muStopAll(){[...MUS.buses].forEach(b=>b.stop())}
+{const _c=closeOv;closeOv=function(){muStopAll();ytStop();return _c.apply(this,arguments)}}
+// tiempo "que se oye ahora" en el reloj del audio (descuenta la latencia de salida: altavoz, Bluetooth…)
+function muNow(){const a=MUS.a;if(!a)return performance.now()/1000;
+  try{if(a.getOutputTimestamp){const o=a.getOutputTimestamp();if(o.contextTime>0&&o.performanceTime>0)return o.contextTime+(performance.now()-o.performanceTime)/1000}}catch(e){}
+  return a.currentTime-(a.outputLatency||a.baseLatency||0)}
+const mHz=m=>440*Math.pow(2,(m-69)/12);
+const INST={
+  piano:{w:'triangle',h:[[2,.35],[3,.12]],att:.004,dec:.35,sus:.25,rel:.25,vol:.28},
+  xilo:{w:'sine',h:[[4,.22],[10,.05]],att:.002,dec:.15,sus:.0001,rel:.15,vol:.42,len:.5},
+  organo:{w:'sine',h:[[2,.3],[3,.15]],att:.03,dec:.2,sus:.8,rel:.12,vol:.22},
+  puro:{w:'triangle',h:[[2,.12]],att:.02,dec:.3,sus:.75,rel:.08,vol:.32}
+};
+function muNote(dest,m,t,d,inst='piano',vol=1){const a=MUS.a;if(!a||!dest)return;const I=INST[inst],f=mHz(m),g=a.createGain(),pk=I.vol*vol;
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(pk,t+I.att);g.gain.setTargetAtTime(Math.max(.0001,pk*I.sus),t+I.att,I.dec/3);
+  const end=t+(I.len?Math.min(d,I.len):d);g.gain.setTargetAtTime(.0001,end,I.rel/4);g.connect(dest);const stop=end+I.rel+.05;
+  const osc=(type,fr,gv)=>{const o=a.createOscillator();o.type=type;o.frequency.value=fr;if(gv===1)o.connect(g);else{const h=a.createGain();h.gain.value=gv;o.connect(h);h.connect(g)}o.start(t);o.stop(stop)};
+  osc(I.w,f,1);I.h.forEach(([k,v])=>{if(f*k<a.sampleRate/2)osc('sine',f*k,v)})}
+// nota mantenida (para el deslizador de «Afina la nota»)
+function muHold(m,inst='puro'){const a=muCtx();if(!a)return null;const I=INST[inst],t=a.currentTime,g=a.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(I.vol,t+.03);g.connect(MUS.out);
+  const os=[[I.w,1,1],...I.h.map(([k,v])=>['sine',k,v])].map(([w,k,v])=>{const o=a.createOscillator();o.type=w;o.frequency.value=mHz(m)*k;const h=a.createGain();h.gain.value=v;o.connect(h);h.connect(g);o.start();return [o,k]});
+  const b={on:true,set(m){const f=mHz(m);os.forEach(([o,k])=>o.frequency.setTargetAtTime(f*k,a.currentTime,.012))},stop(){if(!b.on)return;b.on=false;MUS.buses.delete(b);g.gain.setTargetAtTime(.0001,a.currentTime,.03);os.forEach(([o])=>{try{o.stop(a.currentTime+.25)}catch(e){}})}};
+  MUS.buses.add(b);return b}
+function muNoise(){const a=MUS.a;if(!MUS.nb){const n=a.sampleRate*.5|0,b=a.createBuffer(1,n,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<n;i++)c[i]=Math.random()*2-1;MUS.nb=b}return MUS.nb}
+function muDrum(dest,k,t,vol=1){const a=MUS.a;if(!a||!dest)return;const g=a.createGain();g.connect(dest);
+  if(k==='bombo'||k==='taiko'){const o=a.createOscillator(),tk=k==='taiko';o.type='sine';o.frequency.setValueAtTime(tk?190:150,t);o.frequency.exponentialRampToValueAtTime(tk?85:45,t+.12);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.9*vol,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+(tk?.45:.32));o.connect(g);o.start(t);o.stop(t+.5);
+    if(tk){const s=a.createBufferSource(),f=a.createBiquadFilter(),ng=a.createGain();s.buffer=muNoise();f.type='lowpass';f.frequency.value=900;ng.gain.setValueAtTime(.35*vol,t);ng.gain.exponentialRampToValueAtTime(.0001,t+.08);s.connect(f);f.connect(ng);ng.connect(dest);s.start(t);s.stop(t+.1)}return}
+  if(k==='clic'||k==='clic1'){const o=a.createOscillator();o.type='sine';o.frequency.value=k==='clic1'?2000:1500;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.6*vol,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+.06);o.connect(g);o.start(t);o.stop(t+.08);return}
+  const s=a.createBufferSource(),f=a.createBiquadFilter();s.buffer=muNoise();
+  if(k==='caja'){f.type='highpass';f.frequency.value=1200;g.gain.setValueAtTime(.45*vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+.18)}
+  else{f.type='highpass';f.frequency.value=7000;g.gain.setValueAtTime(.22*vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+.05)} // charles
+  s.connect(f);f.connect(g);s.start(t);s.stop(t+.25)}
+
+// ---- melodías de dominio público (autores muertos hace más de 70 años, o tradicionales) ----
+// formato: nota+octava[:pulsos], R = silencio. Do central = C4.
+const NIX={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+function muParse(s){return s.trim().split(/\s+/).map(tok=>{const [n,dd]=tok.split(':');const d=dd?+dd:1;if(n==='R')return {m:null,d};const x=n.match(/^([A-G])([#b]?)(\d)$/);
+  return {m:12*(+x[3]+1)+NIX[x[1]]+(x[2]==='#'?1:x[2]==='b'?-1:0),d}})}
+function muEvents(x,bpm){const sp=60/(bpm||x.bpm);let t=0;const out=[];muParse(x.n).forEach(o=>{if(o.m!=null)out.push({t:t*sp,d:o.d*sp*.92,m:o.m,b:o.d});t+=o.d});return out}
+const MEL=[
+ {id:'alegria',t:'Himno de la alegría',a:'Beethoven',bpm:120,n:'E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 E4:1.5 D4:.5 D4:2 E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 D4:1.5 C4:.5 C4:2'},
+ {id:'elisa',t:'Para Elisa',a:'Beethoven',bpm:140,n:'E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 G#4:.5 B4:.5 C5:1.5 E4:.5 E5:.5 D#5:.5 E5:.5 D#5:.5 E5:.5 B4:.5 D5:.5 C5:.5 A4:1.5 C4:.5 E4:.5 A4:.5 B4:1.5 E4:.5 C5:.5 B4:.5 A4:2'},
+ {id:'serenata',t:'Pequeña serenata nocturna',a:'Mozart',bpm:132,n:'G4 R:.5 D4:.5 G4 R:.5 D4:.5 G4:.5 D4:.5 G4:.5 B4:.5 D5:2 C5 R:.5 A4:.5 C5 R:.5 A4:.5 C5:.5 A4:.5 F#4:.5 A4:.5 D4:2'},
+ {id:'quinta',t:'Quinta sinfonía',a:'Beethoven',bpm:108,n:'R:.5 G4:.5 G4:.5 G4:.5 Eb4:2.5 R:.5 F4:.5 F4:.5 F4:.5 D4:3'},
+ {id:'cumple',t:'Cumpleaños feliz',a:'Popular',bpm:100,n:'G4:.75 G4:.25 A4 G4 C5 B4:2 G4:.75 G4:.25 A4 G4 D5 C5:2 G4:.75 G4:.25 G5 E5 C5 B4 A4:2 F5:.75 F5:.25 E5 C5 D5 C5:2'},
+ {id:'estrellita',t:'Estrellita, ¿dónde estás?',a:'Popular',bpm:110,n:'C4 C4 G4 G4 A4 A4 G4:2 F4 F4 E4 E4 D4 D4 C4:2 G4 G4 F4 F4 E4 E4 D4:2 G4 G4 F4 F4 E4 E4 D4:2'},
+ {id:'martinillo',t:'Martinillo',a:'Popular',bpm:120,n:'C4 D4 E4 C4 C4 D4 E4 C4 E4 F4 G4:2 E4 F4 G4:2 G4:.5 A4:.5 G4:.5 F4:.5 E4 C4 G4:.5 A4:.5 G4:.5 F4:.5 E4 C4 C4 G3 C4:2 C4 G3 C4:2'},
+ {id:'granja',t:'En la granja del viejo MacDonald',a:'Popular',bpm:120,n:'G4 G4 G4 D4 E4 E4 D4:2 B4 B4 A4 A4 G4:3 D4 G4 G4 G4 D4 E4 E4 D4:2 B4 B4 A4 A4 G4:3'},
+ {id:'cuna',t:'Canción de cuna',a:'Brahms',bpm:100,n:'E4:.5 E4:.5 G4:2 E4:.5 E4:.5 G4:2 E4:.5 G4:.5 C5 B4:1.5 A4:.5 A4 G4 D4:.5 E4:.5 F4 D4 D4:.5 E4:.5 F4:2 D4:.5 F4:.5 B4:.5 A4:.5 G4 B4 C5:3'},
+ {id:'nochepaz',t:'Noche de paz',a:'Gruber',bpm:96,n:'G4:1.5 A4:.5 G4 E4:3 G4:1.5 A4:.5 G4 E4:3 D5:2 D5 B4:3 C5:2 C5 G4:3 A4:2 A4 C5:1.5 B4:.5 A4 G4:1.5 A4:.5 G4 E4:3'},
+ {id:'cascabel',t:'Jingle Bells (Navidad, Navidad)',a:'Pierpont',bpm:140,n:'E4 E4 E4:2 E4 E4 E4:2 E4 G4 C4:1.5 D4:.5 E4:4 F4 F4 F4:1.5 F4:.5 F4 E4 E4 E4:.5 E4:.5 E4 D4 D4 E4 D4:2 G4:2'},
+ {id:'nupcial',t:'Marcha nupcial («Aquí viene la novia»)',a:'Wagner',bpm:76,n:'C4 F4:.75 F4:.25 F4:2 C4 G4:.75 E4:.25 F4:2'},
+ {id:'gruta',t:'En la gruta del rey de la montaña',a:'Grieg',bpm:130,n:'B3:.5 C#4:.5 D4:.5 E4:.5 F#4:.5 D4:.5 F#4 F4:.5 C#4:.5 F4 E4:.5 C4:.5 E4 B3:.5 C#4:.5 D4:.5 E4:.5 F#4:.5 D4:.5 F#4:.5 B4:.5 A4:.5 F#4:.5 D4:.5 F#4:.5 A4:2'},
+ {id:'turca',t:'Marcha turca',a:'Mozart',bpm:116,n:'B4:.25 A4:.25 G#4:.25 A4:.25 C5:1 D5:.25 C5:.25 B4:.25 C5:.25 E5:1 F5:.25 E5:.25 D#5:.25 E5:.25 B5:.25 A5:.25 G#5:.25 A5:.25 B5:.25 A5:.25 G#5:.25 A5:.25 C6:2'},
+ {id:'cucaracha',t:'La cucaracha',a:'Popular',bpm:150,n:'C4:.5 C4:.5 C4:.5 F4:1.5 A4 R C4:.5 C4:.5 C4:.5 F4:1.5 A4:2 R F4 F4:.5 E4:.5 E4:.5 D4:.5 D4:.5 C4:3'},
+ {id:'tell',t:'Obertura de Guillermo Tell',a:'Rossini',bpm:150,n:'G4:.25 G4:.25 G4:.5 G4:.25 G4:.25 G4:.5 G4:.25 G4:.25 C5:.5 D5:.5 E5:2'},
+ {id:'primavera',t:'La primavera',a:'Vivaldi',bpm:110,n:'E4 G#4 G#4 G#4 F#4:.5 E4:.5 B4:3 B4:.5 A4:.5 G#4 G#4 G#4 F#4:.5 E4:.5 B4:3 B4:.5 A4:.5 G#4 A4:.5 B4:.5 A4 G#4 F#4:2'},
+ {id:'danubio',t:'El Danubio azul',a:'Strauss',bpm:150,n:'D4 F#4 A4 A4:3 A5 A5:2 F#5 F#5:3 D4 D4 F#4 A4 A4:3 A5 A5:2 G5 G5:3'}
+].map(x=>({...x,ev:muEvents(x)}));
+const MELI=Object.fromEntries(MEL.map(x=>[x.id,x]));
+function muPlayEv(bus,ev,t0,inst='piano',vol=1){if(!bus.node)return;const b0=ev.length?ev[0].t:0;ev.forEach(e=>muNote(bus.node,e.m,t0+e.t-b0,e.d,inst,vol))}
+const muArt=(n,size=120,id='')=>`<div class="mu-art" ${id?`id="${id}"`:''} style="--s:${size}px"><img src="img/mu_${n}.webp" alt="" onerror="this.remove()"><i class="mu-ph">${{tambor:'🥁',altavoz:'🔊',vinilo:'💿',diapason:'🎶',metronomo:'⏱',xilofono:'🎵',pulsador:'🔴'}[n]||'🎵'}</i></div>`;
+const muPulse=el=>{if(!el)return;el.classList.remove('beat');void el.offsetWidth;el.classList.add('beat')};
+const muNoAudio=()=>!muCtx()&&(openOv(`<h1>Sin sonido</h1><p class="note">Este navegador no deja reproducir sonido. Prueba en otro navegador.</p><button class="btn" id="g-close">Salir</button>`),$('#g-close').onclick=closeOv,true);
+
+// --- Repite el ritmo ---
+function ritmo(official){if(muNoAudio())return;
+  const r=rngFor('ritmo',official),ROUNDS=10;
+  const pats=Array.from({length:ROUNDS},(_,k)=>{const n=3+Math.floor(k*.6),e=60/(96+k*3)/2,set=k<3?[2,2,4]:k<6?[1,2,2,3,4]:[1,1,2,2,3];const ts=[0];let acc=0;
+    for(let i=0;i<n-1;i++){acc+=set[Math.floor(r()*set.length)]*e;ts.push(acc)}return ts});
+  openOv(header('ritmo',official)+`<div class="say" id="ri-s">Escucha…</div><div class="row" style="gap:14px"><span class="tag" id="ri-k">Ronda 1 de ${ROUNDS}</span><div class="big" id="ri-p" style="font-size:30px">0</div></div>
+    <button class="mu-drum" id="ri-d" aria-label="Tambor" disabled>${muArt('tambor',190)}</button><div class="mu-dots" id="ri-dots"></div><p class="note" style="margin:0">Toca el tambor con el mismo ritmo que has oído.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  let k=0,pts=0,taps=[],live=false,tmo=null;const D=$('#ri-d'),S=$('#ri-s'),tb=muBus();const hit=()=>muPulse(D);
+  const arm=ms=>{clearTimeout(tmo);tmo=setTimeout(judge,ms);timers.push(tmo)};
+  function play(){live=false;taps=[];D.disabled=true;$('#ri-dots').innerHTML='';S.textContent='Escucha…';$('#ri-k').textContent=`Ronda ${k+1} de ${ROUNDS}`;
+    const ts=pats[k],a=muCtx(),b=muBus(),t0=a.currentTime+.5;ts.forEach(t=>{muDrum(b.node,'taiko',t0+t);timers.push(setTimeout(hit,(.5+t)*1000))});
+    timers.push(setTimeout(()=>{live=true;D.disabled=false;S.textContent='¡Tu turno!';arm(6000)},(.5+ts[ts.length-1]+.6)*1000))}
+  D.addEventListener('pointerdown',e=>{e.preventDefault();if(!live)return;taps.push(performance.now()/1000);muDrum(tb.node,'taiko',MUS.a.currentTime);hit();$('#ri-dots').insertAdjacentHTML('beforeend','<i></i>');
+    arm(taps.length>=pats[k].length?450:1800)});
+  function judge(){if(!live)return;live=false;D.disabled=true;const p=pats[k];let got=0,msg;
+    if(taps.length!==p.length)msg=taps.length?`Eran ${p.length} golpes y has dado ${taps.length}`:'¡No has tocado!';
+    else{let err=0;for(let i=1;i<p.length;i++)err+=Math.abs((taps[i]-taps[0])-(p[i]-p[0]));err=err/(p.length-1)*1000;
+      got=Math.round(Math.max(0,Math.min(1,1-(err-30)/170))*100);msg=got>=90?'¡Clavado!':got>=60?'¡Bien!':got>0?'Casi…':'Ritmo cambiado'}
+    pts+=got;$('#ri-p').textContent=pts;ghMark(pts);S.textContent=`${msg} · +${got}`;sfx(got>=60?'ok':'bad');k++;
+    timers.push(setTimeout(()=>{if(k<ROUNDS)play();else{tb.stop();finish('ritmo',pts,official)}},1400))}
+  if(MUT)MUT.g=()=>({pats,k,live});ghMark(0);timers.push(setTimeout(play,400));
+}
+
+// --- ¿Más aguda o más grave? ---
+function tono(official){if(muNoAudio())return;
+  const r=rngFor('tono',official),CENTS=[300,250,200,160,130,100,80,65,50,40,32,25,20,16,13,10,8,6,5,4];
+  const Q=Array.from({length:30},()=>({m:55+r()*14,up:r()<.5}));
+  openOv(header('tono',official)+`<div class="say" id="to-s">Escucha las dos notas</div><div class="row" style="gap:12px"><span class="tag" id="to-k">Nivel 1</span><span class="mu-lives" id="to-v"></span></div>${muArt('altavoz',130,'to-a')}
+    <div class="row" style="gap:10px" id="to-o"><button class="btn mu-ans" data-u="1" disabled>▲ Más aguda</button><button class="btn mu-ans" data-u="0" disabled>▼ Más grave</button></div>
+    <p class="note" style="margin:0">¿La <b>segunda</b> nota es más aguda o más grave que la primera? Cada nivel se parecen más. Tienes 3 vidas.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  let k=0,att=0,lives=3,live=false,q=null;const S=$('#to-s'),A=$('#to-a'),btn=[...ovIn.querySelectorAll('.mu-ans')];
+  const lv=()=>{$('#to-v').innerHTML='❤'.repeat(lives)+`<span style="opacity:.2">${'❤'.repeat(3-lives)}</span>`};lv();
+  function play(){live=false;btn.forEach(b=>b.disabled=true);q={...Q[att++%Q.length],c:CENTS[k]};$('#to-k').textContent=`Nivel ${k+1}`;
+    const a=muCtx(),b=muBus(),t=a.currentTime+.35;muNote(b.node,q.m,t,.6,'puro');muNote(b.node,q.m+(q.up?1:-1)*q.c/100,t+.95,.6,'puro');
+    S.textContent='Primera…';timers.push(setTimeout(()=>muPulse(A),350));timers.push(setTimeout(()=>{S.textContent='Segunda…';muPulse(A)},1300));
+    timers.push(setTimeout(()=>{live=true;btn.forEach(b=>b.disabled=false);S.textContent='¿Más aguda o más grave?'},1950))}
+  $('#to-o').onclick=e=>{const b=e.target.closest('[data-u]');if(!b||!live)return;live=false;btn.forEach(x=>x.disabled=true);const ok=(b.dataset.u==='1')===q.up;
+    if(ok){k++;ghMark(k);sfx('ok');S.textContent='¡Sí!'}else{lives--;lv();sfx('bad');S.textContent=`No: era más ${q.up?'aguda':'grave'}`}
+    timers.push(setTimeout(()=>{if(!lives||k>=CENTS.length)finish('tono',k,official);else play()},1100))};
+  if(MUT)MUT.g=()=>({q,live});ghMark(0);timers.push(setTimeout(play,400));
+}
+
+// --- Melodía a ciegas (Simon solo de oído) ---
+function ciegas(official){if(muNoAudio())return;
+  const r=rngFor('ciegas',official),seq=Array.from({length:40},()=>Math.floor(r()*5)),NOTES=[72,74,76,79,81],COL=['#E63946','#FF8A3D','#FFC93C','#2BB673','#3A86FF'];
+  openOv(header('ciegas',official)+`<div class="say" id="ci-s">Escucha las 5 notas</div><div class="mu-xilo" id="ci-x">${NOTES.map((n,i)=>`<button data-i="${i}" style="--c:${COL[i]};--h:${100-i*10}%" aria-label="Nota ${i+1}" disabled></button>`).join('')}</div>
+    <div class="big" id="ci-n">0</div><p class="note" style="margin:0">rondas completadas · la melodía suena sin luces</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  const bars=[...ovIn.querySelectorAll('#ci-x button')],S=$('#ci-s'),tb=muBus();let level=1,input=0,locked=true;
+  const lit=i=>{bars[i].classList.add('lit');timers.push(setTimeout(()=>bars[i].classList.remove('lit'),200))};
+  function intro(){const a=muCtx(),b=muBus(),t0=a.currentTime+.3;NOTES.forEach((m,i)=>{muNote(b.node,m,t0+i*.45,.4,'xilo');timers.push(setTimeout(()=>lit(i),(.3+i*.45)*1000))});
+    timers.push(setTimeout(()=>{S.textContent='Ahora, sin mirar';timers.push(setTimeout(play,900))},(.3+5*.45+.3)*1000))}
+  function play(){locked=true;bars.forEach(b=>b.disabled=true);S.textContent='Escucha…';const n=level+1,sp=Math.max(.32,.56-level*.015),a=muCtx(),b=muBus(),t0=a.currentTime+.4;
+    for(let i=0;i<n;i++)muNote(b.node,NOTES[seq[i]],t0+i*sp,sp*.9,'xilo');
+    timers.push(setTimeout(()=>{locked=false;input=0;bars.forEach(b=>b.disabled=false);S.textContent='¡Tu turno!'},(.4+n*sp+.2)*1000))}
+  $('#ci-x').addEventListener('pointerdown',e=>{const bt=e.target.closest('button');if(!bt||locked)return;e.preventDefault();const i=+bt.dataset.i;muNote(tb.node,NOTES[i],MUS.a.currentTime,.35,'xilo');lit(i);
+    if(i!==seq[input]){locked=true;bars.forEach(b=>b.disabled=true);S.textContent='¡Fallo!';sfx('bad');timers.push(setTimeout(()=>{tb.stop();finish('ciegas',level-1,official)},900));return}
+    input++;if(input===level+1){$('#ci-n').textContent=level;ghMark(level);level++;locked=true;S.textContent='¡Bien!';timers.push(setTimeout(play,800))}});
+  if(MUT)MUT.g=()=>({seq,level,locked});ghMark(0);timers.push(setTimeout(intro,300));
+}
+
+// --- Afina la nota ---
+function afina(official){if(muNoAudio())return;
+  const r=rngFor('afina',official),N=6,R=Array.from({length:N},()=>{const m=55+Math.floor(r()*14);return {m,lo:m-(4+r()*5),hi:m+(4+r()*5),st:.08+r()*.84}});
+  openOv(header('afina',official)+`<div class="say" id="af-s">Escucha la nota</div><div class="row" style="gap:12px"><span class="tag" id="af-k">Nota 1 de ${N}</span><span class="tag" id="af-t">Error: 0</span></div>${muArt('diapason',110,'af-a')}
+    <button class="btn ghost" id="af-ref">▶ Escuchar la nota</button>
+    <div class="mu-slide" id="af-sl"><span class="mu-lo">grave</span><span class="mu-hi">aguda</span><div class="mu-knob" id="af-kn"></div></div>
+    <button class="btn red" id="af-ok" disabled>Fijar</button><p class="note" style="margin:0">Arrastra el dedo por la barra: suena mientras lo mueves. Suéltalo cuando suene igual que la nota y pulsa Fijar.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  let k=0,tot=0,pos=0,moved=false,hold=null,live=false;const SL=$('#af-sl'),KN=$('#af-kn'),S=$('#af-s');
+  const mAt=p=>R[k].lo+p*(R[k].hi-R[k].lo);const draw=()=>{KN.style.left=(pos*100)+'%'};
+  const ref=()=>{if(k>=N||!$('#af-sl'))return;if(hold){hold.stop();hold=null}const a=muCtx(),b=muBus();muNote(b.node,R[k].m,a.currentTime+.05,1.1,'puro');muPulse($('#af-a'))};
+  $('#af-ref').onclick=ref;
+  const setX=e=>{const rc=SL.getBoundingClientRect();pos=Math.max(0,Math.min(1,(e.clientX-rc.left)/rc.width));draw();if(hold)hold.set(mAt(pos))};
+  SL.addEventListener('pointerdown',e=>{if(!live)return;e.preventDefault();try{SL.setPointerCapture(e.pointerId)}catch(_){}setX(e);hold&&hold.stop();hold=muHold(mAt(pos));moved=true;$('#af-ok').disabled=false});
+  SL.addEventListener('pointermove',e=>{if(hold&&live)setX(e)});
+  const up=()=>{if(hold){hold.stop();hold=null}};SL.addEventListener('pointerup',up);SL.addEventListener('pointercancel',up);
+  function round(){live=true;moved=false;pos=R[k].st;draw();$('#af-ok').disabled=true;$('#af-k').textContent=`Nota ${k+1} de ${N}`;S.textContent='Escucha la nota';timers.push(setTimeout(ref,300))}
+  $('#af-ok').onclick=()=>{if(!live||!moved)return;live=false;up();const d=(mAt(pos)-R[k].m)*100,err=Math.min(600,Math.round(Math.abs(d)));tot+=err;$('#af-t').textContent=`Error: ${tot}`;
+    S.textContent=err<=10?'¡Perfecta!':err<=30?`Muy cerca: ${err} cents ${d>0?'alta':'baja'}`:`Te has ido ${err} cents ${d>0?'por arriba':'por abajo'}`;sfx(err<=30?'ok':'bad');k++;ghMark(k);
+    timers.push(setTimeout(()=>{if(k<N)round();else finish('afina',tot,official)},1500))};
+  if(MUT)MUT.g=()=>({R,k,live,pos});ghMark(0);timers.push(setTimeout(round,300));
+}
+
+// --- Metrónomo interior ---
+function metronomo(official){if(muNoAudio())return;
+  const r=rngFor('metronomo',official),pool=[72,84,96,108,120,132],bpms=[];while(bpms.length<3){const b=pool[Math.floor(r()*pool.length)];if(!bpms.includes(b))bpms.push(b)}
+  openOv(header('metronomo',official)+`<div class="say" id="mt-s">Prepárate</div><div class="row" style="gap:12px"><span class="tag" id="mt-k">Ronda 1 de 3</span><span class="tag" id="mt-e">—</span></div>
+    <button class="mu-drum mu-pad" id="mt-p" aria-label="Toca aquí">${muArt('metronomo',150,'mt-a')}<b>TOCA AQUÍ</b></button><div class="mu-beats" id="mt-b">${'<i></i>'.repeat(16)}</div>
+    <p class="note" style="margin:0">Suenan 8 clics: tócalos a la vez. Luego se callan: sigue tocando 8 veces más al mismo ritmo.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  let k=0,taps=[],t0=0,T=0,live=false;const errs=[],S=$('#mt-s'),dots=[...ovIn.querySelectorAll('#mt-b i')],tb=muBus();
+  $('#mt-p').addEventListener('pointerdown',e=>{e.preventDefault();if(!live)return;const t=muNow();taps.push(t);muDrum(tb.node,'clic',MUS.a.currentTime,.35);muPulse($('#mt-a'));
+    if(t>t0+7.5*T){const n=taps.filter(x=>x>t0+7.5*T).length;if(n<=8)dots[7+n].classList.add('me')}});
+  function round(){taps=[];dots.forEach(d=>d.className='');const bpm=bpms[k];T=60/bpm;$('#mt-k').textContent=`Ronda ${k+1} de 3 · ${bpm} pulsaciones/min`;
+    const a=muCtx(),b=muBus(),st=a.currentTime+.9;t0=st;live=true;S.textContent='Toca con los clics…';
+    for(let i=0;i<8;i++){muDrum(b.node,i%4?'clic':'clic1',st+i*T);timers.push(setTimeout(()=>{dots[i].classList.add('on');muPulse($('#mt-a'))},(.9+i*T)*1000))}
+    timers.push(setTimeout(()=>{S.textContent='¡Sigue tú, sin sonido!'},(.9+7.6*T)*1000));
+    timers.push(setTimeout(judge,(.9+16*T+.6*T)*1000))}
+  function judge(){live=false;const offs=[];taps.filter(t=>t<t0+7.5*T).forEach(t=>{const i=Math.round((t-t0)/T);if(i>=2&&i<8&&Math.abs(t-(t0+i*T))<T/2)offs.push(t-(t0+i*T))});
+    offs.sort((a,b)=>a-b);const off=offs.length>=2?Math.max(-.15,Math.min(.15,offs[Math.floor(offs.length/2)])):0;
+    const free=taps.filter(t=>t>t0+7.5*T);let sum=0;for(let j=0;j<8;j++){const want=t0+(8+j)*T+off;let bi=-1,bd=1e9;free.forEach((t,i)=>{const d=Math.abs(t-want);if(d<bd){bd=d;bi=i}});
+      if(bi>=0&&bd<T/2){sum+=bd;free.splice(bi,1)}else sum+=Math.min(T/2,.35)}
+    const ms=Math.round(sum/8*1000);errs.push(ms);$('#mt-e').textContent=`Error: ${ms} ms`;S.textContent=ms<40?'¡Reloj suizo!':ms<80?'¡Muy bien!':ms<150?'Te has despistado un poco':'Se te ha ido el ritmo';sfx(ms<80?'ok':'bad');
+    k++;ghMark(k);timers.push(setTimeout(()=>{if(k<3)round();else{tb.stop();finish('metronomo',Math.round(errs.reduce((a,b)=>a+b,0)/errs.length),official)}},1600))}
+  if(MUT)MUT.g=()=>({t0,T,live,k});ghMark(0);timers.push(setTimeout(round,400));
+}
+
+// --- ¿Cuántas notas suenan? ---
+function acordes(official){if(muNoAudio())return;
+  const r=rngFor('acordes',official),ROUNDS=12;
+  const R=Array.from({length:ROUNDS},(_,k)=>{const n=1+Math.floor(r()*(k<4?3:4)),minI=k<4?7:k<8?4:3,maxI=k<4?12:k<8?9:5;let ms;
+    for(let tries=0;tries<50;tries++){ms=[48+Math.floor(r()*10)];for(let i=1;i<n;i++){let iv;do{iv=minI+Math.floor(r()*(maxI-minI+1))}while(iv%12===0);ms.push(ms[i-1]+iv)}
+      if(ms.every((a,i)=>ms.every((b,j)=>i===j||Math.abs(a-b)%12)))break}return {n,ms}});
+  openOv(header('acordes',official)+`<div class="say" id="ac-s">¿Cuántas notas suenan a la vez?</div><div class="row" style="gap:12px"><span class="tag" id="ac-k">Ronda 1 de ${ROUNDS}</span><div class="big" id="ac-p" style="font-size:30px">0</div></div>${muArt('altavoz',120,'ac-a')}
+    <div class="mu-nums" id="ac-o">${[1,2,3,4].map(n=>`<button class="btn" data-n="${n}" disabled>${n}</button>`).join('')}</div><button class="btn ghost" id="ac-r" disabled>🔁 Otra vez</button>
+    <p class="note" style="margin:0">Las notas suenan juntas, como un acorde. Puede haber de 1 a 4. Puedes repetirlo una vez por ronda.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  let k=0,pts=0,live=false,t1=0,rep=false;const S=$('#ac-s'),btn=[...ovIn.querySelectorAll('#ac-o button')];
+  const chord=()=>{const a=muCtx(),b=muBus(),t=a.currentTime+.25,q=R[k];q.ms.forEach(m=>muNote(b.node,m,t,1.5,'organo',1/Math.sqrt(q.n)));timers.push(setTimeout(()=>muPulse($('#ac-a')),250))};
+  function play(){live=false;rep=false;btn.forEach(b=>b.disabled=true);$('#ac-r').disabled=true;$('#ac-k').textContent=`Ronda ${k+1} de ${ROUNDS}`;S.textContent='Escucha…';chord();
+    timers.push(setTimeout(()=>{live=true;t1=performance.now();btn.forEach(b=>b.disabled=false);$('#ac-r').disabled=false;S.textContent='¿Cuántas?'},1000))}
+  $('#ac-r').onclick=()=>{if(!live||rep)return;rep=true;$('#ac-r').disabled=true;chord()};
+  $('#ac-o').onclick=e=>{const b=e.target.closest('[data-n]');if(!b||!live)return;live=false;btn.forEach(x=>x.disabled=true);$('#ac-r').disabled=true;const q=R[k],ok=+b.dataset.n===q.n;
+    if(ok){const g=100+Math.round(30*Math.max(0,1-(performance.now()-t1)/3000));pts+=g;sfx('ok');S.textContent=`¡Sí, ${q.n}! +${g}`}else{sfx('bad');S.textContent=`No: ${q.n===1?'era 1 nota':`eran ${q.n}`}`}
+    $('#ac-p').textContent=pts;k++;ghMark(pts);timers.push(setTimeout(()=>{if(k<ROUNDS)play();else finish('acordes',pts,official)},1200))};
+  if(MUT)MUT.g=()=>({R,k,live});ghMark(0);timers.push(setTimeout(play,400));
+}
+
+// --- Adivina la melodía ---
+function muOpts(r,M,pool=MEL){const o=[M];const rest=shuffle(pool.filter(x=>x!==M).slice(),r);while(o.length<4&&rest.length)o.push(rest.pop());return shuffle(o,r)}
+function melodia(official){if(muNoAudio())return;
+  const r=rngFor('melodia',official),ROUNDS=8,order=shuffle(MEL.slice(),r).slice(0,ROUNDS),opts=order.map(M=>muOpts(r,M));
+  openOv(header('melodia',official)+`<div class="say" id="ml-s">Escucha…</div><div class="row" style="gap:12px"><span class="tag" id="ml-k">Ronda 1 de ${ROUNDS}</span><div class="big" id="ml-p" style="font-size:30px">0</div></div>
+    ${muArt('vinilo',120,'ml-a')}<div class="tag" id="ml-c">0 notas</div><button class="btn red" id="ml-b" style="font-size:24px;padding:14px 30px" disabled>¡La sé!</button><div class="mu-opts" id="ml-o"></div>
+    <p class="note" style="margin:0">Pulsa «¡La sé!» en cuanto la reconozcas: cuantas menos notas necesites, más puntos.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  let k=0,pts=0,live=false,bus=null,t0=0,heard=0,late=false,rid=0;const S=$('#ml-s'),A=$('#ml-a');
+  function play(){const M=order[k],ev=M.ev.slice(0,24),a=muCtx(),my=++rid;bus=muBus();t0=a.currentTime+.4;muPlayEv(bus,ev,t0);live=true;late=false;heard=0;
+    $('#ml-o').innerHTML='';$('#ml-b').hidden=false;$('#ml-b').disabled=false;$('#ml-k').textContent=`Ronda ${k+1} de ${ROUNDS}`;S.textContent='Escucha…';A.classList.add('spin');$('#ml-c').textContent='0 notas';
+    ev.forEach((e,i)=>timers.push(setTimeout(()=>{if(rid!==my||!live)return;heard=i+1;$('#ml-c').textContent=`${heard} ${heard===1?'nota':'notas'}`},(.4+e.t)*1000)));
+    const end=ev[ev.length-1].t+ev[ev.length-1].d;timers.push(setTimeout(()=>{if(rid===my&&live){late=true;buzz()}},(.4+end+.8)*1000))}
+  function buzz(){if(!live)return;live=false;bus.stop();A.classList.remove('spin');$('#ml-b').hidden=true;heard=Math.max(1,heard);S.textContent=late?'Se acabó: ¿cuál era?':`¡Con ${heard} ${heard===1?'nota':'notas'}! ¿Cuál es?`;
+    $('#ml-o').innerHTML=opts[k].map((o,i)=>`<button class="btn ghost" data-i="${i}">${o.t}</button>`).join('')}
+  $('#ml-b').onclick=buzz;
+  $('#ml-o').onclick=e=>{const b=e.target.closest('[data-i]');if(!b||live||$('#ml-o').dataset.lock==='1')return;$('#ml-o').dataset.lock='1';const M=order[k],ok=opts[k][+b.dataset.i]===M;
+    const g=ok?(late?10:Math.max(20,120-7*heard)):0;pts+=g;$('#ml-p').textContent=pts;b.classList.add(ok?'ok':'bad');sfx(ok?'ok':'bad');S.innerHTML=`${ok?`¡Sí! +${g}`:'No'} · <b>${M.t}</b> (${M.a})`;k++;ghMark(pts);
+    timers.push(setTimeout(()=>{$('#ml-o').dataset.lock='';if(k<ROUNDS)play();else finish('melodia',pts,official)},1700))};
+  if(MUT)MUT.g=()=>({order,opts,k,live,heard});ghMark(0);timers.push(setTimeout(play,300));
+}
+
+// --- La nota falsa ---
+function notafalsa(official){if(muNoAudio())return;
+  const r=rngFor('notafalsa',official),ROUNDS=8,order=shuffle(MEL.filter(M=>M.ev.length>=8).slice(),r).slice(0,ROUNDS);
+  const R=order.map(M=>{const ev=M.ev.slice(0,18).map(e=>({...e})),pcs=new Set(ev.map(e=>e.m%12));let cand=[];for(let j=3;j<ev.length-1;j++)if(ev[j].b>=.5)cand.push(j);if(!cand.length)for(let j=2;j<ev.length;j++)cand.push(j);
+    const j=cand[Math.floor(r()*cand.length)];const sh=shuffle([1,-1,2,-2],r).find(s=>!pcs.has((ev[j].m+s+120)%12)&&ev[j].m+s!==(ev[j-1]||{}).m&&ev[j].m+s!==(ev[j+1]||{}).m)||1;ev[j].m+=sh;return {M,ev,j}});
+  openOv(header('notafalsa',official)+`<div class="say" id="nf-s">Escucha…</div><div class="row" style="gap:12px"><span class="tag" id="nf-k">Ronda 1 de ${ROUNDS}</span><div class="big" id="nf-p" style="font-size:30px">0</div></div>
+    <div class="tag" id="nf-t"></div>${muArt('altavoz',120,'nf-a')}<button class="btn red" id="nf-b" style="font-size:26px;padding:16px 34px" disabled>¡Esa!</button>
+    <p class="note" style="margin:0">Una nota de la melodía está desafinada. Pulsa justo cuando suene. Si te adelantas, pierdes la ronda.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  let k=0,pts=0,live=false,bus=null,t0=0,rid=0;const S=$('#nf-s');
+  function play(){const q=R[k],a=muCtx(),my=++rid;bus=muBus();t0=a.currentTime+.6;muPlayEv(bus,q.ev,t0);live=true;$('#nf-b').disabled=false;$('#nf-k').textContent=`Ronda ${k+1} de ${ROUNDS}`;
+    $('#nf-t').textContent=`${q.M.t} · ${q.M.a}`;S.textContent='Escucha…';q.ev.forEach(e=>timers.push(setTimeout(()=>{if(rid===my&&live)muPulse($('#nf-a'))},(.6+e.t)*1000)));
+    const L=q.ev[q.ev.length-1];timers.push(setTimeout(()=>{if(rid===my&&live)judge(null)},(.6+L.t+L.d+.9)*1000))}
+  function judge(tt){if(!live)return;live=false;$('#nf-b').disabled=true;bus.stop();const q=R[k],e=q.ev[q.j],st=t0+e.t;let g=0,msg;
+    if(tt==null)msg='Se te ha escapado';else if(tt<st-.05)msg='¡Demasiado pronto!';else{const dt=tt-st;if(dt<=Math.max(e.d,.3)+.7){g=100+Math.round(40*Math.max(0,1-dt));msg=`¡Pillada! +${g}`}else msg='Tarde'}
+    pts+=g;$('#nf-p').textContent=pts;sfx(g?'ok':'bad');S.textContent=`${msg} · era la nota ${q.j+1}`;k++;ghMark(pts);
+    timers.push(setTimeout(()=>{if(k<ROUNDS)play();else finish('notafalsa',pts,official)},1500))}
+  $('#nf-b').addEventListener('pointerdown',e=>{e.preventDefault();if(live)judge(muNow())});
+  if(MUT)MUT.g=()=>({R,k,live,t0});ghMark(0);timers.push(setTimeout(play,300));
+}
+
+// --- Ordena la melodía ---
+function ordena(official){if(muNoAudio())return;
+  const r=rngFor('ordena',official),ROUNDS=3,mels=shuffle(MEL.filter(M=>M.ev.length>=12).slice(),r).slice(0,ROUNDS),COL=['#E63946','#FFC93C','#2BB673','#3A86FF'];
+  const R=mels.map(M=>{const ev=M.ev.slice(0,24),L=ev[ev.length-1],tot=L.t+L.d,cut=[0];for(let q=1;q<4;q++){let i=ev.findIndex(e=>e.t>=tot*q/4-.01);i=Math.max(cut[q-1]+2,Math.min(i,ev.length-2*(4-q)));cut.push(i)}cut.push(ev.length);
+    const ch=[0,1,2,3].map(q=>ev.slice(cut[q],cut[q+1]));const key=c=>c.map(e=>e.m+':'+e.b).join(' ');let ord,g=0;do{ord=shuffle([0,1,2,3],r)}while(ord.every((v,i)=>key(ch[v])===key(ch[i]))&&++g<50);return {M,ch,ord,key}});
+  openOv(header('ordena',official)+`<div class="row" style="gap:12px">${clockEl()}<span class="tag" id="or-k">Melodía 1 de ${ROUNDS}</span></div><div class="say" id="or-s"></div>
+    <small class="eyebrow">Trozos (toca para oír)</small><div class="mu-chunks" id="or-c"></div><small class="eyebrow">Tu orden</small><div class="mu-slots" id="or-l"></div>
+    <div class="row" style="gap:8px"><button class="btn ghost" id="or-p" disabled>▶ Oír mi orden</button><button class="btn red" id="or-ok" disabled>Comprobar</button></div>
+    <p class="note" style="margin:0">La melodía está cortada en 4 trozos. Toca un trozo para oírlo y «Poner» para colocarlo. Toca un hueco para quitarlo. Cada fallo suma 5 s.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  const sw=stopwatch();let k=0,pen=0,slots=[],bus=null;const S=$('#or-s');
+  const playChunks=list=>{if(bus)bus.stop();const a=muCtx();bus=muBus();let t=a.currentTime+.1;list.forEach(c=>{const b0=c[0].t;c.forEach(e=>muNote(bus.node,e.m,t+e.t-b0,e.d));const L=c[c.length-1];t+=L.t-b0+L.d/.92})};
+  function render(){const q=R[k];$('#or-c').innerHTML=q.ord.map((v,i)=>`<div class="mu-chunk ${slots.includes(i)?'used':''}" style="--c:${COL[i]}"><button class="mu-play" data-p="${i}">▶</button><button class="mu-put" data-u="${i}" ${slots.includes(i)?'disabled':''}>Poner</button></div>`).join('');
+    $('#or-l').innerHTML=[0,1,2,3].map(s=>{const i=slots[s];return i==null?`<button class="mu-slot" data-s="${s}" disabled>${s+1}</button>`:`<button class="mu-slot full" data-s="${s}" style="--c:${COL[i]}">♪</button>`}).join('');
+    $('#or-ok').disabled=slots.filter(v=>v!=null).length<4;$('#or-p').disabled=!slots.some(v=>v!=null)}
+  function round(){slots=[];const q=R[k];$('#or-k').textContent=`Melodía ${k+1} de ${ROUNDS}`;S.innerHTML=`<b>${q.M.t}</b> · ${q.M.a}`;render()}
+  $('#or-c').onclick=e=>{const p=e.target.closest('[data-p]'),u=e.target.closest('[data-u]');const q=R[k];
+    if(p)playChunks([q.ch[q.ord[+p.dataset.p]]]);
+    if(u){const i=+u.dataset.u;if(slots.includes(i))return;let s=[0,1,2,3].find(s=>slots[s]==null);slots[s]=i;playChunks([q.ch[q.ord[i]]]);render()}};
+  $('#or-l').onclick=e=>{const b=e.target.closest('.mu-slot.full');if(!b)return;slots[+b.dataset.s]=null;render()};
+  $('#or-p').onclick=()=>{const q=R[k];playChunks(slots.filter(v=>v!=null).map(i=>q.ch[q.ord[i]]))};
+  $('#or-ok').onclick=()=>{const q=R[k];const good=slots.filter((i,s)=>q.key(q.ch[q.ord[i]])===q.key(q.ch[s])).length;
+    if(good===4){sfx('ok');S.innerHTML=`¡Perfecto! <b>${q.M.t}</b>`;playChunks(q.ch);k++;ghMark(k);$('#or-ok').disabled=true;
+      timers.push(setTimeout(()=>{if(k<ROUNDS)round();else{bus&&bus.stop();finish('ordena',Math.round(sw.ms())+pen,official)}},2200))}
+    else{pen+=5000;sfx('bad');S.textContent=`${good} de 4 en su sitio · +5 s`}};
+  if(MUT)MUT.g=()=>({R,k,slots});round();sw.start();showClock(sw);ghMark(0);
+}
+
+// --- Concierto: toca la melodía al compás ---
+function concierto(official){if(muNoAudio())return;
+  const r=rngFor('concierto',official),W=340,H=480,LY=408,FALL=1.8,COL=['#E63946','#FFC93C','#3A86FF'];
+  const pool=['alegria','cucaracha','turca','cascabel','granja','martinillo','gruta','danubio','tell','estrellita'].map(id=>MELI[id]);const two=shuffle(pool.slice(),r).slice(0,2);
+  const notes=[],beats=[],songs=[];let T=2.2;
+  two.forEach((M,si)=>{const bpm=M.bpm*(si?1.15:1),ev=muEvents(M,bpm),ms=ev.map(e=>e.m).sort((a,b)=>a-b),lo=ms[Math.floor(ms.length/3)],hi=ms[Math.floor(ms.length*2/3)];let last=-9;
+    songs.push({t:T,M});ev.forEach(e=>{if(e.t-last<.15)return;last=e.t;notes.push({t:T+e.t,m:e.m,lane:e.m<lo?0:e.m<hi||lo===hi?1:2,st:0})});
+    const L=ev[ev.length-1],end=L.t+L.d,sp=60/bpm;for(let b=0;b*sp<end;b++)beats.push({t:T+b*sp,sp});T+=end+sp*2});
+  const END=notes[notes.length-1].t+1;
+  openOv(header('concierto',official)+`<div class="row" style="gap:12px"><div class="big" id="co-p" style="font-size:30px">100 %</div><span class="tag" id="co-t"></span></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca la columna de cada nota cuando llegue a la línea: si aciertas, suena la melodía. Tocar a lo loco resta.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  const {c,x,pos}=makeCanvas(W,H);const a=muCtx(),bk=muBus(),tb=muBus(),T0=a.currentTime+.3;let pts=0,judged=0,hits=0,over=false;const fx=[];
+  beats.forEach(o=>{muDrum(bk.node,'bombo',T0+o.t,.55);muDrum(bk.node,'charles',T0+o.t+o.sp/2,.7)});
+  for(let i=0;i<4;i++)muDrum(bk.node,'clic1',T0+songs[0].t-(4-i)*60/two[0].bpm,.5);
+  const now=()=>muNow()-T0;
+  c.addEventListener('pointerdown',e=>{e.preventDefault();if(over)return;const [px]=pos(e),ln=Math.max(0,Math.min(2,Math.floor(px/W*3))),t=now();let best=null,bd=1;
+    notes.forEach(n=>{if(n.lane===ln&&!n.st){const d=Math.abs(n.t-t);if(d<bd){bd=d;best=n}}});
+    if(best&&bd<=.14){best.st=1;judged++;hits++;const g=bd<=.07?100:60;pts+=g;muNote(tb.node,best.m,MUS.a.currentTime,.3,'piano',1.2);fx.push({ln,t:performance.now(),txt:g===100?'¡PERFECTO!':'BIEN',c:'#2BB673'});ghMark(hits)}
+    else{pts=Math.max(0,pts-15);muDrum(tb.node,'caja',MUS.a.currentTime,.25);fx.push({ln,t:performance.now(),txt:'−15',c:'#E63946'})}});
+  const pr=()=>judged?Math.round(pts/(100*judged)*100):100;
+  function draw(){if(!c.isConnected)return;const t=now();
+    notes.forEach(n=>{if(!n.st&&t-n.t>.14){n.st=2;judged++;fx.push({ln:n.lane,t:performance.now(),txt:'FALLO',c:'#E63946'})}});
+    const cur=songs.filter(s=>s.t<=t+1).pop();$('#co-t').textContent=cur?`${cur.M.t} · ${cur.M.a}`:'';$('#co-p').textContent=pr()+' %';
+    x.fillStyle=PAPER;x.fillRect(0,0,W,H);for(let l=0;l<3;l++){x.fillStyle=l%2?'#F3EEE3':'#FAF7F0';x.fillRect(l*W/3,0,W/3,H)}
+    x.strokeStyle=INK;x.lineWidth=4;x.beginPath();x.moveTo(0,LY);x.lineTo(W,LY);x.stroke();
+    for(let l=0;l<3;l++){const cx=(l+.5)*W/3;if(!dimg(x,'taiko_'+l,cx,LY+30,80)){x.fillStyle=COL[l];x.beginPath();x.arc(cx,LY+30,30,0,7);x.fill();x.lineWidth=3;x.strokeStyle=INK;x.stroke()}}
+    notes.forEach(n=>{if(n.st===1)return;const y=LY-(n.t-t)/FALL*LY;if(y<-30||y>H+30)return;const cx=(n.lane+.5)*W/3;x.globalAlpha=n.st===2?.25:1;
+      if(!dimg(x,'nota_'+n.lane,cx,y,48)){x.fillStyle=COL[n.lane];x.beginPath();x.ellipse(cx,y,22,16,0,0,7);x.fill();x.lineWidth=3;x.strokeStyle=INK;x.stroke()}x.globalAlpha=1});
+    const pn=performance.now();for(let i=fx.length-1;i>=0;i--){const f=fx[i],age=(pn-f.t)/600;if(age>1){fx.splice(i,1);continue}x.globalAlpha=1-age;x.fillStyle=f.c;x.font='400 18px Dela Gothic One,sans-serif';x.textAlign='center';x.fillText(f.txt,(f.ln+.5)*W/3,LY-30-age*40);x.globalAlpha=1}
+    if(t<songs[0].t){x.fillStyle=INK;x.font='400 64px Dela Gothic One,sans-serif';x.textAlign='center';x.fillText(String(Math.ceil(songs[0].t-t)),W/2,H/2)}
+    if(t>END&&!over){over=true;bk.stop(.2);tb.stop(.2);finish('concierto',pr(),official);return}
+    raf=requestAnimationFrame(draw)}
+  if(MUT)MUT.g=()=>({notes,T0,W});ghMark(0);draw();
+}
+
+// ===== Canciones del grupo (YouTube) =====
+// Solo se guardan enlaces de YouTube; el audio lo pone el reproductor oficial de YouTube. Necesita conexión.
+let SONGS=null;
+const songKey=()=>'rdm_songs_'+(ONLINE&&GID?GID:'local');
+async function songsLoad(force){if(SONGS&&!force&&SONGS._k===songKey())return SONGS;let list=store.get(songKey(),[]);
+  if(ONLINE&&sb&&GID){try{const {data,error}=await sb.from('songs').select('id,yt,title,artist,year,start_s,added_by').eq('group_id',GID).order('id');if(!error&&data){list=data;store.set(songKey(),data)}}catch(e){}}
+  SONGS=list;SONGS._k=songKey();return SONGS}
+const ytId=s=>{s=(s||'').trim();const m=s.match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([A-Za-z0-9_-]{11})/);return m?m[1]:(/^[A-Za-z0-9_-]{11}$/.test(s)?s:null)};
+const songLab=s=>`${esc(s.title)}${s.artist?' · '+esc(s.artist):''}`;
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function ytMeta(id){const u='https://www.youtube.com/watch?v='+id;
+  for(const src of ['https://www.youtube.com/oembed?format=json&url=','https://noembed.com/embed?url=']){try{const r=await fetch(src+encodeURIComponent(u));if(r.ok){const j=await r.json();if(j&&j.title)return j}}catch(e){}}return null}
+function ytClean(t,author){t=(t||'').replace(/\s*[\(\[][^\)\]]*(official|oficial|video|vídeo|audio|lyric|letra|remaster|hd|4k|videoclip)[^\)\]]*[\)\]]/ig,'').replace(/\s+/g,' ').trim();
+  const m=t.match(/^(.+?)\s+[-–—|]\s+(.+)$/);if(m)return {artist:m[1].trim(),title:m[2].trim()};return {artist:(author||'').replace(/\s*-\s*Topic$/,'').replace(/VEVO$/i,'').trim(),title:t}}
+function songsCanDel(s){return !ONLINE||!s.added_by||s.added_by===myUid||(P[me]&&P[me].admin)}
+async function openSongs(back){
+  const draw=list=>{openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Canciones del grupo</span><button class="btn ghost" id="sg-x" style="font-size:14px;padding:6px 10px">${back?'Volver':'Salir'}</button></div>
+    <img src="img/ic_cancion.webp" alt="" style="width:80px;height:80px;object-fit:contain"><h2>Vuestra lista</h2>
+    <p class="note" style="margin:0">Pegad enlaces de YouTube de canciones que conozcáis. Las usan «Adivina la canción», «¿De qué década es?» y el duelo. ${ONLINE?'Las ve todo el grupo.':'Se guardan solo en este móvil.'}</p>
+    <div class="panel stack" style="width:100%;gap:8px;text-align:left">
+      <input id="sg-u" class="inp" placeholder="Enlace de YouTube" inputmode="url" autocomplete="off">
+      <div class="row" style="gap:6px"><input id="sg-t" class="inp" placeholder="Título" maxlength="120"><input id="sg-a" class="inp" placeholder="Artista" maxlength="80"></div>
+      <div class="row" style="gap:6px"><input id="sg-y" class="inp" placeholder="Año" inputmode="numeric" maxlength="4" style="max-width:90px"><input id="sg-s" class="inp" placeholder="Empieza en (1:05)" maxlength="6" style="max-width:150px"></div>
+      <small class="note" id="sg-m" style="margin:0">Sin año no sale en «¿De qué década es?». «Empieza en» sirve para saltar la intro y que suene el estribillo.</small>
+      <button class="btn red" id="sg-add">Añadir</button></div>
+    <div class="stack" style="width:100%;gap:6px;text-align:left" id="sg-l">${list.length?list.map(s=>`<div class="sg-row"><img src="https://i.ytimg.com/vi/${s.yt}/default.jpg" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span><b>${esc(s.title)}</b><small>${esc(s.artist||'')}${s.year?' · '+s.year:''}</small></span>${songsCanDel(s)?`<button class="btn ghost" data-del="${s.id!=null?s.id:s.yt}" aria-label="Quitar">✕</button>`:''}</div>`).join(''):'<p class="note">Aún no hay canciones. Hacen falta al menos 4.</p>'}</div>`,'img/bg_menu.webp');
+    $('#sg-x').onclick=()=>back?back():closeOv();
+    const M=$('#sg-m');
+    $('#sg-u').addEventListener('change',async()=>{const id=ytId($('#sg-u').value);if(!id){M.textContent='Ese enlace no parece de YouTube.';return}M.textContent='Buscando el título…';const j=await ytMeta(id);if(ytId($('#sg-u')&&$('#sg-u').value)!==id)return;
+      if(j){const c=ytClean(j.title,j.author_name);if(!$('#sg-t').value)$('#sg-t').value=c.title;if(!$('#sg-a').value)$('#sg-a').value=c.artist;M.textContent='Revisa título y artista, y pon el año.'}else M.textContent='No he podido leer el título: escríbelo tú.'});
+    $('#sg-add').onclick=async()=>{const id=ytId($('#sg-u').value),title=$('#sg-t').value.trim(),artist=$('#sg-a').value.trim(),y=+$('#sg-y').value.trim()||null,ss=$('#sg-s').value.trim();
+      const st=/^\d+:\d{1,2}$/.test(ss)?+ss.split(':')[0]*60+ +ss.split(':')[1]:(+ss||0);
+      if(!id){M.textContent='Pega un enlace de YouTube.';return}if(!title){M.textContent='Falta el título.';return}if(y&&(y<1900||y>2100)){M.textContent='El año no es válido.';return}
+      if(list.some(s=>s.yt===id)){M.textContent='Esa canción ya está en la lista.';return}
+      const row={yt:id,title,artist:artist||null,year:y,start_s:Math.max(0,Math.min(3600,st|0))};$('#sg-add').disabled=true;
+      if(ONLINE&&sb&&GID){const {error}=await sb.from('songs').insert({...row,group_id:GID});if(error){M.textContent='No se ha podido guardar: '+(error.message||'error');$('#sg-add').disabled=false;return}draw(await songsLoad(true))}
+      else{const l=store.get(songKey(),[]);l.push({...row,id:Date.now()});store.set(songKey(),l);SONGS=null;draw(await songsLoad(true))}};
+    $('#sg-l').onclick=async e=>{const b=e.target.closest('[data-del]');if(!b)return;const k=b.dataset.del;b.disabled=true;
+      if(ONLINE&&sb&&GID){const {error}=await sb.from('songs').delete().eq('id',+k);if(error){b.disabled=false;return}}else store.set(songKey(),store.get(songKey(),[]).filter(s=>String(s.id)!==k&&s.yt!==k));
+      draw(await songsLoad(true))};
+  };
+  draw(SONGS&&SONGS._k===songKey()?SONGS:store.get(songKey(),[]));draw(await songsLoad(true));
+}
+
+// reproductor de YouTube tapado (para no ver el título); el toque atraviesa la tapa y llega al vídeo
+const YTS={api:null,p:null};
+function ytApi(){if(window.YT&&YT.Player)return Promise.resolve(window.YT);if(YTS.api)return YTS.api;
+  YTS.api=new Promise((res,rej)=>{const prev=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{try{prev&&prev()}catch(e){}res(window.YT)};
+    const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>{YTS.api=null;rej(new Error('net'))};document.head.appendChild(s);setTimeout(()=>{if(!(window.YT&&YT.Player)){YTS.api=null;rej(new Error('timeout'))}},15000)});return YTS.api}
+async function ytMake(elId){const Y=await ytApi();return new Promise((res,rej)=>{let p;const to=setTimeout(()=>rej(new Error('timeout')),15000);
+  p=new Y.Player(elId,{width:'100%',height:'100%',playerVars:{controls:0,disablekb:1,playsinline:1,rel:0,fs:0,iv_load_policy:3,modestbranding:1},
+    events:{onReady:()=>{clearTimeout(to);YTS.p=p;res(p)},onStateChange:e=>p._cb&&p._cb('state',e.data),onError:e=>p._cb&&p._cb('error',e.data)}})})}
+function ytStop(){try{if(YTS.p){YTS.p._cb=null;YTS.p.stopVideo&&YTS.p.stopVideo();YTS.p.destroy&&YTS.p.destroy()}}catch(e){}YTS.p=null}
+function ytPlay(p,s,{secs=15,cover,onPlay,onFail}){let started=false,done=false;const C=cover;C.classList.remove('tap','on');C.classList.add('wait');
+  p._cb=(k,v)=>{if(done)return;if(k==='error'){done=true;onFail(v);return}
+    if(v===1&&!started){started=true;C.classList.remove('tap','wait');C.classList.add('on');onPlay();timers.push(setTimeout(()=>{if(!done)try{p.pauseVideo()}catch(e){}},secs*1000))}};
+  try{p.loadVideoById({videoId:s.yt,startSeconds:s.start_s||0})}catch(e){done=true;onFail(-1);return {stop(){}}}
+  timers.push(setTimeout(()=>{if(!started&&!done){C.classList.remove('wait');C.classList.add('tap')}},1800));
+  return {stop(){done=true;C.classList.remove('on','tap','wait');try{p.pauseVideo()}catch(e){}},resume(){if(done)return;try{p.playVideo()}catch(e){}}}}
+const ytBoxHTML=(id='yt-c')=>`<div class="yt-box"><div id="${id}-pl"></div><div class="yt-cover" id="${id}">${muArt('vinilo',84)}<b class="yt-wait">Cargando la canción…</b><b class="yt-tap">▶ Toca aquí para escuchar</b><b class="yt-on">🎵 Escuchando…</b></div></div>`;
+const decOf=y=>Math.floor(y/10)*10,decLab=d=>d<2000?`años ${String(d).slice(2)}`:`${d}s`;
+
+function cancion(official){ytGame('cancion')}
+function decada(official){ytGame('decada')}
+async function ytGame(gid){
+  const isDec=gid==='decada',ROUNDS=8;
+  openOv(header(gid,false)+`<div class="say" id="yg-s">Preparando…</div><div class="row" style="gap:12px"><span class="tag" id="yg-k"></span><div class="big" id="yg-p" style="font-size:30px">0</div></div>${ytBoxHTML()}<div class="mu-opts" id="yg-o"></div>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;const S=$('#yg-s');
+  const all=(await songsLoad()).filter(s=>!isDec||s.year);
+  if(all.length<4){S.textContent=`Faltan canciones${isDec?' con año':''}: hay ${all.length} y hacen falta 4.`;$('#yg-o').innerHTML='<button class="btn red" id="yg-add">Añadir canciones</button>';$('#yg-add').onclick=()=>openSongs();return}
+  if(!navigator.onLine){S.textContent='Este juego necesita conexión (suena desde YouTube).';return}
+  let p;try{p=await ytMake('yt-c-pl')}catch(e){if($('#yg-s'))$('#yg-s').textContent='No se ha podido cargar YouTube. Revisa la conexión.';return}
+  if(!$('#yt-c')){ytStop();return}
+  const r=mulberry32((Math.random()*4294967296)>>>0),queue=shuffle(all.slice(),r);let k=0,pts=0,cur=null,ctl=null,t1=0,live=false;const n=Math.min(ROUNDS,all.length),C=$('#yt-c');
+  const decs=[...new Set([1960,1970,1980,1990,2000,2010,2020,...all.map(s=>decOf(s.year))])].filter(d=>d>=decOf(Math.min(1960,...all.map(s=>s.year)))&&d<=2020).sort((a,b)=>a-b);
+  function round(){if(!queue.length){end();return}cur=queue.shift();live=false;$('#yg-k').textContent=`Canción ${k+1} de ${n}`;S.textContent=isDec?'¿De qué década es?':'¿Qué canción es?';
+    const ops=isDec?decs.map(d=>({v:d,l:decLab(d)})):muOpts(r,cur,all.filter(s=>s.title!==cur.title||s===cur)).map(s=>({v:s.yt,l:songLab(s)}));
+    $('#yg-o').innerHTML=ops.map(o=>`<button class="btn ghost" data-v="${o.v}" disabled>${o.l}</button>`).join('');
+    ctl=ytPlay(p,cur,{secs:15,cover:C,onPlay:()=>{live=true;t1=performance.now();$('#yg-o').querySelectorAll('button').forEach(b=>b.disabled=false)},
+      onFail:()=>{S.textContent='Esa canción no se puede poner fuera de YouTube. Paso a otra.';timers.push(setTimeout(round,1400))}})}
+  $('#yg-o').onclick=e=>{const b=e.target.closest('[data-v]');if(!b||!live)return;live=false;ctl.stop();$('#yg-o').querySelectorAll('button').forEach(x=>x.disabled=true);
+    const sp=Math.round(30*Math.max(0,1-(performance.now()-t1)/12000));let g=0;
+    if(isDec){const d=+b.dataset.v,ok=decOf(cur.year);g=d===ok?100+sp:Math.abs(d-ok)===10?40:0;b.classList.add(g>=100?'ok':g?'meh':'bad');$('#yg-o').querySelector(`[data-v="${ok}"]`).classList.add('ok')}
+    else{const ok=b.dataset.v===cur.yt;g=ok?100+sp:0;b.classList.add(ok?'ok':'bad')}
+    pts+=g;$('#yg-p').textContent=pts;sfx(g?'ok':'bad');S.innerHTML=`${g?`+${g}`:'No'} · <b>${esc(cur.title)}</b>${cur.artist?' · '+esc(cur.artist):''}${cur.year?' ('+cur.year+')':''}`;k++;ghMark(pts);
+    timers.push(setTimeout(()=>{if(k<n)round();else end()},2600))};
+  function end(){ytStop();finish(gid,pts,false)}
+  ghMark(0);round();
+}
+// en la pantalla previa de los juegos de YouTube: cuántas canciones hay y botón para añadir
+async function ytIntro(gid){const box=$('#yt-intro');if(!box)return;const isDec=gid==='decada';
+  const paint=list=>{if(!$('#yt-intro'))return;const n=list.filter(s=>!isDec||s.year).length;box.innerHTML=`<div class="panel row" style="gap:10px;justify-content:space-between;width:100%"><span style="text-align:left"><b>${n} canciones${isDec?' con año':''}</b><br><small class="note">${n<4?'Hacen falta al menos 4.':'Suena desde YouTube: necesita conexión.'}</small></span><button class="btn ghost" id="yt-ed">🎵 Lista</button></div>`;
+    $('#yt-ed').onclick=()=>openSongs(()=>openPractice(gid));box.dataset.n=n};
+  paint(store.get(songKey(),[]));paint(await songsLoad(true));
+  const go=$('#pr-go');if(go){const orig=go.onclick;go.onclick=()=>{if(+box.dataset.n<4){openSongs(()=>openPractice(gid));return}orig()}}}
+
+// --- Duelo: adivina la canción (melodías de la app o canciones del grupo) ---
+function duoCancion(A,B){
+  const yt=(SONGS||store.get(songKey(),[])).length>=4&&navigator.onLine;
+  duoShell('cancion',A,B,`<div class="duo-msg" id="du-m">Tocad vuestro lado para empezar</div>${yt?`<div class="row" id="du-src" style="gap:6px"><button class="btn ghost on" data-src="mel" style="font-size:13px;padding:5px 9px">Melodías clásicas</button><button class="btn ghost" data-src="yt" style="font-size:13px;padding:5px 9px">Canciones del grupo</button></div>`:''}<div id="du-yt" hidden>${ytBoxHTML('du-c')}</div>`);
+  let src='mel',sa=0,sb2=0,st='idle',ready={a:0,b:0},lock={},Q=null,bus=null,t0=0,heard=0,rid=0,p=null,ctl=null,tmo=null;const M=$('#du-m'),used=new Set();
+  if(yt)$('#du-src').onclick=e=>{const b=e.target.closest('[data-src]');if(!b||st!=='idle')return;src=b.dataset.src;$('#du-src').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
+  const zone=(who,html)=>{$(who==='a'?'#du-za':'#du-zb').innerHTML=html};
+  const buzzer=who=>zone(who,lock[who]?'<div class="duo-q" style="font-size:22px">Sin turno</div>':`<button class="mu-buzz" data-z="1">${muArt('pulsador',90)}<b>¡La sé!</b></button>`);
+  const score=()=>{$('#du-sa').textContent=sa;$('#du-sb').textContent=sb2;if(sa>=5||sb2>=5){st='end';ytStop();timers.push(setTimeout(()=>duoEnd('cancion',A,B,sa,sb2),1200));return true}return false};
+  const stopPlay=()=>{if(bus){bus.stop();bus=null}if(ctl)ctl.stop()};
+  const reveal=()=>{st='wait';stopPlay();clearTimeout(tmo);M.innerHTML=`Era <b>${esc(Q.title)}</b>`;zone('a','');zone('b','');if(!score())timers.push(setTimeout(next,1800))};
+  function playMel(from){const a=muCtx(),my=++rid;bus=muBus();const ev=Q.ev.slice(from);t0=a.currentTime+.3-(ev[0]?ev[0].t:0);muPlayEv(bus,ev,a.currentTime+.3);
+    ev.forEach((e,i)=>timers.push(setTimeout(()=>{if(rid===my&&st==='play')heard=from+i+1},(.3+e.t-ev[0].t)*1000)));const L=ev[ev.length-1];
+    if(L)timers.push(setTimeout(()=>{if(rid===my&&st==='play'){M.textContent='Se acabó… ¡decidíos!';tmo=setTimeout(()=>{if(st==='play')reveal()},4000);timers.push(tmo)}},(.3+L.t-ev[0].t+L.d+.5)*1000))}
+  async function next(){lock={};heard=0;st='play';M.textContent='Escuchad…';
+    if(src==='yt'){const list=(await songsLoad()).filter(s=>!used.has(s.yt));if(list.length<4)used.clear();const pool=(await songsLoad()).filter(s=>!used.has(s.yt));const s=pool[Math.floor(Math.random()*pool.length)];used.add(s.yt);
+      const R=Math.random;Q={title:s.title,id:s.yt,opts:muOpts(R,s,SONGS).map(o=>({id:o.yt,l:songLab(o)}))};
+      if(!p){$('#du-yt').hidden=false;try{p=await ytMake('du-c-pl')}catch(e){M.textContent='No se ha podido cargar YouTube';src='mel';next();return}}
+      ctl=ytPlay(p,s,{secs:20,cover:$('#du-c'),onPlay:()=>{},onFail:()=>{M.textContent='Esa no se puede poner. Otra…';timers.push(setTimeout(next,1200))}});timers.push(tmo=setTimeout(()=>{if(st==='play')reveal()},26000))}
+    else{const pool=MEL.filter(x=>!used.has(x.id));if(pool.length<4)used.clear();const m=MEL.filter(x=>!used.has(x.id))[Math.floor(Math.random()*MEL.filter(x=>!used.has(x.id)).length)];used.add(m.id);
+      Q={title:m.t,id:m.id,ev:m.ev.slice(0,24),opts:muOpts(Math.random,m).map(o=>({id:o.id,l:o.t}))};playMel(0)}
+    buzzer('a');buzzer('b')}
+  function answerUI(who){const other=who==='a'?'b':'a';zone(who,`<div class="duo-ops mu-dops">${Q.opts.map(o=>`<button data-o="${esc(o.id)}">${o.l}</button>`).join('')}</div>`);zone(other,`<div class="duo-q" style="font-size:20px">${esc(duoName(who==='a'?A:B))} contesta…</div>`);
+    clearTimeout(tmo);tmo=setTimeout(()=>{if(st==='answer'&&ans===who)wrong(who)},7000);timers.push(tmo)}
+  let ans=null;
+  function wrong(who){lock[who]=1;sfx('bad');const other=who==='a'?'b':'a';if(lock[other]){reveal();return}st='play';ans=null;M.textContent=`${duoName(who==='a'?A:B)} falla. ¡Te toca, ${duoName(other==='a'?A:B)}!`;
+    buzzer(who);buzzer(other);if(src==='yt'){ctl&&ctl.resume();clearTimeout(tmo);tmo=setTimeout(()=>{if(st==='play')reveal()},15000);timers.push(tmo)}else playMel(Math.min(heard,Q.ev.length-1))}
+  const tap=(who,e)=>{
+    if(st==='idle'){ready[who]=1;M.textContent=ready.a&&ready.b?'':`${duoName(who==='a'?A:B)} listo.`;if(ready.a&&ready.b){$('#du-src')&&($('#du-src').hidden=true);muCtx();next()}return}
+    if(st==='play'&&e.target.closest('[data-z]')&&!lock[who]){st='answer';ans=who;if(src==='yt'){try{p.pauseVideo()}catch(_){}}else{if(bus){bus.stop();bus=null}rid++}M.textContent=`¡${duoName(who==='a'?A:B)} la sabe!`;answerUI(who);return}
+    const b=e.target.closest('[data-o]');if(st!=='answer'||ans!==who||!b)return;
+    if(b.dataset.o===String(Q.id)){st='wait';clearTimeout(tmo);stopPlay();if(who==='a')sa++;else sb2++;sfx('ok');b.classList.add('ok');M.innerHTML=`¡${esc(duoName(who==='a'?A:B))}! Era <b>${esc(Q.title)}</b>`;if(!score())timers.push(setTimeout(next,1800))}
+    else{b.classList.add('bad');ans=null;wrong(who)}};
+  duoTap($('#du-bot'),e=>tap('a',e));duoTap($('#du-top'),e=>tap('b',e));
+}
+if(MUT){MUT.openSongs=b=>openSongs(b);MUT.openDuo=()=>openDuo()}
+DUO.push({id:'cancion',name:'Adivina la canción',desc:'Suena una melodía (o una canción del grupo). Quien la reconozca, que pulse y conteste. Si falla, sigue sonando para el otro.',win:5});
+Object.assign(HOWTO,{
+  ritmo:['Suena un ritmo de tambor.','Repítelo tocando el tambor: mismos golpes, mismo ritmo.','10 rondas, cada vez más largas. Puntúa lo exacto que lo clavas.'],
+  tono:['Suenan dos notas seguidas.','Di si la segunda es más aguda (▲) o más grave (▼).','Cada nivel se parecen más. 3 vidas.'],
+  ciegas:['Primero suenan las 5 láminas del xilófono, una a una.','Luego suena una melodía SIN luces: repítela de oído.','Cada ronda añade una nota. Un fallo y se acaba.'],
+  afina:['Escucha la nota (puedes repetirla).','Arrastra el dedo por la barra: suena mientras lo mueves.','Cuando suene igual, suelta y pulsa Fijar. 6 notas.'],
+  metronomo:['Suenan 8 clics: tócalos a la vez en el botón.','Los clics se callan: sigue tocando 8 veces más al mismo ritmo.','3 rondas con velocidades distintas. Cuenta lo poco que te desvías.'],
+  concierto:['Bajan notas por tres columnas.','Toca la columna cuando la nota llegue a la línea: si aciertas, suena la melodía.','Dos piezas clásicas, la segunda más rápida. Tocar a lo loco resta.'],
+  acordes:['Suenan varias notas a la vez.','Di cuántas son: de 1 a 4.','12 rondas. Puedes repetir el sonido una vez por ronda.'],
+  melodia:['Suena una melodía conocida, nota a nota.','Pulsa «¡La sé!» en cuanto la reconozcas y elige el título.','Cuantas menos notas necesites, más puntos. 8 melodías.'],
+  notafalsa:['Suena una melodía conocida.','Una de sus notas está desafinada.','Pulsa «¡Esa!» justo cuando suene. Si te adelantas, pierdes la ronda.'],
+  ordena:['Una melodía está cortada en 4 trozos desordenados.','Toca ▶ para oír cada trozo y «Poner» para colocarlo en tu orden.','Comprueba. 3 melodías; cada fallo suma 5 s.'],
+  cancion:['Suena un trozo de una canción de vuestra lista de YouTube.','Elige el título entre 4.','Rápido suma más. Necesita conexión.'],
+  decada:['Suena un trozo de una canción de vuestra lista.','Adivina de qué década es.','Acertar la década da 100; quedarte a una, 40. Necesita conexión.']
+});
+Object.assign(GHLAB,{ritmo:v=>`${v} puntos`,tono:v=>`nivel ${v}`,ciegas:v=>`${v} rondas`,afina:v=>`nota ${v}`,metronomo:v=>`ronda ${v}`,concierto:v=>`${v} notas`,acordes:v=>`${v} puntos`,melodia:v=>`${v} puntos`,notafalsa:v=>`${v} puntos`,ordena:v=>`melodía ${v}`,cancion:v=>`${v} puntos`,decada:v=>`${v} puntos`});
+
 // ===== sincronización con Supabase (cuenta por email, varios grupos) =====
 var needLogin=false;let sb=null,myPid=null,myUid=null,myEmail='',syncing=false,netErr=null;
 var MEMB=store.get('rdm_memb',[]),GID=store.get('rdm_gid',null),OWNER=store.get('rdm_owner',false);
