@@ -205,6 +205,13 @@ label{font-weight:900;font-size:12px;letter-spacing:.06em;text-transform:upperca
 .confeti{position:absolute;left:0;right:0;margin:0 auto;top:0;width:min(440px,100%);pointer-events:none;animation:pop .6s cubic-bezier(.2,1.6,.4,1) both;opacity:.85;z-index:0}
 .overlay .inner{position:relative}
 .overlay .inner>*:not(.confeti){position:relative;z-index:1}
+.objs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:min(340px,100%)}.objs button{aspect-ratio:1;border:3px solid var(--ink);background:var(--paper);border-radius:10px;padding:6px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);display:flex;align-items:center;justify-content:center}.objs button img{width:100%;height:100%;object-fit:contain}.objs .emo{font-size:38px;line-height:1}.objs button.cov{background:url(img/sp_carta.webp) center/100% 100% no-repeat;border:0}.objs button.good{background:#CDEFD9}.objs button.bad{background:#FFD9DC}
+.sdk{display:grid;grid-template-columns:repeat(4,1fr);width:min(300px,100%);aspect-ratio:1;border:4px solid var(--ink);background:var(--paper)}.sdk button{border:1px solid rgba(26,26,26,.35);background:var(--paper);font-family:var(--display);font-size:34px;cursor:pointer;padding:0}.sdk button.br{border-right:4px solid var(--ink)}.sdk button.bb{border-bottom:4px solid var(--ink)}.sdk button.fix{background:#EFE9DC}.sdk button.sel{background:#FFF1C4}.sdk button.bad{background:#FFD9DC}
+.sdk-n{width:56px;height:56px;font-family:var(--display);font-size:28px;border:3px solid var(--ink);background:var(--paper);box-shadow:3px 3px 0 var(--ink);cursor:pointer;margin:2px}
+.mm{display:flex;flex-direction:column;gap:6px;width:min(300px,100%);max-height:300px;overflow:auto}.mm-row{display:flex;gap:8px;align-items:center;padding:4px 6px;border:2px solid rgba(26,26,26,.2)}.mm-row.cur{border:3px solid var(--ink);background:#FFF8E1}.mm-row i{width:34px;height:34px;border-radius:50%;border:3px solid var(--ink);display:block}.mm-f{font-size:18px;letter-spacing:2px;margin-left:auto;font-weight:900}
+.mm-c{width:44px;height:44px;border-radius:50%;border:3px solid var(--ink);box-shadow:2px 2px 0 var(--ink);cursor:pointer;margin:3px}
+.sema{width:150px;height:290px;border-radius:30px;background:#2B2B2B;border:5px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:space-around;cursor:pointer;touch-action:none;box-shadow:6px 6px 0 var(--ink)}.sema .l{width:100px;height:100px;border-radius:50%;background:#444;border:4px solid var(--ink)}.sema.red .r{background:#FF3B3B;box-shadow:0 0 30px #FF3B3B}.sema.green .g{background:#3BFF7A;box-shadow:0 0 30px #3BFF7A}
+.tab25{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;width:min(330px,100%);aspect-ratio:1}.tab25 button{border:3px solid var(--ink);background:var(--paper);font-family:var(--display);font-size:26px;cursor:pointer;padding:0;border-radius:6px}.tab25 button.ok{background:#CDEFD9;color:#7A9;border-color:#7A9}.tab25 button.bad{background:var(--red)}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:min(340px,100%)}
 .card{aspect-ratio:3/4;border:0;border-radius:8px;background:url(img/sp_carta.webp) center/100% 100% no-repeat;cursor:pointer;padding:6px;box-shadow:3px 3px 0 var(--ink);transition:transform .15s}
 .card img{width:100%;height:100%;object-fit:contain;visibility:hidden}
@@ -278,7 +285,7 @@ input[type=range]{accent-color:var(--red)}
 
       <h2 style="margin-top:10px">Minijuegos</h2>
       <div class="games" id="games"></div>
-      <p class="note" style="margin:0">Todos se pueden practicar sin límite. El reto del día sale de cualquiera de los 21, el mismo para todos.</p>
+      <p class="note" style="margin:0">Todos se pueden practicar sin límite. El reto del día sale de cualquiera de los <span class="ngames">21</span>, el mismo para todos.</p>
     </div>
   </section>
 
@@ -422,7 +429,19 @@ const GAMES=[
  {id:'tarta',name:'Divide la tarta',cat:'percepcion',desc:'Corta la fracción exacta de la tarta.',better:'low',label:'error %',short:s=>String(s).replace('.',',')+' %',long:s=>`${String(s).replace('.',',')} % de error total`,pts:[[90,0],[45,40],[25,70],[12,95],[6,100]],round:0.1},
  {id:'fruta',name:'Cortar fruta',cat:'habilidad',desc:'Corta toda la fruta que puedas en 30 s. Ojo con las bombas.',better:'high',label:'frutas',short:s=>String(s),long:s=>`${s} frutas`,pts:[[0,0],[15,40],[28,70],[40,95],[50,100]],round:1},
  {id:'minigolf',name:'Minigolf',cat:'habilidad',desc:'Tres hoyos con el mínimo de golpes.',better:'low',label:'golpes',short:s=>String(s),long:s=>`${s} golpes`,pts:[[24,0],[12,40],[9,70],[6,95],[4,100]],round:1},
- {id:'tiles',name:'Magic Tiles',cat:'habilidad',desc:'Toca cada tecla al cruzar la línea roja.',better:'high',label:'teclas',short:s=>String(s),long:s=>`${s} teclas`,pts:[[0,0],[30,40],[60,70],[100,95],[140,100]],round:1}
+ {id:'tiles',name:'Magic Tiles',cat:'habilidad',desc:'Toca cada tecla al cruzar la línea roja.',better:'high',label:'teclas',short:s=>String(s),long:s=>`${s} teclas`,pts:[[0,0],[30,40],[60,70],[100,95],[140,100]],round:1},
+ {id:'cambio',name:'¿Qué ha cambiado?',cat:'memoria',desc:'Memoriza los objetos y encuentra el que ha cambiado.',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[300,40],[550,70],[780,95],[880,100]],round:10},
+ {id:'sudoku',name:'Mini sudoku',cat:'logica',desc:'Tres sudokus de 4×4 lo antes posible.',better:'low',label:'tiempo',short:sec,long:sec,pts:[[240000,0],[90000,40],[50000,70],[28000,95],[18000,100]],round:100},
+ {id:'mastermind',name:'Mastermind',cat:'logica',desc:'Adivina la combinación de 4 colores.',better:'low',label:'intentos',short:s=>String(s),long:s=>s>10?'sin descifrar':`${s} ${s===1?'intento':'intentos'}`,pts:[[12,0],[8,40],[6,70],[4,95],[3,100]],round:1},
+ {id:'topos',name:'Topos',cat:'habilidad',desc:'Golpea los topos. Los del casco restan.',better:'high',label:'topos',short:s=>String(s),long:s=>`${s} topos`,pts:[[0,0],[12,40],[22,70],[32,95],[38,100]],round:1},
+ {id:'flappy',name:'Ninja saltarín',cat:'habilidad',desc:'Toca para saltar entre los bambús.',better:'high',label:'bambús',short:s=>String(s),long:s=>`${s} ${s===1?'bambú':'bambús'}`,pts:[[0,0],[8,40],[18,70],[30,95],[40,100]],round:1},
+ {id:'arco',name:'Tiro con arco',cat:'habilidad',desc:'10 flechas con viento. Dispara cuando la mira esté bien.',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[45,40],[65,70],[82,95],[92,100]],round:1},
+ {id:'semaforo',name:'Semáforo',cat:'percepcion',desc:'Toca en cuanto se ponga verde. Sin adelantarte.',better:'low',label:'ms',short:s=>s+' ms',long:s=>`${s} ms de media`,pts:[[700,0],[400,40],[300,70],[230,95],[190,100]],round:1},
+ {id:'tabla',name:'Del 1 al 25',cat:'percepcion',desc:'Toca los números del 1 al 25 en orden.',better:'low',label:'tiempo',short:sec,long:sec,pts:[[90000,0],[45000,40],[32000,70],[22000,95],[16000,100]],round:100},
+ {id:'montones',name:'¿Dónde hay más?',cat:'percepcion',desc:'Dos montones de estrellas un instante. ¿Cuál tenía más?',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[600,40],[900,70],[1200,95],[1400,100]],round:10},
+ {id:'camarero',name:'Camarero',cat:'equilibrio',desc:'Inclina el móvil para que no se caigan los vasos.',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[40,40],[80,70],[115,95],[130,100]],round:1},
+ {id:'burbuja',name:'Nivel de burbuja',cat:'equilibrio',desc:'Mantén la burbuja en el centro mientras el suelo se mueve.',better:'high',label:'en el centro',short:s=>s.toFixed(1).replace('.',',')+' s',long:s=>`${s.toFixed(1).replace('.',',')} s en el centro`,pts:[[0,0],[10,40],[17,70],[24,95],[27,100]],round:0.1},
+ {id:'esquiva',name:'Esquiva',cat:'equilibrio',desc:'Inclina el móvil para esquivar los obstáculos.',better:'high',label:'metros',short:s=>s+' m',long:s=>`${s} metros`,pts:[[0,0],[150,40],[300,70],[500,95],[650,100]],round:1}
 ];
 GAMES.forEach(g=>{g.play=true});
 const G=Object.fromEntries(GAMES.map(g=>[g.id,g]));
@@ -548,6 +567,18 @@ function sndBtn(){const b=$('#snd');if(b){b.textContent=SND.on?'🔊':'🔇';b.s
 
 // ===== Tutoriales (primera vez que se abre cada juego) =====
 const HOWTO={
+ cambio:['Pulsa Empezar y memoriza los 8 objetos.','Se tapan y uno se cambia por otro.','Toca el que ha cambiado. Rápido suma más.'],
+ sudoku:['Toca una casilla vacía y luego un número.','Cada fila, columna y cuadrado de 2×2 lleva 1, 2, 3 y 4.','Resuelve los 3 tableros lo antes posible.'],
+ mastermind:['Elige 4 colores (no se repiten) y pulsa Probar.','● negra: color bien colocado. ○ blanca: está, pero en otro sitio.','Descífralo en los mínimos intentos.'],
+ topos:['Toca para empezar.','Golpea los topos que asoman.','¡No toques los del casco: restan 2!'],
+ flappy:['Toca la pantalla para que el ninja salte.','Pasa por el hueco entre los bambús.','Cada vez va más rápido.'],
+ arco:['La mira roja se mueve sola.','La veleta de abajo dice hacia dónde sopla el viento.','Toca para disparar. 10 flechas, máximo 100 puntos.'],
+ semaforo:['Toca el semáforo para empezar.','Espera con el dedo preparado.','Toca en cuanto se ponga verde. Si te adelantas, penaliza.'],
+ tabla:['Los números del 1 al 25 están desordenados.','Tócalos en orden lo más rápido posible.','Cada fallo suma 1 segundo.'],
+ montones:['Salen dos montones de estrellas un momento.','Elige el lado que tenía más.','Rápido suma más. Cada ronda están más igualados.'],
+ camarero:['Pulsa Empezar.','Inclina el móvil para que los vasos no se salgan de la bandeja.','Cada segundo suma un punto por cada vaso que queda.'],
+ burbuja:['Pulsa Empezar.','El suelo se mueve solo y la burbuja se desplaza.','Inclina el móvil para mantenerla dentro del círculo verde.'],
+ esquiva:['Pulsa Empezar.','Inclina el móvil a los lados para mover la pelota.','Esquiva rocas, conos y cangrejos. Cuentan los metros.'],
  simon:['Mira los colores que se encienden.','Repítelos en el mismo orden.','Cada ronda añade un color más.'],
  parejas:['Toca dos cartas para darles la vuelta.','Si son iguales, se quedan boca arriba.','Encuentra las 8 parejas lo antes posible.'],
  zip:['Empieza en el número 1.','Arrastra el dedo pasando por los números en orden.','Tienes que pintar TODAS las casillas.'],
@@ -890,7 +921,7 @@ const fmtDelta=v=>(v>0?'+':v<0?'−':'±')+Math.abs(v);
 const MODS={
   niebla:{name:'Niebla',desc:'Solo se ve bien el centro de la pantalla.',no:['crono']},
   temblor:{name:'Terremoto',desc:'La pantalla no para de temblar.',no:[]},
-  apagon:{name:'Apagones',desc:'La luz se va cada pocos segundos.',no:['simon','cuantos','crono','parejas']},
+  apagon:{name:'Apagones',desc:'La luz se va cada pocos segundos.',no:['simon','cuantos','crono','parejas','cambio','montones','semaforo']},
   mini:{name:'Modo hormiga',desc:'Todo se ve más pequeño.',no:['crono']},
   ciego:{name:'A ciegas',desc:'No ves el cronómetro.',only:g=>g.label==='tiempo'}
 };
@@ -1150,7 +1181,7 @@ function pushNudgeHTML(){
 // ===== Fantasma: graba cada partida y permite repetirla contra otra (nunca en el reto oficial) =====
 let GH=null,GHNEXT=null;
 const GHOST_VIS={laberinto:1,minigolf:1,apilar:1};
-const GH_FR={equilibrio:1,encestar:1,apilar:1,fruta:1,tiles:1}; // juegos cuyo fantasma se dibuja con «fotogramas»
+const GH_FR={equilibrio:1,encestar:1,apilar:1,fruta:1,tiles:1,topos:1,flappy:1,arco:1,camarero:1,burbuja:1,esquiva:1}; // juegos cuyo fantasma se dibuja con «fotogramas»
 const ghHasMoves=(gid,g)=>!GH_FR[gid]||!!(g&&g.fr&&g.fr.length);
 function ghBegin(gid,official){
   const nx=!official&&GHNEXT&&GHNEXT.g===gid?GHNEXT:null;GHNEXT=null;
@@ -1172,7 +1203,7 @@ function ghPosAt(){const g=GH&&GH.ghost;if(!g||!g.ps||!g.ps.length||GH.t0==null)
   if(t<=ps[0][0])return ps[0];if(t>=ps[ps.length-1][0])return ps[ps.length-1];
   let lo=0,hi=ps.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(ps[m][0]<=t)lo=m;else hi=m}
   const a=ps[lo],b=ps[hi];if(a[3]!==b[3])return a;const k=(t-a[0])/((b[0]-a[0])||1);return [t,a[1]+(b[1]-a[1])*k,a[2]+(b[2]-a[2])*k,a[3]]}
-const GHLAB={minigolf:v=>`hoyo ${Math.floor(v/100)+1} · ${v%100} golpes`,equilibrio:v=>`${v} s`,zip:v=>`${v}/25 casillas`,flood:v=>`${v}/100 pintadas`,lightsout:v=>`${v}/25 apagadas`,tuberias:v=>`${v}/25 con agua`,deslizante:v=>`${v}/8 en su sitio`,parejas:v=>`${v}/8 parejas`,sopa:v=>`${v}/6 palabras`,angulo:v=>`ronda ${v}`,tarta:v=>`ronda ${v}`,intruso:v=>`ronda ${v}`,cuantos:v=>`${v} puntos`,simon:v=>`${v} rondas`};
+const GHLAB={minigolf:v=>`hoyo ${Math.floor(v/100)+1} · ${v%100} golpes`,equilibrio:v=>`${v} s`,zip:v=>`${v}/25 casillas`,flood:v=>`${v}/100 pintadas`,lightsout:v=>`${v}/25 apagadas`,tuberias:v=>`${v}/25 con agua`,deslizante:v=>`${v}/8 en su sitio`,parejas:v=>`${v}/8 parejas`,sopa:v=>`${v}/6 palabras`,angulo:v=>`ronda ${v}`,tarta:v=>`ronda ${v}`,cambio:v=>`${v} puntos`,montones:v=>`${v} puntos`,sudoku:v=>`${v} casillas`,mastermind:v=>`${v} intentos`,semaforo:v=>`ronda ${v}`,tabla:v=>`va por el ${v}`,burbuja:v=>`${v} s dentro`,esquiva:v=>`${v} m`,camarero:v=>`${v} puntos`,intruso:v=>`ronda ${v}`,cuantos:v=>`${v} puntos`,simon:v=>`${v} rondas`};
 function ghBadge(){
   if(!GH||!GH.ghost)return;const g=GH.ghost,el=document.createElement('div');el.className='gh-tag';el.style.backgroundImage='url(img/ic_fantasma.webp)';
   const first=ovIn.firstElementChild;if(first)first.after(el);else ovIn.prepend(el);
@@ -1279,6 +1310,7 @@ function renderHoy(){
   $('#btn-reto').disabled=!!m; $('#btn-reto').textContent=m?'Reto hecho':'Jugar reto';
   $('#reto-status').textContent=m?`Tu resultado de hoy: ${fmt(todayGame.id,m.score)}. Mañana, nuevo reto.`:'Un intento oficial por día. El mismo reto para todos.';
   {const cm=$('#ch-mod');cm.hidden=!todayMod;if(todayMod)cm.innerHTML=`<img class="hic" src="img/mod_${todayMod.k}.webp" alt="" style="width:34px;height:34px;float:left;margin-right:8px"><b>Modificador: ${todayMod.name}</b>${todayMod.desc} Igual para todos, también al practicarlo.`}
+  document.querySelectorAll('.ngames').forEach(e=>e.textContent=GAMES.length);
   $('#games').innerHTML=GAMES.map(g=>`<button class="game ${g.play?'':'lock'}" data-g="${g.id}" ${g.play?'':'aria-disabled="true"'}><img src="img/ic_${g.id}.webp" alt=""><span>${g.name}</span><small>${CATNAME[g.cat]}${g.practice?' · práctica':''}</small></button>`).join('');
   net();
 }
@@ -1301,7 +1333,7 @@ function fameRanking(gid){
   const played=rows.filter(r=>r.score!=null).sort((a,b)=>g.better==='high'?b.score-a.score:a.score-b.score);
   return [...played,...rows.filter(r=>r.score==null)];
 }
-function dfmt(gid,d){const g=G[gid];if(g.label==='tiempo')return sec(d);if(gid==='crono')return (d/1000).toFixed(2).replace('.',',')+' s';if(gid==='equilibrio')return d.toFixed(1).replace('.',',')+' s';if(gid==='tarta')return String(Math.round(d*10)/10).replace('.',',')+' %';if(gid==='angulo')return d+'°';return d+' '+g.label}
+function dfmt(gid,d){const g=G[gid];if(g.label==='tiempo')return sec(d);if(gid==='crono')return (d/1000).toFixed(2).replace('.',',')+' s';if(gid==='equilibrio'||gid==='burbuja')return d.toFixed(1).replace('.',',')+' s';if(gid==='tarta')return String(Math.round(d*10)/10).replace('.',',')+' %';if(gid==='angulo')return d+'°';return d+' '+g.label}
 function renderRank(){
   let rows,unitGame=null;
   $('#fame-bar').hidden=rmode!=='fame';$('#fame-note').hidden=rmode!=='fame';
@@ -1383,7 +1415,7 @@ function startGame(gid,official){
 }
 function runGame(gid,official){
   ghBegin(gid,official);
-  ({simon,crono,parejas,zip,flood,stroop,encestar,apilar,laberinto,equilibrio,sopa,cuantos,intruso,fruta,lightsout,tuberias,deslizante,angulo,tarta,minigolf,tiles})[gid](official);
+  ({simon,crono,parejas,zip,flood,stroop,encestar,apilar,laberinto,equilibrio,sopa,cuantos,intruso,fruta,lightsout,tuberias,deslizante,angulo,tarta,minigolf,tiles,cambio,sudoku,mastermind,topos,flappy,arco,semaforo,tabla,montones,camarero,burbuja,esquiva})[gid](official);
   if(gid===todayGame.id&&todayMod)applyMod(todayMod);
   ghBadge();
 }
@@ -1885,6 +1917,256 @@ function tiles(official){
     ghFramesIn(220).forEach(f=>{x.save();x.globalAlpha=GHA;x.fillStyle='#8E44FF';x.fillRect(f[1]*W/LANES+6,LY-TOL,W/LANES-12,TOL*2);x.globalAlpha=.7;x.font='16px sans-serif';x.textAlign='center';x.fillText('👻',(f[1]+.5)*W/LANES,LY-TOL-6);x.restore()});
     notes.forEach(n=>{x.globalAlpha=Math.min(1,n.t*2);dimg(x,'notas',n.x,n.y,56);x.globalAlpha=1});
     if(!started){x.fillStyle='#FFC93C';x.font='400 18px Dela Gothic One,sans-serif';x.textAlign='center';const t=rows[0];x.fillText('Empieza',t.l*W/LANES+W/LANES/2,t.y+TH/2+6)}});
+}
+
+// ===== tanda 3 de minijuegos =====
+const OBJ_EMOJI=['⛺','🔦','🧢','🕶️','🏐','🍉','🍦','🎒','🪣','🧭','🛶','🐚','🦀','🌵','🪁','🎈'];
+const objHTML=k=>`<img src="img/sp_obj_${k}.webp" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'emo',textContent:'${OBJ_EMOJI[k]}'}))">`;
+
+// --- ¿Qué ha cambiado? ---
+function cambio(official){
+  const ROUNDS=6,r=rngFor('cambio',official);
+  const rounds=Array.from({length:ROUNDS},(_,k)=>{const set=shuffle([...Array(16).keys()],r);const show=set.slice(0,8),rest=set.slice(8);const at=Math.floor(r()*8);const nw=rest[Math.floor(r()*rest.length)];const after=show.slice();after[at]=nw;return {show,after,at,ms:Math.round(3200-k*250)}});
+  openOv(header('cambio',official)+`<div class="say" id="cb-s">Ronda 1 de ${ROUNDS}</div><div class="objs" id="cb"></div><button class="btn red" id="cb-go">Empezar</button><p class="note" style="margin:0">Memoriza los objetos. Se tapan y uno cambia: tócalo. Rápido suma más.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  let k=0,pts=0,shownAt=0,live=false;const el=$('#cb');
+  const draw=(list,cover)=>{el.innerHTML=list.map((o,i)=>`<button data-i="${i}" class="${cover?'cov':''}">${cover?'':objHTML(o)}</button>`).join('')};
+  draw(Array(8).fill(0),true);
+  function round(){const R=rounds[k];live=false;$('#cb-s').textContent=`Ronda ${k+1} de ${ROUNDS} · memoriza`;draw(R.show,false);
+    timers.push(setTimeout(()=>{draw(R.show,true);$('#cb-s').textContent='…';sfx('tick');
+      timers.push(setTimeout(()=>{draw(R.after,false);$('#cb-s').textContent='¿Qué ha cambiado?';shownAt=performance.now();live=true},650))},R.ms))}
+  $('#cb-go').onclick=()=>{$('#cb-go').hidden=true;ghMark(0);round()};
+  el.onclick=e=>{const b=e.target.closest('button');if(!b||!live)return;live=false;const R=rounds[k],ok=+b.dataset.i===R.at,dt=(performance.now()-shownAt)/1000;
+    if(ok){pts+=100+Math.round(Math.max(0,50*(1-dt/4)));sfx('ok')}else{sfx('bad');b.classList.add('bad')}
+    el.children[R.at].classList.add('good');k++;ghMark(pts);$('#cb-s').textContent=ok?'¡Bien visto!':'Era este';
+    timers.push(setTimeout(()=>{if(k<ROUNDS)round();else finish('cambio',pts,official)},900))};
+}
+
+// --- Mini sudoku (3 tableros de 4×4) ---
+function sudokuGen(r){
+  let g=Array.from({length:4},(_,y)=>Array.from({length:4},(_,x)=>(2*(y%2)+Math.floor(y/2)+x)%4));
+  const dig=shuffle([1,2,3,4],r);g=g.map(row=>row.map(v=>dig[v]));
+  const bands=shuffle([0,1],r),rows=[];bands.forEach(b=>shuffle([0,1],r).forEach(i=>rows.push(g[b*2+i])));g=rows;
+  const cols=[];shuffle([0,1],r).forEach(b=>shuffle([0,1],r).forEach(i=>cols.push(b*2+i)));g=g.map(row=>cols.map(c=>row[c]));
+  if(r()<.5)g=g[0].map((_,c)=>g.map(row=>row[c]));
+  const sol=g.flat();
+  const count=(b,lim)=>{const i=b.indexOf(0);if(i<0)return 1;let n=0;const y=(i/4)|0,x=i%4;for(let v=1;v<=4&&n<lim;v++){if(sdOk(b,i,v)){b[i]=v;n+=count(b,lim);b[i]=0}}return n};
+  const puz=sol.slice();for(const i of shuffle([...Array(16).keys()],r)){const v=puz[i];puz[i]=0;if(count(puz.slice(),2)!==1)puz[i]=v;if(puz.filter(Boolean).length<=5)break}
+  return {sol,puz};
+}
+function sdOk(b,i,v){const y=(i/4)|0,x=i%4;for(let k=0;k<4;k++){if(k!==x&&b[y*4+k]===v)return false;if(k!==y&&b[k*4+x]===v)return false}
+  const by=y-y%2,bx=x-x%2;for(let a=by;a<by+2;a++)for(let c=bx;c<bx+2;c++){const j=a*4+c;if(j!==i&&b[j]===v)return false}return true}
+const SDCOL=['','#E63946','#3A86FF','#2BB673','#F4B400'];
+function sudoku(official){
+  const r=rngFor('sudoku',official),N=3;const boards=Array.from({length:N},()=>sudokuGen(r));
+  openOv(header('sudoku',official)+clockEl()+`<div class="say" id="sd-s">Tablero 1 de ${N}</div><div class="sdk" id="sd"></div><div class="row" id="sd-k" style="justify-content:center">${[1,2,3,4].map(v=>`<button class="sdk-n" data-v="${v}" style="color:${SDCOL[v]}">${v}</button>`).join('')}<button class="sdk-n" data-v="0">⌫</button></div><p class="note" style="margin:0">Cada fila, cada columna y cada cuadrado de 2×2 lleva 1, 2, 3 y 4 sin repetir. Toca una casilla y luego el número.</p>`,'img/bg_menu.webp');
+  $('#g-close').onclick=closeOv;
+  const sw=stopwatch();let k=0,cur=boards[0].puz.slice(),sel=-1,over=false,filled=0;
+  const draw=()=>{const B=boards[k];$('#sd').innerHTML=cur.map((v,i)=>{const fixed=!!B.puz[i],bad=v&&!fixed&&!sdOk(cur,i,v);return `<button data-i="${i}" class="${fixed?'fix':''} ${i===sel?'sel':''} ${bad?'bad':''} ${i%4===1?'br':''} ${((i/4)|0)===1?'bb':''}" style="color:${v?SDCOL[v]:'inherit'}">${v||''}</button>`}).join('')};draw();
+  $('#sd').onclick=e=>{const b=e.target.closest('button');if(!b||over)return;const i=+b.dataset.i;if(boards[k].puz[i])return;sel=i;sfx('tick');draw()};
+  $('#sd-k').onclick=e=>{const b=e.target.closest('button');if(!b||over||sel<0)return;if(!sw.started()){sw.start();showClock(sw);ghMark(0)}
+    const v=+b.dataset.v;const was=cur[sel];cur[sel]=v;if(!was&&v)filled++;if(was&&!v)filled--;ghMark(filled);sfx('pop');draw();
+    if(cur.every((x,i)=>x&&sdOk(cur,i,x))){sfx('ok');k++;sel=-1;if(k===N){over=true;const ms=Math.round(sw.ms());cancelAnimationFrame(raf);$('#sd-s').textContent='¡Resuelto!';timers.push(setTimeout(()=>finish('sudoku',ms,official),700));return}
+      $('#sd-s').textContent=`Tablero ${k+1} de ${N}`;cur=boards[k].puz.slice();draw()}};
+}
+
+// --- Mastermind ---
+const MMCOL=['#E63946','#FFC93C','#3A86FF','#2BB673','#8E44FF','#FF8A3D'];
+function mastermind(official){
+  const r=rngFor('mastermind',official),MAX=10;const code=shuffle([0,1,2,3,4,5],r).slice(0,4);
+  openOv(header('mastermind',official)+`<div class="say" id="mm-s">Adivina los 4 colores (no se repiten)</div><div class="mm" id="mm"></div><div class="row" id="mm-p" style="justify-content:center;flex-wrap:wrap">${MMCOL.map((c,i)=>`<button class="mm-c" data-c="${i}" style="background:${c}" aria-label="Color ${i+1}"></button>`).join('')}</div><div class="row" style="justify-content:center"><button class="btn ghost" id="mm-del" style="font-size:14px;padding:6px 12px">Borrar</button><button class="btn red" id="mm-ok" style="font-size:16px;padding:8px 16px">Probar</button></div><p class="note" style="margin:0">● negra: color en su sitio. ○ blanca: color que está pero en otro sitio. ${MAX} intentos.</p>`,'img/bg_menu.webp');
+  $('#g-close').onclick=closeOv;
+  const rows=[];let guess=[],over=false;
+  const fb=g=>{let b=0,w=0;g.forEach((c,i)=>{if(code[i]===c)b++;else if(code.includes(c))w++});return [b,w]};
+  const draw=()=>{const all=[...rows.map(x=>({g:x.g,f:x.f})),...(over?[]:[{g:guess,f:null}])];
+    $('#mm').innerHTML=all.map(x=>`<div class="mm-row ${x.f?'':'cur'}">${[0,1,2,3].map(i=>`<i style="background:${x.g[i]!=null?MMCOL[x.g[i]]:'transparent'}"></i>`).join('')}<span class="mm-f">${x.f?'●'.repeat(x.f[0])+'○'.repeat(x.f[1])+'·'.repeat(4-x.f[0]-x.f[1]):''}</span></div>`).join('');
+    $('#mm').scrollTop=1e6};draw();
+  ghMark(0);
+  $('#mm-p').onclick=e=>{const b=e.target.closest('.mm-c');if(!b||over||guess.length>=4)return;const c=+b.dataset.c;if(guess.includes(c)){sfx('bad');return}guess.push(c);sfx('tick');draw()};
+  $('#mm-del').onclick=()=>{if(over)return;guess.pop();draw()};
+  $('#mm-ok').onclick=()=>{if(over||guess.length<4)return;const f=fb(guess);rows.push({g:guess,f});guess=[];ghMark(rows.length);
+    if(f[0]===4){over=true;sfx('win');$('#mm-s').textContent=`¡Descifrado en ${rows.length}!`;draw();timers.push(setTimeout(()=>finish('mastermind',rows.length,official),900));return}
+    sfx(f[0]+f[1]?'pop':'bad');if(rows.length>=MAX){over=true;$('#mm-s').textContent='Sin intentos. Era:';draw();$('#mm').insertAdjacentHTML('beforeend',`<div class="mm-row">${code.map(c=>`<i style="background:${MMCOL[c]}"></i>`).join('')}</div>`);timers.push(setTimeout(()=>finish('mastermind',12,official),1500));return}
+    $('#mm-s').textContent=`Intento ${rows.length+1} de ${MAX}`;draw()};
+}
+
+// --- Topos ---
+function topos(official){
+  const W=360,H=420,DUR=30,r=rngFor('topos',official);const HOLES=[];for(let y=0;y<3;y++)for(let x=0;x<3;x++)HOLES.push([60+x*120,95+y*125]);
+  const sched=[];for(let t=0.5;t<DUR-0.6;){const k=t/DUR;sched.push({t,h:Math.floor(r()*9),helm:r()<0.22,dur:1.1-0.5*k+r()*0.25});t+=0.75-0.4*k+r()*0.3}
+  openOv(header('topos',official)+`<div class="row" style="gap:20px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Golpea los topos. ¡Los del casco restan 2!</p>`,'img/bg_menu.webp');
+  $('#g-close').onclick=closeOv;
+  const {c,x,pos}=makeCanvas(W,H);let t=0,si=0,live=[],score=0,started=false,over=false,fx=[];
+  c.addEventListener('pointerdown',e=>{if(over)return;if(!started){started=true;ghMark(0);return}const [px,py]=pos(e);
+    const m=live.find(o=>!o.hit&&Math.hypot(px-HOLES[o.h][0],py-(HOLES[o.h][1]-18))<52&&o.up>0.35);if(!m)return;m.hit=true;m.left=Math.min(m.left,0.35);
+    if(m.helm){score-=2;sfx('bad');navigator.vibrate&&navigator.vibrate(80)}else{score++;sfx('pop')}fx.push({h:m.h,t:0.3});$('#g-sc').textContent=score;ghMark(score);ghFrame([m.h],0,true)});
+  fixedLoop(dt=>{if(!started)return;t+=dt;$('#g-t').textContent=Math.max(0,Math.ceil(DUR-t));
+    while(si<sched.length&&sched[si].t<=t){const s=sched[si++];if(!live.some(o=>o.h===s.h))live.push({...s,age:0,left:s.dur,up:0,hit:false})}
+    live.forEach(o=>{o.age+=dt;o.left-=dt;o.up=o.left<0.15?Math.max(0,o.left/0.15):Math.min(1,o.age/0.12)});live=live.filter(o=>o.left>0);fx.forEach(f=>f.t-=dt);fx=fx.filter(f=>f.t>0);
+    if(t>=DUR&&!over){over=true;timers.push(setTimeout(()=>finish('topos',Math.max(0,score),official),500));return false}},
+  ()=>{x.fillStyle='#8BC34A';x.fillRect(0,0,W,H);const gp=pat(x,'tex_cesped');if(gp){x.fillStyle=gp;x.fillRect(0,0,W,H)}
+    HOLES.forEach(([hx,hy],i)=>{if(!dimg(x,'agujero',hx,hy+6,104)){x.fillStyle='#4A3424';x.beginPath();x.ellipse(hx,hy+6,46,16,0,0,7);x.fill();x.strokeStyle=INK;x.lineWidth=3;x.stroke()}
+      const o=live.find(q=>q.h===i);if(o){x.save();x.beginPath();x.rect(hx-60,hy-110,120,116);x.clip();const yy=hy+6-70*o.up+40;const n=o.hit?'topo_golpe':o.helm?'topo_casco':'topo';
+        if(!dimg(x,n,hx,yy,86)){x.fillStyle='#8D6E63';x.beginPath();x.ellipse(hx,yy,30,36,0,0,7);x.fill();x.strokeStyle=INK;x.lineWidth=3;x.stroke();x.fillStyle=INK;x.beginPath();x.arc(hx-10,yy-10,4,0,7);x.arc(hx+10,yy-10,4,0,7);x.fill();
+          if(o.helm){x.fillStyle='#F4B400';x.beginPath();x.arc(hx,yy-18,26,Math.PI,0);x.fill();x.stroke()}if(o.hit){x.fillStyle='#FFC93C';x.font='20px sans-serif';x.textAlign='center';x.fillText('✦',hx,yy-40)}}x.restore()}
+});
+    ghFramesIn(250).forEach(f=>{const [hx,hy]=HOLES[f[1]];x.save();x.globalAlpha=GHA;x.fillStyle='#8E44FF';x.beginPath();x.arc(hx,hy-20,34,0,7);x.fill();x.globalAlpha=.7;x.font='16px sans-serif';x.textAlign='center';x.fillText('👻',hx,hy-60);x.restore()});
+    if(!started){x.fillStyle=INK;x.font='900 16px Zen Kaku Gothic New,sans-serif';x.textAlign='center';x.fillText('Toca para empezar',W/2,H-14)}});
+}
+
+// --- Ninja saltarín ---
+function flappy(official){
+  const W=360,H=520,r=rngFor('flappy',official),NX=90,GAP0=170;
+  openOv(header('flappy',official)+`<div class="big" id="g-sc" style="font-size:40px">0</div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca para saltar y pasa entre los bambús sin tocarlos.</p>`,'img/bg_menu.webp');
+  $('#g-close').onclick=closeOv;
+  const {c,x}=makeCanvas(W,H);let y=H/2,vy=0,started=false,over=false,score=0,cols=[],dist=0,next=0,spd=150;
+  const addCol=()=>{const gap=Math.max(120,GAP0-cols.length*1.5-score*1.5);const cy=90+r()*(H-180-gap)+gap/2;cols.push({x:W+40,cy,gap,pass:false})};
+  c.addEventListener('pointerdown',()=>{if(over)return;if(!started){started=true;ghMark(0)}vy=-330;sfx('tick')});
+  fixedLoop(dt=>{if(!started)return;if(over)return false;vy+=1050*dt;y+=vy*dt;spd=150+score*2.5;dist+=spd*dt;next-=spd*dt;if(next<=0){addCol();next=190}
+    cols.forEach(o=>{o.x-=spd*dt;if(!o.pass&&o.x+28<NX-14){o.pass=true;score++;sfx('pop');$('#g-sc').textContent=score;ghMark(score)}});cols=cols.filter(o=>o.x>-60);ghFrame([y],66);
+    const hit=y<16||y>H-16||cols.some(o=>Math.abs(o.x-NX)<28+14&&Math.abs(y-o.cy)>o.gap/2-14);
+    if(hit){over=true;sfx('bad');navigator.vibrate&&navigator.vibrate(80);timers.push(setTimeout(()=>finish('flappy',score,official),800));return false}},
+  ()=>{x.fillStyle='#CDEBF7';x.fillRect(0,0,W,H);x.lineWidth=3;x.strokeStyle=INK;
+    cols.forEach(o=>{const top=o.cy-o.gap/2,bot=o.cy+o.gap/2;const im=spr('bambu');
+      if(im){x.save();x.translate(o.x,top);x.scale(1,-1);x.drawImage(im,-28,0,56,Math.max(top,40));x.restore();x.drawImage(im,o.x-28,bot,56,Math.max(H-bot,40))}
+      else{x.fillStyle='#7CB342';x.fillRect(o.x-26,0,52,top);x.strokeRect(o.x-26,-3,52,top+3);x.fillRect(o.x-26,bot,52,H-bot);x.strokeRect(o.x-26,bot,52,H-bot+3)}});
+    {const gf=ghFrameAt();if(gf){x.save();x.globalAlpha=GHA;if(!dimg(x,'ninja_up',NX,gf[1],44)){x.fillStyle='#8E44FF';x.beginPath();x.arc(NX,gf[1],15,0,7);x.fill()}x.globalAlpha=.7;x.font='14px sans-serif';x.textAlign='center';x.fillText('👻',NX,gf[1]-26);x.restore()}}
+    if(!dimg(x,vy<0?'ninja_up':'ninja_down',NX,y,44)){x.fillStyle=INK;x.beginPath();x.arc(NX,y,15,0,7);x.fill();x.fillStyle='#E63946';x.fillRect(NX-15,y-5,30,5)}
+    if(!started){x.fillStyle=INK;x.font='900 16px Zen Kaku Gothic New,sans-serif';x.textAlign='center';x.fillText('Toca para empezar',W/2,H/2+60)}});
+}
+
+// --- Tiro con arco ---
+function arco(official){
+  const W=360,H=440,N=10,r=rngFor('arco',official),TX=180,TY=190,TR=120;
+  const shots=Array.from({length:N},(_,k)=>({wx:(r()-.5)*2*(6+k*2.4),wy:(r()-.5)*2*(3+k*1.2),ax:30+k*4+r()*10,ay:20+k*3+r()*8,fx:0.9+r()*0.8,fy:1.2+r()*0.9,ph:r()*6}));
+  openOv(header('arco',official)+`<div class="row" style="gap:16px"><div class="say" id="ar-s">Flecha 1 de ${N}</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">La mira se mueve. Toca para disparar. El viento desvía la flecha: mira la veleta y compénsalo.</p>`,'img/bg_menu.webp');
+  $('#g-close').onclick=closeOv;
+  const {c,x}=makeCanvas(W,H);let k=0,t=0,score=0,hits=[],cool=0,over=false,started=false;
+  const aim=()=>{const S=shots[k];return [TX+S.ax*Math.sin(t*S.fx+S.ph),TY+S.ay*Math.sin(t*S.fy+S.ph*1.7)]};
+  c.addEventListener('pointerdown',()=>{if(over||cool>0)return;if(!started){started=true;ghMark(0)}const S=shots[k],[ax,ay]=aim();const hx=ax+S.wx,hy=ay+S.wy;const d=Math.hypot(hx-TX,hy-TY);const p=Math.max(0,10-Math.floor(d/(TR/10)));
+    score+=p;hits.push({x:hx,y:hy,p});sfx(p>=9?'perfect':p?'pop':'bad');$('#g-sc').textContent=score;ghMark(score);k++;cool=0.6;t=0;
+    if(k===N){over=true;$('#ar-s').textContent='¡Fin!';timers.push(setTimeout(()=>finish('arco',score,official),900))}else $('#ar-s').textContent=`Flecha ${k+1} de ${N}`});
+  fixedLoop(dt=>{if(over)return false;if(cool>0)cool-=dt;t+=dt;if(started&&k<N){const [ax,ay]=aim();ghFrame([ax,ay],66)}},
+  ()=>{x.fillStyle=PAPER;x.fillRect(0,0,W,H);
+    if(!dimg(x,'diana',TX,TY,TR*2+10)){const C=['#FAF7F0','#1A1A1A','#3A86FF','#E63946','#FFC93C'];for(let i=0;i<5;i++){x.beginPath();x.arc(TX,TY,TR*(1-i*0.2),0,7);x.fillStyle=C[i];x.fill();x.strokeStyle=INK;x.lineWidth=2;x.stroke()}}
+    hits.forEach(h=>{if(!drot(x,'flecha_clavada',h.x,h.y,34,34,0)){x.fillStyle=INK;x.beginPath();x.arc(h.x,h.y,5,0,7);x.fill();x.strokeStyle=PAPER;x.lineWidth=2;x.stroke()}});
+    if(k<N){const S=shots[k];
+      {const gf=ghFrameAt();if(gf){x.save();x.globalAlpha=GHA+.1;x.strokeStyle='#8E44FF';x.lineWidth=3;x.beginPath();x.arc(gf[1],gf[2],14,0,7);x.moveTo(gf[1]-22,gf[2]);x.lineTo(gf[1]+22,gf[2]);x.moveTo(gf[1],gf[2]-22);x.lineTo(gf[1],gf[2]+22);x.stroke();x.restore()}}
+      const [ax,ay]=aim();x.strokeStyle='#E63946';x.lineWidth=3;x.beginPath();x.arc(ax,ay,14,0,7);x.moveTo(ax-24,ay);x.lineTo(ax+24,ay);x.moveTo(ax,ay-24);x.lineTo(ax,ay+24);x.stroke();
+      const m=Math.hypot(S.wx,S.wy),a=Math.atan2(S.wy,S.wx);x.save();x.translate(W/2,H-40);x.fillStyle=INK;x.font='900 13px Zen Kaku Gothic New,sans-serif';x.textAlign='center';x.fillText('viento',0,38);
+      const vi=spr('veleta');if(vi){const vw=58,vh=vw*vi.naturalHeight/vi.naturalWidth;x.save();if(Math.cos(a)<0){x.scale(-1,1);x.rotate(Math.PI-a)}else x.rotate(a);x.drawImage(vi,-vw/2,-vh/2-6,vw,vh);x.restore()}else{x.rotate(a);x.strokeStyle='#3A86FF';x.lineWidth=5;x.beginPath();x.moveTo(-10-m,0);x.lineTo(10+m,0);x.lineTo(2+m,-8);x.moveTo(10+m,0);x.lineTo(2+m,8);x.stroke()}x.restore()}
+    if(!started){x.fillStyle=INK;x.font='900 15px Zen Kaku Gothic New,sans-serif';x.textAlign='center';x.fillText('Toca para disparar',W/2,H-80)}});
+}
+
+// --- Semáforo de reflejos ---
+function semaforo(official){
+  const ROUNDS=5,r=rngFor('semaforo',official);const waits=Array.from({length:ROUNDS},()=>1300+Math.floor(r()*2600));
+  openOv(header('semaforo',official)+`<div class="say" id="se-s">Toca cuando se ponga VERDE</div><button class="sema" id="se" aria-label="Semáforo"><span class="l r"></span><span class="l g"></span></button><div class="say" id="se-t" style="min-height:1.4em"></div><p class="note" style="margin:0">${ROUNDS} rondas. Si tocas en rojo es salida falsa: esa ronda cuenta 1 segundo.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  const el=$('#se');let k=0,state='idle',t0=0,times=[];
+  const set=s=>{state=s;el.classList.toggle('red',s==='red');el.classList.toggle('green',s==='green')};
+  function round(){set('red');$('#se-s').textContent=`Ronda ${k+1} de ${ROUNDS} · espera…`;timers.push(setTimeout(()=>{if(state!=='red')return;set('green');t0=performance.now();sfx('go')},waits[k]))}
+  const next=()=>{k++;ghMark(k);if(k===ROUNDS){const avg=Math.round(times.reduce((a,b)=>a+b,0)/times.length);$('#se-s').textContent=`Media: ${avg} ms`;timers.push(setTimeout(()=>finish('semaforo',avg,official),900));return}timers.push(setTimeout(round,900))};
+  el.addEventListener('pointerdown',e=>{e.preventDefault();
+    if(state==='idle'){ghMark(0);$('#se-t').textContent='';round();return}
+    if(state==='red'){set('wait');times.push(1000);sfx('bad');$('#se-t').textContent='¡Salida falsa! +1 s';navigator.vibrate&&navigator.vibrate(100);next();return}
+    if(state==='green'){const ms=Math.round(performance.now()-t0);set('wait');times.push(ms);sfx(ms<260?'perfect':'pop');$('#se-t').textContent=`${ms} ms`;next()}});
+  $('#se-t').textContent='Toca el semáforo para empezar';
+}
+
+// --- Del 1 al 25 ---
+function tabla(official){
+  const r=rngFor('tabla',official),nums=shuffle([...Array(25)].map((_,i)=>i+1),r);
+  openOv(header('tabla',official)+clockEl()+`<div class="say" id="tb-s">Busca el 1</div><div class="tab25" id="tb">${nums.map(n=>`<button data-n="${n}">${n}</button>`).join('')}</div><p class="note" style="margin:0">Toca del 1 al 25 en orden. Cada fallo suma 1 segundo.</p>`,'img/bg_menu.webp');
+  $('#g-close').onclick=closeOv;
+  const sw=stopwatch();let want=1,pen=0,over=false;
+  $('#tb').onclick=e=>{const b=e.target.closest('button');if(!b||over)return;if(!sw.started()){sw.start();showClock(sw);ghMark(0)}
+    if(+b.dataset.n===want){b.classList.add('ok');sfx('tick');ghMark(want);want++;
+      if(want>25){over=true;const ms=Math.round(sw.ms())+pen;cancelAnimationFrame(raf);$('#g-t').textContent=(ms/1000).toFixed(1).replace('.',',');timers.push(setTimeout(()=>finish('tabla',ms,official),500));return}
+      $('#tb-s').textContent=`Busca el ${want}`}
+    else{pen+=1000;sfx('bad');b.classList.add('bad');timers.push(setTimeout(()=>b.classList.remove('bad'),250));$('#tb-s').textContent=`+1 s · busca el ${want}`}};
+}
+
+// --- ¿Dónde hay más? ---
+function montones(official){
+  const W=340,H=230,ROUNDS=12,r=rngFor('montones',official),COLS=['#E63946','#FFC93C','#3A86FF','#2BB673'];
+  const pile=(n,x0)=>{const pts=[];let g=0;while(pts.length<n&&g<3000){g++;const p=[x0+16+r()*(W/2-40),18+r()*(H-36)];if(pts.every(q=>Math.hypot(p[0]-q[0],p[1]-q[1])>22))pts.push(p)}return pts};
+  const rounds=Array.from({length:ROUNDS},(_,k)=>{const a=8+Math.floor(r()*12);const d=Math.max(1,Math.round(a*(0.45-k*0.03)));const b=a+(r()<.5?d:-d);const left=pile(a,0),right=pile(Math.max(3,b),W/2);return {left,right,col:COLS[Math.floor(r()*4)],ans:left.length>right.length?0:1}});
+  openOv(header('montones',official)+`<div class="say" id="mo-s">Ronda 1 de ${ROUNDS}</div>`+cvHTML(W,H)+`<div class="row" id="mo-o" style="justify-content:center"></div><button class="btn red" id="mo-go">Empezar</button><p class="note" style="margin:0">Salen dos montones un momento. ¿En cuál había más? Rápido suma más.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  const {x}=makeCanvas(W,H);let k=0,pts=0,shownAt=0;
+  const blank=t=>{x.fillStyle=PAPER;x.fillRect(0,0,W,H);x.strokeStyle=INK;x.lineWidth=3;x.beginPath();x.moveTo(W/2,10);x.lineTo(W/2,H-10);x.stroke();if(t){x.fillStyle=INK;x.font='400 34px Dela Gothic One,sans-serif';x.textAlign='center';x.fillText('?',W/4,H/2+12);x.fillText('?',W*3/4,H/2+12)}};blank(true);
+  const star=(px,py,col)=>{if(dimg(x,'estrella_'+COLS.indexOf(col),px,py,24))return;x.fillStyle=col;x.beginPath();x.arc(px,py,8,0,7);x.fill();x.lineWidth=2;x.strokeStyle=INK;x.stroke()};
+  function round(){const R=rounds[k];$('#mo-s').textContent=`Ronda ${k+1} de ${ROUNDS}`;$('#mo-o').innerHTML='';blank(false);R.left.forEach(p=>star(p[0],p[1],R.col));R.right.forEach(p=>star(p[0],p[1],R.col));
+    timers.push(setTimeout(()=>{blank(true);shownAt=performance.now();$('#mo-o').innerHTML=`<button class="btn ghost" data-o="0">◀ Izquierda</button><button class="btn ghost" data-o="1">Derecha ▶</button>`},Math.max(450,900-k*35)))}
+  $('#mo-go').onclick=()=>{$('#mo-go').hidden=true;ghMark(0);round()};
+  $('#mo-o').onclick=e=>{const b=e.target.closest('[data-o]');if(!b)return;const R=rounds[k];const ok=+b.dataset.o===R.ans,dt=(performance.now()-shownAt)/1000;
+    if(ok){pts+=100+Math.round(Math.max(0,40*(1-dt/3)));sfx('ok')}else sfx('bad');
+    $('#mo-o').innerHTML=`<span class="say" style="color:${ok?'var(--green)':'var(--red)'}">${ok?'¡Sí!':'No'} · ${R.left.length} contra ${R.right.length}</span>`;k++;ghMark(pts);
+    timers.push(setTimeout(()=>{if(k<ROUNDS)round();else finish('montones',pts,official)},850))};
+}
+
+// --- Camarero (inclinación en 2D) ---
+function camarero(official){
+  const W=360,H=380,r=rngFor('camarero',official),DUR=45,RT=150,GR=22;const cx=W/2,cy=H/2;
+  const bumps=[];for(let t=2;t<DUR;t+=1.6+r()*1.8)bumps.push({t,a:r()*Math.PI*2,f:90+t*5+r()*60});
+  openOv(header('camarero',official)+`<div class="row" style="gap:12px">${clockEl()}<div class="big" id="g-sc" style="font-size:30px;color:var(--red)">0</div><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Inclina el móvil para que los vasos no se caigan de la bandeja. Cada segundo suma un punto por vaso. ¡Ojo con los empujones! Sin giroscopio, arrastra el dedo.</p>`,'img/bg_menu.webp');
+  $('#g-close').onclick=closeOv;
+  const {c,x,pos}=makeCanvas(W,H);const tilt=tiltControl(c,pos);let gl=[{x:-45,y:-25},{x:45,y:-25},{x:0,y:40}].map(g=>({...g,vx:0,vy:0,on:true,fall:0}));let t=0,bi=0,score=0,acc=0,on=false,over=false,shake=0;
+  $('#g-go').onclick=()=>{enableGyro(tilt,c);on=true;$('#g-go').hidden=true;ghMark(0)};
+  fixedLoop(dt=>{if(over)return false;if(!on)return;t+=dt;
+    while(bi<bumps.length&&bumps[bi].t<=t){const b=bumps[bi++];gl.forEach(g=>{if(g.on){g.vx+=Math.cos(b.a)*b.f;g.vy+=Math.sin(b.a)*b.f}});shake=0.25;sfx('tick')}
+    if(shake>0)shake-=dt;
+    gl.forEach(g=>{if(!g.on){g.fall+=dt;return}g.vx+=tilt.x*420*dt;g.vy+=tilt.y*420*dt;g.vx*=0.985;g.vy*=0.985;g.x+=g.vx*dt;g.y+=g.vy*dt;if(Math.hypot(g.x,g.y)>RT-6){g.on=false;sfx('bad');navigator.vibrate&&navigator.vibrate(80)}});
+    for(let i=0;i<3;i++)for(let j=i+1;j<3;j++){const a=gl[i],b=gl[j];if(!a.on||!b.on)continue;const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1;if(d<GR*2){const p=(GR*2-d)/2,nx=dx/d,ny=dy/d;a.x-=nx*p;a.y-=ny*p;b.x+=nx*p;b.y+=ny*p;const rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;if(rv<0){a.vx+=rv*nx;a.vy+=rv*ny;b.vx-=rv*nx;b.vy-=rv*ny}}}
+    const alive=gl.filter(g=>g.on).length;acc+=alive*dt;if(acc>=1){const n=Math.floor(acc);acc-=n;score+=n;$('#g-sc').textContent=score;ghMark(score)}
+    $('#g-t').textContent=Math.max(0,DUR-t).toFixed(1).replace('.',',');ghFrame(gl.flatMap(g=>g.on?[g.x,g.y]:[999,999]),100);
+    if(!alive||t>=DUR){over=true;timers.push(setTimeout(()=>finish('camarero',score,official),800));return false}},
+  ()=>{x.fillStyle=PAPER;x.fillRect(0,0,W,H);x.save();if(shake>0)x.translate((Math.random()-.5)*8,(Math.random()-.5)*8);x.translate(cx,cy);
+    if(!dimg(x,'bandeja',0,0,RT*2+16)){x.fillStyle='#B0BEC5';x.beginPath();x.arc(0,0,RT,0,7);x.fill();x.strokeStyle=INK;x.lineWidth=4;x.stroke();x.strokeStyle='#ECEFF1';x.lineWidth=2;x.beginPath();x.arc(0,0,RT-10,0,7);x.stroke()}
+    {const gf=ghFrameAt();if(gf){x.save();x.globalAlpha=GHA;for(let i=0;i<3;i++){const gx=gf[1+i*2],gy=gf[2+i*2];if(gx>900)continue;if(!dimg(x,'vaso',gx,gy,GR*2.4)){x.fillStyle='#8E44FF';x.beginPath();x.arc(gx,gy,GR,0,7);x.fill()}}x.restore()}}
+    gl.forEach((g,i)=>{const s=g.on?1:Math.max(0,1-g.fall*2);if(s<=0)return;x.save();x.translate(g.x,g.y);x.scale(s,s);if(!g.on)x.rotate(g.fall*6);
+      if(!dimg(x,'vaso',0,0,GR*2.4)){x.fillStyle=['#FF8A3D','#E63946','#2BB673'][i];x.beginPath();x.arc(0,0,GR,0,7);x.fill();x.strokeStyle=INK;x.lineWidth=3;x.stroke();x.fillStyle='rgba(255,255,255,.7)';x.beginPath();x.arc(-6,-6,6,0,7);x.fill()}x.restore()});
+    x.restore()});
+}
+
+// --- Nivel de burbuja (2D) ---
+function burbuja(official){
+  const W=340,H=340,r=rngFor('burbuja',official),DUR=30,R=140,Z=34;const cx=W/2,cy=H/2;const ph=[r()*6,r()*6,r()*6,r()*6],fq=[0.31+r()*0.2,0.53+r()*0.2,0.27+r()*0.2,0.61+r()*0.2];
+  openOv(header('burbuja',official)+`<div class="row" style="gap:12px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:30px;color:var(--green)">0,0 s</div><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">El suelo se mueve solo. Inclina el móvil para mantener la burbuja dentro del círculo verde. Cuenta el tiempo que está dentro. Sin giroscopio, arrastra el dedo.</p>`,'img/bg_menu.webp');
+  $('#g-close').onclick=closeOv;
+  const {c,x,pos}=makeCanvas(W,H);const tilt=tiltControl(c,pos);let bx=0,by=0,vx=0,vy=0,t=0,inside=0,on=false,over=false,lastS=-1;
+  $('#g-go').onclick=()=>{enableGyro(tilt,c);on=true;$('#g-go').hidden=true;ghMark(0)};
+  fixedLoop(dt=>{if(over)return false;if(!on)return;t+=dt;const amp=0.35+t/DUR*0.6;
+    const dx=amp*(Math.sin(t*fq[0]*2+ph[0])+0.5*Math.sin(t*fq[1]*3+ph[1])),dy=amp*(Math.sin(t*fq[2]*2+ph[2])+0.5*Math.sin(t*fq[3]*3+ph[3]));
+    vx+=((dx-tilt.x)*260-vx*1.5)*dt;vy+=((dy-tilt.y)*260-vy*1.5)*dt;bx+=vx*dt;by+=vy*dt;const d=Math.hypot(bx,by);if(d>R-16){bx*=(R-16)/d;by*=(R-16)/d;vx*=-0.3;vy*=-0.3}
+    if(Math.hypot(bx,by)<Z){inside+=dt}const s=Math.floor(inside);if(s!==lastS){lastS=s;ghMark(s)}
+    $('#g-t').textContent=Math.max(0,Math.ceil(DUR-t));$('#g-sc').textContent=inside.toFixed(1).replace('.',',')+' s';ghFrame([bx,by],66);
+    if(t>=DUR){over=true;timers.push(setTimeout(()=>finish('burbuja',Math.round(inside*10)/10,official),600));return false}},
+  ()=>{x.fillStyle=PAPER;x.fillRect(0,0,W,H);x.save();x.translate(cx,cy);
+    if(!dimg(x,'nivel',0,0,R*2+24)){x.fillStyle='#E8F5E9';x.beginPath();x.arc(0,0,R,0,7);x.fill();x.strokeStyle=INK;x.lineWidth=5;x.stroke()}
+    const inZ=Math.hypot(bx,by)<Z;x.strokeStyle=inZ?'#2BB673':'#E63946';x.lineWidth=4;x.beginPath();x.arc(0,0,Z,0,7);x.stroke();x.strokeStyle='rgba(26,26,26,.3)';x.lineWidth=2;x.beginPath();x.moveTo(-R,0);x.lineTo(R,0);x.moveTo(0,-R);x.lineTo(0,R);x.stroke();
+    {const gf=ghFrameAt();if(gf){x.save();x.globalAlpha=GHA;if(!dimg(x,'burbuja',gf[1],gf[2],34)){x.fillStyle='#8E44FF';x.beginPath();x.arc(gf[1],gf[2],15,0,7);x.fill()}x.restore()}}
+    if(!dimg(x,'burbuja',bx,by,34)){const g=x.createRadialGradient(bx-5,by-5,2,bx,by,16);g.addColorStop(0,'#fff');g.addColorStop(1,'rgba(160,220,255,.8)');x.fillStyle=g;x.beginPath();x.arc(bx,by,16,0,7);x.fill();x.strokeStyle=INK;x.lineWidth=2;x.stroke()}
+    x.restore()});
+}
+
+// --- Esquiva inclinando ---
+function esquiva(official){
+  const W=340,H=520,r=rngFor('esquiva',official),BY=H-110,BR=16;const KINDS=['roca','cono','cangrejo'];
+  openOv(header('esquiva',official)+`<div class="row" style="gap:12px"><div class="big" id="g-sc" style="font-size:34px">0 m</div><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Inclina el móvil a los lados para esquivar. Cada vez va más rápido. Sin giroscopio, arrastra el dedo.</p>`,'img/bg_menu.webp');
+  $('#g-close').onclick=closeOv;
+  const {c,x,pos}=makeCanvas(W,H);const tilt=tiltControl(c,pos);let bx=W/2,vx=0,dist=0,spd=170,obs=[],next=0,on=false,over=false,rot=0,lastM=-1;
+  const add=()=>{const n=dist<1500?1:(r()<.45?2:1);const used=[];for(let i=0;i<n;i++){let ox;let g=0;do{ox=30+r()*(W-60);g++}while(used.some(u=>Math.abs(u-ox)<90)&&g<20);used.push(ox);obs.push({x:ox,y:-40,k:KINDS[Math.floor(r()*3)],s:22+r()*10})}};
+  $('#g-go').onclick=()=>{enableGyro(tilt,c);on=true;$('#g-go').hidden=true;ghMark(0)};
+  fixedLoop(dt=>{if(over)return false;if(!on)return;spd=170+dist*0.06;dist+=spd*dt;next-=spd*dt;if(next<=0){add();next=Math.max(120,230-dist*0.02)}
+    vx+=(tilt.x*900-vx*3)*dt;bx+=vx*dt;if(bx<BR){bx=BR;vx=0}if(bx>W-BR){bx=W-BR;vx=0}rot+=spd*dt/BR;
+    obs.forEach(o=>o.y+=spd*dt);obs=obs.filter(o=>o.y<H+50);const m=Math.floor(dist/50);if(m!==lastM){lastM=m;$('#g-sc').textContent=m+' m';ghMark(m)}ghFrame([bx],66);
+    if(obs.some(o=>Math.hypot(o.x-bx,o.y-BY)<o.s+BR-6)){over=true;sfx('boom');navigator.vibrate&&navigator.vibrate(120);timers.push(setTimeout(()=>finish('esquiva',m,official),800));return false}},
+  ()=>{x.fillStyle='#F2DFB0';x.fillRect(0,0,W,H);x.strokeStyle='rgba(26,26,26,.15)';x.lineWidth=2;const off=(dist%60);for(let yy=-60+off;yy<H;yy+=60){x.beginPath();x.moveTo(W/2,yy);x.lineTo(W/2,yy+28);x.stroke()}
+    obs.forEach(o=>{if(!dimg(x,o.k,o.x,o.y,o.s*2.4)){x.fillStyle=o.k==='cono'?'#FF8A3D':o.k==='cangrejo'?'#E63946':'#8D8D8D';x.beginPath();x.arc(o.x,o.y,o.s,0,7);x.fill();x.strokeStyle=INK;x.lineWidth=3;x.stroke()}});
+    {const gf=ghFrameAt();if(gf){x.save();x.globalAlpha=GHA;if(!drot(x,'pelota',gf[1],BY,BR*2.2,BR*2.2,rot)){x.fillStyle='#8E44FF';x.beginPath();x.arc(gf[1],BY,BR,0,7);x.fill()}x.globalAlpha=.7;x.font='14px sans-serif';x.textAlign='center';x.fillText('👻',gf[1],BY-BR-6);x.restore()}}
+    if(!drot(x,'pelota',bx,BY,BR*2.2,BR*2.2,rot)){x.fillStyle='#3A86FF';x.beginPath();x.arc(bx,BY,BR,0,7);x.fill();x.strokeStyle=INK;x.lineWidth=3;x.stroke()}});
 }
 
 function piques(id,pos,n,game,score,best,prevBest){
