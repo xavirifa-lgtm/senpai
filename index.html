@@ -87,6 +87,8 @@ h3{font-size:16px}
 .overlay .inner{width:100%;max-width:480px;padding-block:max(12px,env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-bottom,0px));gap:10px!important;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center;background-size:cover;background-position:center}
 .simon{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:min(320px,100%);aspect-ratio:1;max-width:100%}
 .pad{border:4px solid var(--ink);border-radius:50%;cursor:pointer;box-shadow:0 6px 0 var(--ink);transition:filter .1s,transform .1s}
+button{-webkit-tap-highlight-color:transparent}.pad,.pad:focus,.pad:active,.pad:focus-visible{outline:none!important;-webkit-tap-highlight-color:transparent}.pad:disabled{opacity:1}
+.gh-opt.on{outline:4px solid var(--red);outline-offset:1px}
 .pad[data-i="0"]{background:var(--red)}.pad[data-i="1"]{background:var(--yellow)}.pad[data-i="2"]{background:var(--green)}.pad[data-i="3"]{background:var(--blue)}
 .pad.lit{filter:brightness(1.45) saturate(1.2);transform:translateY(4px);box-shadow:0 2px 0 var(--ink)}
 .pad:disabled{cursor:default}
@@ -585,28 +587,28 @@ function sndBtn(){const b=$('#snd');if(b){b.textContent=SND.on?'🔊':'🔇';b.s
 
 // ===== Tutoriales (primera vez que se abre cada juego) =====
 const HOWTO={
- cambio:['Pulsa Empezar y memoriza los 8 objetos.','Se tapan y uno se cambia por otro.','Toca el que ha cambiado. Rápido suma más.'],
+ cambio:['Memoriza los 8 objetos.','Se tapan y uno se cambia por otro.','Toca el que ha cambiado. Rápido suma más.'],
  sudoku:['Toca una casilla vacía y luego un número.','Cada fila, columna y cuadrado de 2×2 lleva 1, 2, 3 y 4.','Resuelve los 3 tableros lo antes posible.'],
  mastermind:['Elige 4 colores (no se repiten) y pulsa Probar.','Cada casilla te dice: ✓ color y sitio correctos, ↔ el color está pero en otro sitio, ✕ no está.','Descífralo en los mínimos intentos. Toca una casilla para quitar su color.'],
- topos:['Toca para empezar.','Golpea los topos que asoman.','¡No toques los del casco: restan 2!'],
+ topos:['Golpea los topos que asoman: 30 segundos.','Toca justo encima del topo.','¡No toques los del casco: restan 2!'],
  flappy:['Toca la pantalla para que el ninja salte.','Pasa por el hueco entre los bambús.','Cada vez va más rápido.'],
  arco:['La mira se mueve sola. Toca para disparar: la flecha tarda un poco en llegar.','Compensa el viento de la veleta. Si esperas, te tiembla el pulso (5 s por flecha).','La diana encoge y las 4 últimas se mueven. 10 flechas, máximo 100.'],
- semaforo:['Toca el semáforo para empezar.','Espera con el dedo preparado.','Toca en cuanto se ponga verde. Si te adelantas, penaliza.'],
+ semaforo:['5 rondas. Espera con el dedo preparado.','Toca el semáforo en cuanto se ponga verde.','Si te adelantas, esa ronda cuenta 1 segundo.'],
  tabla:['Los números del 1 al 25 están desordenados.','Tócalos en orden lo más rápido posible.','Cada fallo suma 1 segundo.'],
  montones:['Salen dos montones de estrellas un instante.','Elige el lado con MÁS estrellas: ojo, a veces las de un lado son más grandes para engañarte.','2,5 s para contestar. Cada ronda están más igualados.'],
- camarero:['Pulsa Empezar: el camarero cruza el restaurante.','Inclina el móvil para que el vaso, la taza y la tarta no se caigan con los baches y los perros.','Cada segundo, cada cosa en la bandeja da 1 € de propina.'],
- burbuja:['Pulsa Empezar.','El suelo se mueve solo y la burbuja se desplaza.','Inclina el móvil para mantenerla dentro del círculo verde.'],
- esquiva:['Pulsa Empezar.','Inclina el móvil a los lados para mover la pelota.','Esquiva rocas, conos y cangrejos. Cuentan los metros.'],
+ camarero:['El camarero cruza el restaurante con la bandeja.','Inclina el móvil para que el vaso, la taza y la tarta no se caigan con los baches y los perros.','Cada segundo, cada cosa en la bandeja da 1 € de propina.'],
+ burbuja:['30 segundos. El suelo se mueve solo y la burbuja se desplaza.','Inclina el móvil para mantenerla dentro del círculo verde.'],
+ esquiva:['La pelota baja por la pista cada vez más rápido.','Inclina el móvil a los lados para moverla.','Esquiva rocas, conos y cangrejos. Cuentan los metros.'],
  simon:['Mira los colores que se encienden.','Repítelos en el mismo orden.','Cada ronda añade un color más.'],
  parejas:['Toca dos cartas para darles la vuelta.','Si son iguales, se quedan boca arriba.','Encuentra las 8 parejas lo antes posible.'],
  zip:['Empieza en el número 1.','Arrastra el dedo pasando por los números en orden.','Tienes que pintar TODAS las casillas.'],
  flood:['Toca un color de abajo.','La mancha de arriba a la izquierda se vuelve de ese color y crece.','Pinta todo el tablero con los mínimos toques.'],
- crono:['Pulsa Empezar y cuenta mentalmente.','A los 3 segundos el reloj desaparece.','Pulsa Para justo a los 10 segundos.'],
+ crono:['El reloj arranca solo: cuenta mentalmente.','A los 3 segundos el reloj desaparece.','Pulsa Para justo a los 10 segundos.'],
  stroop:['Sale una palabra de un color.','Pulsa el COLOR de las letras, no lo que pone.','30 segundos: aciertos menos fallos.'],
  encestar:['Pon el dedo en la pantalla.','Arrástralo hacia abajo, como un tirachinas, y suelta.','Los puntos azules te enseñan hacia dónde va.'],
  apilar:['El bloque se mueve de lado a lado.','Toca para soltarlo encima del anterior.','Lo que sobresale se cae y el bloque encoge.'],
- laberinto:['Pulsa Empezar.','Inclina el móvil para que ruede la canica.','Llévala hasta la meta verde.'],
- equilibrio:['Pulsa Empezar.','Inclina el móvil a los lados para que la pelota no se caiga.','El viento la empuja cada vez más fuerte.'],
+ laberinto:['Sujeta el móvil plano.','Inclínalo para que ruede la canica (sin giroscopio, arrastra el dedo).','Llévala hasta la meta verde.'],
+ equilibrio:['Inclina el móvil a los lados para que la pelota no se caiga.','Sin giroscopio, arrastra el dedo.','El viento la empuja cada vez más fuerte.'],
  sopa:['Cada raya es una letra de una palabra escondida.','Arrastra el dedo en línea recta sobre la palabra.','Encuentra las 6 lo antes posible.'],
  lightsout:['Toca una luz: cambian ella y sus 4 vecinas.','Apágalas todas.','Cuantos menos toques, mejor.'],
  tuberias:['Toca una pieza para girarla.','El agua sale del círculo rojo del centro.','Haz que llegue a todas las piezas.'],
@@ -635,12 +637,13 @@ function retoIntro(gid,next){
     <div class="panel stack" style="width:100%;gap:6px;text-align:left">
       ${top?`<div class="row"><div class="ava" style="--s:48px;--c:${P[top.id].c}"><div class="face"><img src="img/av_${top.id}.webp" alt=""></div></div><span><small class="eyebrow">Marca a batir</small><br><b>${P[top.id].name}</b>: ${fmt(gid,top.score)}</span></div>`:'<b>Eres el primero en jugar el reto de hoy.</b>'}
       ${todayMod&&gid===todayGame.id?`<span class="note"><img class="hic" src="img/mod_${todayMod.k}.webp" alt="" style="width:24px;height:24px"> <b>Modificador de hoy: ${todayMod.name}.</b> ${todayMod.desc}</span>`:''}
+      ${stepsHTML(gid)}
       <span class="note">${mine!=null?`Tu récord en este juego: ${fmt(gid,mine)}`:'Aún no tienes marca en este juego.'}${revanchaToday(me)?' · <b>Revancha ×2 activa</b>':''}</span></div>
     <div class="count" id="cd" hidden></div>
     <button class="btn red" id="cd-go" style="font-size:22px;padding:14px 30px">¡Empezar!</button>
     <button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 12px">Ahora no</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
-  $('#cd-go').onclick=()=>{$('#cd-go').hidden=true;$('#g-close').hidden=true;const el=$('#cd');el.hidden=false;let n=3;
+  $('#cd-go').onclick=()=>{askGyro(gid);$('#cd-go').hidden=true;$('#g-close').hidden=true;const el=$('#cd');el.hidden=false;let n=3;
     const step=()=>{if(n>0){el.textContent=n;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');sfx('count');n--;timers.push(setTimeout(step,750))}
       else{el.textContent='¡YA!';el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');sfx('go');timers.push(setTimeout(next,600))}};step()};
 }
@@ -1270,23 +1273,6 @@ async function ghostsFor(gid){
 // antes de practicar: elegir rival fantasma
 // un fantasma del reto oficial de HOY no se ofrece: sería practicar el nivel exacto del reto antes de jugarlo
 const ghFair=g=>g&&!(g.o&&g.d===TODAY);
-async function openPractice(gid){
-  let mine=ghFair(myGhosts()[gid])?myGhosts()[gid]:null;const others=[];
-  try{const rows=(await ghostsFor(gid)).filter(ghFair);rows.forEach(r=>{if(r.id===me){const hm=ghHasMoves(gid,r),mm=ghHasMoves(gid,mine);if(!mine||(hm&&!mm)||(hm===mm&&ghBetter(gid,r.s,mine.s)))mine=r}else others.push(r)})}catch(e){}
-  others.sort((a,b)=>G[gid].better==='high'?b.s-a.s:a.s-b.s);const top=others[0];
-  if(!mine&&!top){startGame(gid,false);return}
-  const opt=(k,img,t,sub)=>`<button class="gh-opt" data-k="${k}"><img src="${img}" alt="">${k==='solo'?'':'<img class="hic" src="img/ic_fantasma.webp" alt="" style="width:30px;height:30px;border:0;background:none;border-radius:0;margin-left:-22px;margin-top:22px">'}<span><b>${t}</b><small>${sub}</small></span></button>`;
-  openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Práctica</span><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
-    <img src="img/ic_${gid}.webp" alt="" style="width:90px;height:90px;object-fit:contain"><h1>${G[gid].name}</h1>
-    <div class="stack" style="width:100%;gap:8px">${opt('solo',`img/av_${me}.webp`,'Jugar sin fantasma','Práctica normal')}
-    ${mine?opt('mine',`img/av_${me}.webp`,'Contra tu fantasma',`Tu mejor partida grabada: ${fmtShort(gid,mine.s)} · mismo nivel${ghHasMoves(gid,mine)?'':' · grabada antes de los movimientos: solo verás el marcador'}`):''}
-    ${top?opt('top',`img/av_${top.id}.webp`,`Contra ${P[top.id].name}`,`${fmtShort(gid,top.s)}${ghHasMoves(gid,top)?'':' · sin movimientos grabados'}${fameRanking(gid)[0]&&fameRanking(gid)[0].id===top.id?' · récord del grupo':''} · mismo nivel`):''}</div>
-    <p class="note" style="margin:0">El fantasma repite su partida a tu lado, en el mismo nivel. Solo en práctica: el reto oficial siempre es a pelo.</p>`,'img/bg_menu.webp');
-  $('#g-close').onclick=closeOv;
-  ovIn.querySelectorAll('.gh-opt').forEach(b=>b.onclick=()=>{const k=b.dataset.k;
-    if(k==='mine')GHNEXT={...mine,n:'Tu fantasma'};else if(k==='top')GHNEXT={...top,n:P[top.id].name};else GHNEXT=null;
-    startGame(gid,false)});
-}
 // resultado contra el fantasma, para la pantalla final
 function ghVerdict(gid,score){if(GH&&GH.live)return '';const g=GH&&GH.gid===gid&&GH.ghost;if(!g)return '';const win=ghBetter(gid,score,g.s)&&score!==g.s,tie=score===g.s;
   return `<div class="gh-res ${win?'win':tie?'':'lose'}"><img class="hic" src="img/ic_fantasma.webp" alt="" style="width:26px;height:26px"> ${tie?'Empate':win?'Has ganado':'Has perdido'} contra ${g.n==='Tu fantasma'?'tu fantasma':g.n}: ${fmtShort(gid,score)} contra ${fmtShort(gid,g.s)}.</div>`}
@@ -1426,14 +1412,48 @@ function renderMote(){
 
 // ---------- juegos ----------
 const ov=$('#ov'),ovIn=$('#ov-in');
-ovIn.addEventListener('click',e=>{const h=e.target.closest('#g-help');if(!h)return;const gid=h.dataset.g;closeOv();showTutorial(gid,()=>runGame(gid,false))});
+ovIn.addEventListener('click',e=>{const h=e.target.closest('#g-help');if(!h)return;const gid=h.dataset.g;closeOv();startGame(gid,false)});
 let actx=null; function beep(i){if(!SND.on)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=[329.6,392,493.9,587.3][i]||220;o.type='square';g.gain.value=.05;o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.18)}catch(e){}}
 function openOv(html,bg){delete ovIn.dataset.mod;ovIn.style.backgroundImage=bg?`linear-gradient(rgba(250,247,240,.7),rgba(250,247,240,.7)),url(${bg})`:'';ovIn.innerHTML=html;ov.classList.remove('hidden');}
 function closeOv(){ov.classList.add('hidden');ovIn.innerHTML='';timers.forEach(clearTimeout);timers=[];if(raf)cancelAnimationFrame(raf)}
 let timers=[],raf=null;
-function startGame(gid,official){
-  const go=()=>official?retoIntro(gid,()=>runGame(gid,true)):runGame(gid,false);
-  if(!tutSeen()[gid])showTutorial(gid,go);else go();
+// ===== Pantalla previa común: explicación + ¡Empezar! + cuenta atrás, para TODOS los juegos =====
+const GYRO=new Set(['laberinto','equilibrio','camarero','burbuja','esquiva']);let GYRO_OK=false;
+// el permiso del giroscopio (iPhone) solo se puede pedir dentro del toque del usuario: se pide al pulsar Empezar
+function askGyro(gid){if(!GYRO.has(gid)||GYRO_OK)return Promise.resolve();
+  try{if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')return DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')GYRO_OK=true}).catch(()=>{})}catch(e){}
+  GYRO_OK=true;return Promise.resolve()}
+const stepsHTML=gid=>`<div class="tut">${(HOWTO[gid]||[G[gid].desc]).map((t,i)=>`<div class="tut-step"><b>${i+1}</b><span>${t}</span></div>`).join('')}</div>`;
+function countdown(next){openOv(`<div class="count" id="cd"></div>`,'img/bg_reveal.webp');let n=3;const el=$('#cd');
+  const step=()=>{if(n>0){el.textContent=n;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');sfx('count');n--;timers.push(setTimeout(step,700))}
+    else{el.textContent='¡YA!';el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');sfx('go');timers.push(setTimeout(next,500))}};step()}
+// arranca el juego y pulsa por ti su botón interno de empezar (si lo tiene)
+function launch(gid,official){
+  runGame(gid,official);
+  const click=sel=>{const b=$(sel);if(b&&!b.hidden&&!b.disabled){b.click();return true}return false};
+  if(gid==='cambio'){const t=()=>{if(!$('#cb-go'))return;if(!click('#cb-go'))timers.push(setTimeout(t,80))};t();return}
+  ['#g-go','#cu-go','#st-go','#mo-go'].some(click);if(gid==='crono')click('#cr-btn');
+}
+function startGame(gid,official){if(official){retoIntro(gid,()=>launch(gid,true));return}openPractice(gid)}
+// práctica: explicación, rival fantasma opcional y Empezar
+async function openPractice(gid){
+  const pre=GHNEXT&&GHNEXT.g===gid?GHNEXT:null;GHNEXT=null;
+  let mine=null,top=null;
+  if(!pre){mine=ghFair(myGhosts()[gid])?myGhosts()[gid]:null;const others=[];
+    try{const rows=(await ghostsFor(gid)).filter(ghFair);rows.forEach(r=>{if(r.id===me){const hm=ghHasMoves(gid,r),mm=ghHasMoves(gid,mine);if(!mine||(hm&&!mm)||(hm===mm&&ghBetter(gid,r.s,mine.s)))mine=r}else others.push(r)})}catch(e){}
+    others.sort((a,b)=>G[gid].better==='high'?b.s-a.s:a.s-b.s);top=others[0]||null}
+  const opt=(k,img,t,sub,on)=>`<button class="gh-opt ${on?'on':''}" data-k="${k}"><img src="${img}" alt="">${k==='solo'?'':'<img class="hic" src="img/ic_fantasma.webp" alt="" style="width:30px;height:30px;border:0;background:none;border-radius:0;margin-left:-22px;margin-top:22px">'}<span><b>${t}</b><small>${sub}</small></span></button>`;
+  const rivals=pre?`<div class="gh-res" style="width:100%">Contra el fantasma de <b>${pre.n}</b>: ${fmtShort(gid,pre.s)}</div>`
+    :(mine||top)?`<div class="stack" style="width:100%;gap:6px"><small class="eyebrow" style="text-align:left">Rival</small>${opt('solo',`img/av_${me}.webp`,'Sin fantasma','Práctica normal',true)}
+      ${mine?opt('mine',`img/av_${me}.webp`,'Contra tu fantasma',`Tu mejor partida: ${fmtShort(gid,mine.s)}${ghHasMoves(gid,mine)?'':' · solo marcador'}`):''}
+      ${top?opt('top',`img/av_${top.id}.webp`,`Contra ${P[top.id].name}`,`${fmtShort(gid,top.s)}${ghHasMoves(gid,top)?'':' · solo marcador'}${fameRanking(gid)[0]&&fameRanking(gid)[0].id===top.id?' · récord del grupo':''}`):''}</div>`:'';
+  openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">Práctica</span><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
+    <img src="img/ic_${gid}.webp" alt="" style="width:96px;height:96px;object-fit:contain" class="pop"><h1>${G[gid].name}</h1>${stepsHTML(gid)}${rivals}
+    ${gid===todayGame.id&&todayMod?`<span class="note"><img class="hic" src="img/mod_${todayMod.k}.webp" alt="" style="width:24px;height:24px"> <b>Modificador de hoy: ${todayMod.name}.</b> ${todayMod.desc}</span>`:''}
+    <button class="btn red" id="pr-go" style="font-size:22px;padding:14px 30px">¡Empezar!</button>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;let pick=pre;
+  ovIn.querySelectorAll('.gh-opt').forEach(b=>b.onclick=()=>{ovIn.querySelectorAll('.gh-opt').forEach(x=>x.classList.toggle('on',x===b));const k=b.dataset.k;pick=k==='mine'?{...mine,n:'Tu fantasma'}:k==='top'?{...top,n:P[top.id].name}:null});
+  $('#pr-go').onclick=()=>{const t=tutSeen();t[gid]=1;store.set('rdm_tut',t);askGyro(gid).then(()=>countdown(()=>{GHNEXT=pick?{...pick,g:gid}:null;launch(gid,false)}))};
 }
 function runGame(gid,official){
   ghBegin(gid,official);
@@ -1499,6 +1519,7 @@ function parejas(official){
     if(open.length===2){const [a,c]=open;open=[];
       if(deck[a.dataset.i]===deck[c.dataset.i]){sfx('ok');a.classList.add('ok');c.classList.add('ok');done++;ghMark(done);if(done===8){const ms=Math.round(sw.ms());cancelAnimationFrame(raf);timers.push(setTimeout(()=>finish('parejas',ms,official),600))}}
       else{busy=true;sfx('tick');timers.push(setTimeout(()=>{a.classList.remove('up');c.classList.remove('up');busy=false},650))}}};
+  sw.start();showClock(sw);ghMark(0); // el reloj arranca al terminar la cuenta atrás
 }
 
 // --- Zip ---
@@ -1529,6 +1550,7 @@ function zip(official){
   grid.addEventListener('pointerdown',e=>{e.preventDefault();try{grid.setPointerCapture(e.pointerId)}catch(_){}drag=true;if(!sw.started()){sw.start();showClock(sw);ghMark(0)}tryAdd(cellAt(e))});
   grid.addEventListener('pointermove',e=>{if(drag)tryAdd(cellAt(e))});
   grid.addEventListener('pointerup',()=>drag=false);grid.addEventListener('pointercancel',()=>drag=false);
+  sw.start();showClock(sw);ghMark(0); // el reloj arranca al terminar la cuenta atrás
 }
 
 // --- Flood it ---
@@ -1604,6 +1626,7 @@ function encestar(official){
     if(!(can&&inNet))drawBall();
     if(!ball.fly&&start==null&&!drag){x.fillStyle=INK;x.font='900 15px Zen Kaku Gothic New,sans-serif';x.textAlign='center';x.fillText('Tira hacia abajo y suelta',180,495)}
   });
+  start=performance.now();ghMark(0);
 }
 
 // --- Apilar ---
@@ -1645,7 +1668,7 @@ function enableGyro(t,c){
   const h=e=>{if(!c.isConnected){window.removeEventListener('deviceorientation',h);return}if(e.gamma==null||e.beta==null)return;
     if(b0==null)b0=e.beta;t.gyro=true;t.x=cl(e.gamma/20);t.y=cl((e.beta-b0)/20)};
   const go=()=>window.addEventListener('deviceorientation',h);
-  try{if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){return DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')go()}).catch(()=>{})}go()}catch(e){}
+  try{if(!GYRO_OK&&typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){return DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')go()}).catch(()=>{})}go()}catch(e){}
   return Promise.resolve();
 }
 
@@ -1723,6 +1746,7 @@ function sopa(official){
       if(found.size===words.length){done=true;const ms=Math.round(sw.ms());cancelAnimationFrame(raf);timers.push(setTimeout(()=>finish('sopa',ms,official),700))}}
     a=null;sel=[];paint()};
   el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+  sw.start();showClock(sw);ghMark(0); // el reloj arranca al terminar la cuenta atrás
 }
 
 // --- ¿Cuántos hay? ---
@@ -1757,6 +1781,7 @@ function intruso(official){
   $('#in').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(!sw.started()){sw.start();showClock(sw);ghMark(0)}
     if(+b.dataset.i===rounds[k].at){k++;ghMark(k);sfx('ok');if(k===ROUNDS){const ms=Math.round(sw.ms())+pen;cancelAnimationFrame(raf);$('#g-t').textContent=(ms/1000).toFixed(1).replace('.',',');timers.push(setTimeout(()=>finish('intruso',ms,official),500))}else show()}
     else{pen+=3000;sfx('bad');b.classList.add('bad');$('#in-s').textContent='+3 s';navigator.vibrate&&navigator.vibrate(60)}};
+  sw.start();showClock(sw);ghMark(0); // el reloj arranca al terminar la cuenta atrás
 }
 
 // --- Cortar fruta ---
@@ -1766,7 +1791,7 @@ function fruta(official){
   const sched=[];for(let t=0.6;t<DUR-1;t+=0.6+r()*0.6){const n=1+(r()<.35?1:0)+(t>15&&r()<.3?1:0);for(let j=0;j<n;j++){const x0=60+r()*240;sched.push({t:t+j*0.12,x:x0,y:H+30,vx:(180-x0)*(0.4+r()*0.5),vy:-(790+r()*170),bomb:r()<0.14,k:Math.floor(r()*4),R:27+r()*5,d:Math.floor(r()*4),rot:r()*6,vr:(r()-.5)*5})}}
   openOv(header('fruta',official)+`<div class="row" style="gap:20px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Corta cada fruta en la dirección de su flecha. Si cortas al revés, no cuenta. Las bombas restan 3.</p>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
-  const {c,x,pos}=makeCanvas(W,H);let t=0,si=0,live=[],halves=[],flash=[],juice=[],score=0,trail=[],down=false,started=false,over=false;
+  const {c,x,pos}=makeCanvas(W,H);let t=0,si=0,live=[],halves=[],flash=[],juice=[],score=0,trail=[],down=false,started=true,over=false;
   c.addEventListener('pointerdown',e=>{down=true;if(!started)ghMark(0);started=true;trail=[pos(e)];c.setPointerCapture(e.pointerId)});
   c.addEventListener('pointermove',e=>{if(down){const q=pos(e);trail.push(q);if(trail.length>8)trail.shift();ghFrame([q[0],q[1]],40)}});
   const up=()=>{down=false;trail=[]};c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);
@@ -1791,6 +1816,7 @@ function fruta(official){
     {const gt=ghFramesIn(260);if(gt.length>1){x.save();x.globalAlpha=GHA+.07;x.strokeStyle='#8E44FF';x.lineWidth=7;x.lineCap='round';x.beginPath();gt.forEach((f,i)=>{if(i&&f[0]-gt[i-1][0]>120)x.moveTo(f[1],f[2]);else if(i)x.lineTo(f[1],f[2]);else x.moveTo(f[1],f[2])});x.stroke();x.restore()}}
     if(trail.length>1){x.strokeStyle='#3A86FF';x.lineWidth=6;x.lineCap='round';x.beginPath();trail.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]));x.stroke();x.lineCap='butt'}
     if(!started){x.fillStyle=INK;x.font='900 15px Zen Kaku Gothic New,sans-serif';x.textAlign='center';x.fillText('Toca para empezar',W/2,H/2)}});
+  ghMark(0);
 }
 
 // --- Lights Out ---
@@ -1829,6 +1855,7 @@ function tuberias(official){
   draw();
   $('#pp').onclick=e=>{const b=e.target.closest('button');if(!b||over)return;if(!sw.started()){sw.start();showClock(sw);ghMark(flow().size)}rot[+b.dataset.i]=(rot[+b.dataset.i]+1)%4;ghMark(flow().size);sfx('tick');
     if(draw()){over=true;const ms=Math.round(sw.ms());cancelAnimationFrame(raf);timers.push(setTimeout(()=>finish('tuberias',ms,official),700))}};
+  sw.start();showClock(sw);ghMark(0); // el reloj arranca al terminar la cuenta atrás
 }
 
 // --- Puzzle deslizante ---
@@ -1843,6 +1870,7 @@ function deslizante(official){
   $('#dz').onclick=e=>{const t=e.target.closest('button');if(!t||over)return;const i=+t.dataset.i,z=b.indexOf(0);const adj=(Math.abs(i-z)===1&&((i/N)|0)===((z/N)|0))||Math.abs(i-z)===N;if(!adj)return;
     if(!sw.started()){sw.start();showClock(sw);ghMark(b.filter((v,j)=>v&&v===j+1).length)}b[z]=b[i];b[i]=0;moves++;ghMark(b.filter((v,j)=>v&&v===j+1).length);sfx('tick');draw();
     if(b.join()==='1,2,3,4,5,6,7,8,0'){over=true;const ms=Math.round(sw.ms());cancelAnimationFrame(raf);timers.push(setTimeout(()=>finish('deslizante',ms,official),600))}};
+  sw.start();showClock(sw);ghMark(0); // el reloj arranca al terminar la cuenta atrás
 }
 
 // --- Copia el ángulo ---
@@ -1996,6 +2024,7 @@ function sudoku(official){
     const v=+b.dataset.v;const was=cur[sel];cur[sel]=v;if(!was&&v)filled++;if(was&&!v)filled--;ghMark(filled);sfx('pop');draw();
     if(cur.every((x,i)=>x&&sdOk(cur,i,x))){sfx('ok');k++;sel=-1;if(k===N){over=true;const ms=Math.round(sw.ms());cancelAnimationFrame(raf);$('#sd-s').textContent='¡Resuelto!';timers.push(setTimeout(()=>finish('sudoku',ms,official),700));return}
       $('#sd-s').textContent=`Tablero ${k+1} de ${N}`;cur=boards[k].puz.slice();draw()}};
+  sw.start();showClock(sw);ghMark(0); // el reloj arranca al terminar la cuenta atrás
 }
 
 // --- Mastermind (pistas por casilla) ---
@@ -2027,8 +2056,8 @@ function topos(official){
   const sched=[];for(let t=0.5;t<DUR-0.6;){const k=t/DUR;sched.push({t,h:Math.floor(r()*9),helm:r()<0.22,dur:1.1-0.5*k+r()*0.25});t+=0.75-0.4*k+r()*0.3}
   openOv(header('topos',official)+`<div class="row" style="gap:20px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Golpea los topos. ¡Los del casco restan 2!</p>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
-  const {c,x,pos}=makeCanvas(W,H);let t=0,si=0,live=[],score=0,started=false,over=false,fx=[];
-  let ham=null;c.addEventListener('pointerdown',e=>{if(over)return;if(!started){started=true;ghMark(0);return}const [px,py]=pos(e);ham={x:px,y:py,t:0.22};
+  const {c,x,pos}=makeCanvas(W,H);let t=0,si=0,live=[],score=0,started=true,over=false,fx=[];
+  let ham=null;c.addEventListener('pointerdown',e=>{if(over)return;const [px,py]=pos(e);ham={x:px,y:py,t:0.22};
     const m=live.find(o=>!o.hit&&Math.hypot(px-HOLES[o.h][0],py-(HOLES[o.h][1]-18))<52&&o.up>0.35);if(!m)return;m.hit=true;m.left=Math.min(m.left,0.35);
     if(m.helm){score-=2;sfx('bad');navigator.vibrate&&navigator.vibrate(80)}else{score++;sfx('pop')}fx.push({h:m.h,t:0.3});$('#g-sc').textContent=score;ghMark(score);ghFrame([m.h],0,true)});
   fixedLoop(dt=>{if(!started)return;t+=dt;$('#g-t').textContent=Math.max(0,Math.ceil(DUR-t));
@@ -2045,6 +2074,7 @@ function topos(official){
     if(ham){const k=1-ham.t/0.22,a=-1.1+Math.min(1,k*2.2)*1.35;x.save();x.translate(ham.x+34,ham.y+30);x.rotate(a);
       if(!dimg(x,'martillo',-28,-34,84)){x.fillStyle='#C8A165';x.fillRect(-6,-10,12,60);x.strokeStyle=INK;x.lineWidth=3;x.strokeRect(-6,-10,12,60);x.fillStyle='#E63946';x.fillRect(-30,-38,60,30);x.strokeRect(-30,-38,60,30)}x.restore()}
     if(!started){x.fillStyle=INK;x.font='900 16px Zen Kaku Gothic New,sans-serif';x.textAlign='center';x.fillText('Toca para empezar',W/2,H-14)}});
+  ghMark(0);
 }
 
 // --- Ninja saltarín ---
@@ -2052,7 +2082,7 @@ function flappy(official){
   const W=360,H=520,r=rngFor('flappy',official),NX=90,GAP0=170;
   openOv(header('flappy',official)+`<div class="big" id="g-sc" style="font-size:40px">0</div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca para saltar y pasa entre los bambús sin tocarlos.</p>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
-  const {c,x}=makeCanvas(W,H);let y=H/2,vy=0,started=false,over=false,score=0,cols=[],dist=0,next=0,spd=150;
+  const {c,x}=makeCanvas(W,H);let y=H/2,vy=-330,started=true,over=false,score=0,cols=[],dist=0,next=0,spd=150;
   const addCol=()=>{const gap=Math.max(120,GAP0-cols.length*1.5-score*1.5);const cy=90+r()*(H-180-gap)+gap/2;cols.push({x:W+40,cy,gap,pass:false})};
   c.addEventListener('pointerdown',()=>{if(over)return;if(!started){started=true;ghMark(0)}vy=-330;sfx('tick')});
   fixedLoop(dt=>{if(!started)return;if(over)return false;vy+=1050*dt;y+=vy*dt;spd=150+score*2.5;dist+=spd*dt;next-=spd*dt;if(next<=0){addCol();next=190}
@@ -2066,6 +2096,7 @@ function flappy(official){
     {const gf=ghFrameAt();if(gf){x.save();x.globalAlpha=GHA;if(!dimg(x,'ninja_up',NX,gf[1],44)){x.fillStyle='#8E44FF';x.beginPath();x.arc(NX,gf[1],15,0,7);x.fill()}x.globalAlpha=.7;x.font='14px sans-serif';x.textAlign='center';x.fillText('👻',NX,gf[1]-26);x.restore()}}
     if(!dimg(x,vy<0?'ninja_up':'ninja_down',NX,y,44)){x.fillStyle=INK;x.beginPath();x.arc(NX,y,15,0,7);x.fill();x.fillStyle='#E63946';x.fillRect(NX-15,y-5,30,5)}
     if(!started){x.fillStyle=INK;x.font='900 16px Zen Kaku Gothic New,sans-serif';x.textAlign='center';x.fillText('Toca para empezar',W/2,H/2+60)}});
+  ghMark(0);
 }
 
 // --- Tiro con arco (más difícil: diana que encoge, pulso que tiembla si esperas, viento que cambia y diana móvil al final) ---
@@ -2074,7 +2105,7 @@ function arco(official){
   const shots=Array.from({length:N},(_,k)=>({wx:(r()-.5)*2*(10+k*4),wy:(r()-.5)*2*(5+k*2),gx:(r()-.5)*2*(4+k*2),ax:46+k*7+r()*10,ay:32+k*5+r()*8,fx:1.3+r()*1.1,fy:1.6+r()*1.2,ph:r()*6,tr:104-k*5,mv:k>=6?(0.9+r()*0.6)*(r()<.5?-1:1):0,mp:r()*6}));
   openOv(header('arco',official)+`<div class="row" style="gap:16px"><div class="say" id="ar-s">Flecha 1 de ${N}</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca para disparar. Compensa el viento de la veleta (puede cambiar un poco en el vuelo). Si esperas mucho, te tiembla el pulso. 5 s por flecha. Las últimas, con la diana en movimiento.</p>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
-  const {c,x}=makeCanvas(W,H);let k=0,t=0,tt=0,score=0,hits=[],cool=0,over=false,started=false,fly=null;
+  const {c,x}=makeCanvas(W,H);let k=0,t=0,tt=0,score=0,hits=[],cool=0,over=false,started=true,fly=null;
   const tx=(S,time)=>180+(S.mv?Math.sin(time*S.mv+S.mp)*70:0);
   const aim=()=>{const S=shots[k],sh=1+Math.max(0,t-1.6)*0.9;return [180+S.ax*sh*Math.sin(t*S.fx+S.ph)+Math.sin(t*7.3)*2*sh,TY+S.ay*sh*Math.sin(t*S.fy+S.ph*1.7)+Math.cos(t*6.1)*2*sh]};
   const shoot=()=>{if(over||cool>0||fly)return;if(!started){started=true;ghMark(0)}const [ax,ay]=aim();fly={ax,ay,t:0,k};sfx('tick')};
@@ -2096,6 +2127,7 @@ function arco(official){
       const m=Math.hypot(S.wx,S.wy),a=Math.atan2(S.wy,S.wx);x.save();x.translate(W/2,H-50);x.fillStyle=INK;x.font='900 13px Zen Kaku Gothic New,sans-serif';x.textAlign='center';x.fillText('viento',0,38);
       const vi=spr('veleta');if(vi){const vw=40+m*0.9,vh=vw*vi.naturalHeight/vi.naturalWidth;x.save();if(Math.cos(a)<0){x.scale(-1,1);x.rotate(Math.PI-a)}else x.rotate(a);x.drawImage(vi,-vw/2,-vh/2-6,vw,vh);x.restore()}else{x.rotate(a);x.strokeStyle='#3A86FF';x.lineWidth=5;x.beginPath();x.moveTo(-10-m,0);x.lineTo(10+m,0);x.lineTo(2+m,-8);x.moveTo(10+m,0);x.lineTo(2+m,8);x.stroke()}x.restore()}
     if(!started){x.fillStyle=INK;x.font='900 15px Zen Kaku Gothic New,sans-serif';x.textAlign='center';x.fillText('Toca para disparar',W/2,H-95)}});
+  ghMark(0);
 }
 
 // --- Semáforo de reflejos ---
@@ -2111,7 +2143,7 @@ function semaforo(official){
     if(state==='idle'){ghMark(0);$('#se-t').textContent='';round();return}
     if(state==='red'){set('wait');times.push(1000);sfx('bad');$('#se-t').textContent='¡Salida falsa! +1 s';navigator.vibrate&&navigator.vibrate(100);next();return}
     if(state==='green'){const ms=Math.round(performance.now()-t0);set('wait');times.push(ms);sfx(ms<260?'perfect':'pop');$('#se-t').textContent=`${ms} ms`;next()}});
-  $('#se-t').textContent='Toca el semáforo para empezar';
+  ghMark(0);round();
 }
 
 // --- Del 1 al 25 ---
@@ -2125,6 +2157,7 @@ function tabla(official){
       if(want>25){over=true;const ms=Math.round(sw.ms())+pen;cancelAnimationFrame(raf);$('#g-t').textContent=(ms/1000).toFixed(1).replace('.',',');timers.push(setTimeout(()=>finish('tabla',ms,official),500));return}
       $('#tb-s').textContent=`Busca el ${want}`}
     else{pen+=1000;sfx('bad');b.classList.add('bad');timers.push(setTimeout(()=>b.classList.remove('bad'),250));$('#tb-s').textContent=`+1 s · busca el ${want}`}};
+  sw.start();showClock(sw);ghMark(0); // el reloj arranca al terminar la cuenta atrás
 }
 
 // --- ¿Dónde hay más? (más difícil: diferencias pequeñas, tamaños engañosos y poco tiempo) ---
@@ -2410,7 +2443,7 @@ function lvStart(){
   Object.values(R.players).forEach(m=>{if(m.uid!==myUid)R.live[m.uid]={uid:m.uid,n:m.name,id:m.id,tr:[],fr:[],ps:[],live:true,s:null,last:null}});
   openOv(`<div class="count" id="cd"></div>`,'img/bg_reveal.webp');let n=3;const el=$('#cd');
   const step=()=>{if(n>0){el.textContent=n;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');sfx('count');n--;timers.push(setTimeout(step,750))}
-    else{el.textContent='¡YA!';sfx('go');timers.push(setTimeout(()=>{const t=tutSeen();t[R.g]=1;store.set('rdm_tut',t);GHNEXT={g:R.g,seed:R.seed,n:'',live:true};runGame(R.g,false)},500))}};step();
+    else{el.textContent='¡YA!';sfx('go');timers.push(setTimeout(()=>{const t=tutSeen();t[R.g]=1;store.set('rdm_tut',t);GHNEXT={g:R.g,seed:R.seed,n:'',live:true};launch(R.g,false)},500))}};step();
 }
 // cada jugador manda su marcador y su última posición unas 8 veces por segundo
 function lvTick(){
@@ -2467,7 +2500,7 @@ function finish(gid,score,official){
   if(inRace)lvRenderRes();
   $('#f-menu').onclick=()=>{closeOv();show('s-hoy')};
   $('#f-rank').onclick=()=>{closeOv();show('s-rank')};
-  $('#f-again').onclick=()=>{const gg=GH&&GH.gid===gid&&GH.ghost;closeOv();if(gg)GHNEXT=gg;startGame(gid,false)};
+  $('#f-again').onclick=()=>{const gg=GH&&GH.gid===gid&&!GH.live&&GH.ghost;askGyro(gid).then(()=>countdown(()=>{GHNEXT=gg?{...gg,g:gid}:null;launch(gid,false)}))};
   renderAll();
 }
 
