@@ -298,7 +298,7 @@ input[type=range]{accent-color:var(--red)}
 .mu-chunk{display:flex;flex-direction:column;border:3px solid var(--ink);background:var(--c);box-shadow:3px 3px 0 var(--ink)}.mu-chunk.used{opacity:.35}
 .mu-chunk button{font:inherit;border:0;background:none;cursor:pointer;color:var(--ink)}.mu-play{font-size:26px;padding:10px 0}.mu-put{font-weight:900;font-size:13px;background:var(--paper)!important;border-top:3px solid var(--ink)!important;padding:6px 0}
 .mu-slot{aspect-ratio:1;border:3px dashed var(--ink);background:var(--paper);font-family:var(--display);font-size:22px;color:#0005}.mu-slot.full{border-style:solid;background:var(--c);color:var(--ink);font-size:30px;cursor:pointer}
-.yt-box{position:relative;width:min(300px,100%);aspect-ratio:16/9;flex:none}.yt-box iframe,.yt-box>div:first-child{position:absolute;inset:0;width:100%;height:100%}
+.yt-box{position:relative;width:min(300px,100%);aspect-ratio:16/9;flex:none}#yt-host{position:fixed;left:-20px;top:-20px;width:1px;height:1px;opacity:.01;overflow:hidden;z-index:90;pointer-events:none}#yt-host.over{pointer-events:auto}#yt-host iframe{width:100%;height:100%;border:0;display:block}
 .yt-cover{position:absolute;inset:0;pointer-events:none;background:var(--paper);border:4px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;z-index:2;text-align:center;padding:6px}
 .yt-cover b{display:none;font-family:var(--display);font-size:16px}.yt-cover.wait .yt-wait,.yt-cover.tap .yt-tap,.yt-cover.on .yt-on{display:block}.yt-cover.tap{background:var(--yellow);animation:mubeat 1s infinite}
 .sg-row{display:flex;align-items:center;gap:8px;border:3px solid var(--ink);background:var(--paper);padding:6px}.sg-row img{width:64px;height:48px;object-fit:cover;border:2px solid var(--ink)}.sg-row span{flex:1;min-width:0;display:flex;flex-direction:column}.sg-row small{color:var(--ink2)}.sg-row .btn{padding:4px 10px;font-size:14px}
@@ -2945,17 +2945,25 @@ const YTS={api:null,p:null};
 function ytApi(){if(window.YT&&YT.Player)return Promise.resolve(window.YT);if(YTS.api)return YTS.api;
   YTS.api=new Promise((res,rej)=>{const prev=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{try{prev&&prev()}catch(e){}res(window.YT)};
     const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>{YTS.api=null;rej(new Error('net'))};document.head.appendChild(s);setTimeout(()=>{if(!(window.YT&&YT.Player)){YTS.api=null;rej(new Error('timeout'))}},15000)});return YTS.api}
-async function ytMake(elId){const Y=await ytApi();return new Promise((res,rej)=>{let p;const to=setTimeout(()=>rej(new Error('timeout')),15000);
-  p=new Y.Player(elId,{width:'100%',height:'100%',playerVars:{controls:0,disablekb:1,playsinline:1,rel:0,fs:0,iv_load_policy:3,modestbranding:1},
+// Un único reproductor para toda la app, de 1×1 píxel y fuera de la vista (como en Chronobeats):
+// a un reproductor tan pequeño YouTube casi no le pone anuncios. No se destruye entre partidas.
+function ytHost(){let h=document.getElementById('yt-host');if(!h){h=document.createElement('div');h.id='yt-host';h.innerHTML='<div id="yt-pl"></div>';document.body.appendChild(h)}return h}
+function ytPark(){const h=ytHost();clearInterval(YTS.tapIv);YTS.tapIv=null;h.className='';h.removeAttribute('style')}
+// si el navegador no deja arrancar solo (iPhone), el reproductor (invisible) se pone encima de la tapa para que el toque le llegue
+function ytOver(el){const h=ytHost();const put=()=>{if(!el.isConnected){ytPark();return}const r=el.getBoundingClientRect();Object.assign(h.style,{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px'})};
+  h.className='over';put();clearInterval(YTS.tapIv);YTS.tapIv=setInterval(put,400)}
+async function ytMake(){if(YTS.p&&YTS.p.getIframe&&document.contains(YTS.p.getIframe()))return YTS.p;const Y=await ytApi();ytHost();
+  return new Promise((res,rej)=>{let p;const to=setTimeout(()=>rej(new Error('timeout')),15000);
+  p=new Y.Player('yt-pl',{width:'100%',height:'100%',playerVars:{autoplay:0,controls:0,disablekb:1,playsinline:1,rel:0,fs:0,iv_load_policy:3,modestbranding:1},
     events:{onReady:()=>{clearTimeout(to);YTS.p=p;res(p)},onStateChange:e=>p._cb&&p._cb('state',e.data),onError:e=>p._cb&&p._cb('error',e.data)}})})}
-function ytStop(){try{if(YTS.p){YTS.p._cb=null;YTS.p.stopVideo&&YTS.p.stopVideo();YTS.p.destroy&&YTS.p.destroy()}}catch(e){}YTS.p=null}
+function ytStop(){try{if(YTS.p){YTS.p._cb=null;YTS.p.pauseVideo&&YTS.p.pauseVideo()}}catch(e){}ytPark()}
 function ytPlay(p,s,{secs=15,cover,onPlay,onFail}){let started=false,done=false;const C=cover;C.classList.remove('tap','on');C.classList.add('wait');
-  p._cb=(k,v)=>{if(done)return;if(k==='error'){done=true;onFail(v);return}
-    if(v===1&&!started){started=true;C.classList.remove('tap','wait');C.classList.add('on');onPlay();timers.push(setTimeout(()=>{if(!done)try{p.pauseVideo()}catch(e){}},secs*1000))}};
+  p._cb=(k,v)=>{if(done)return;if(k==='error'){done=true;ytPark();onFail(v);return}
+    if(v===1&&!started){started=true;ytPark();C.classList.remove('tap','wait');C.classList.add('on');onPlay();timers.push(setTimeout(()=>{if(!done)try{p.pauseVideo()}catch(e){}},secs*1000))}};
   try{p.loadVideoById({videoId:s.yt,startSeconds:s.start_s||0})}catch(e){done=true;onFail(-1);return {stop(){}}}
-  timers.push(setTimeout(()=>{if(!started&&!done){C.classList.remove('wait');C.classList.add('tap')}},1800));
-  return {stop(){done=true;C.classList.remove('on','tap','wait');try{p.pauseVideo()}catch(e){}},resume(){if(done)return;try{p.playVideo()}catch(e){}}}}
-const ytBoxHTML=(id='yt-c')=>`<div class="yt-box"><div id="${id}-pl"></div><div class="yt-cover" id="${id}">${muArt('vinilo',84)}<b class="yt-wait">Cargando la canción…</b><b class="yt-tap">▶ Toca aquí para escuchar</b><b class="yt-on">🎵 Escuchando…</b></div></div>`;
+  timers.push(setTimeout(()=>{if(!started&&!done){C.classList.remove('wait');C.classList.add('tap');ytOver(C)}},1800));
+  return {stop(){done=true;ytPark();C.classList.remove('on','tap','wait');try{p.pauseVideo()}catch(e){}},resume(){if(done)return;try{p.playVideo()}catch(e){}}}}
+const ytBoxHTML=(id='yt-c')=>`<div class="yt-box"><div class="yt-cover" id="${id}">${muArt('vinilo',84)}<b class="yt-wait">Cargando la canción…</b><b class="yt-tap">▶ Toca aquí para escuchar</b><b class="yt-on">🎵 Escuchando…</b></div></div>`;
 const decOf=y=>Math.floor(y/10)*10,decLab=d=>d<1960?`años ${d}`:d<2000?`años ${String(d).slice(2)}`:`${d}s`;
 
 function cancion(official){ytGame('cancion')}
@@ -2967,7 +2975,7 @@ async function ytGame(gid){
   const all=(await songsLoad()).filter(s=>!isDec||s.year);
   if(all.length<4){S.textContent=`Faltan canciones${isDec?' con año':''}: hay ${all.length} y hacen falta 4.`;$('#yg-o').innerHTML='<button class="btn red" id="yg-add">Añadir canciones</button>';$('#yg-add').onclick=()=>openSongs();return}
   if(!navigator.onLine){S.textContent='Este juego necesita conexión (suena desde YouTube).';return}
-  let p;try{p=await ytMake('yt-c-pl')}catch(e){if($('#yg-s'))$('#yg-s').textContent='No se ha podido cargar YouTube. Revisa la conexión.';return}
+  let p;try{p=await ytMake()}catch(e){if($('#yg-s'))$('#yg-s').textContent='No se ha podido cargar YouTube. Revisa la conexión.';return}
   if(!$('#yt-c')){ytStop();return}
   const r=mulberry32((Math.random()*4294967296)>>>0),queue=shuffle(all.slice(),r);let k=0,pts=0,cur=null,ctl=null,t1=0,live=false;const n=Math.min(ROUNDS,all.length),C=$('#yt-c');
   const decs=[...new Set([1960,1970,1980,1990,2000,2010,2020,...all.filter(s=>s.year).map(s=>decOf(s.year))])].filter(d=>d<=2020).sort((a,b)=>a-b);
@@ -3009,7 +3017,7 @@ function duoCancion(A,B){
   async function next(){lock={};heard=0;st='play';M.textContent='Escuchad…';
     if(src==='yt'){const list=(await songsLoad()).filter(s=>!used.has(s.yt));if(list.length<4)used.clear();const pool=(await songsLoad()).filter(s=>!used.has(s.yt));const s=pool[Math.floor(Math.random()*pool.length)];used.add(s.yt);
       const R=Math.random;Q={title:s.title,id:s.yt,opts:muOpts(R,s,SONGS).map(o=>({id:o.yt,l:songLab(o)}))};
-      if(!p){$('#du-yt').hidden=false;try{p=await ytMake('du-c-pl')}catch(e){M.textContent='No se ha podido cargar YouTube';src='mel';next();return}}
+      if(!p){$('#du-yt').hidden=false;try{p=await ytMake()}catch(e){M.textContent='No se ha podido cargar YouTube';src='mel';next();return}}
       ctl=ytPlay(p,s,{secs:20,cover:$('#du-c'),onPlay:()=>{},onFail:()=>{M.textContent='Esa no se puede poner. Otra…';timers.push(setTimeout(next,1200))}});timers.push(tmo=setTimeout(()=>{if(st==='play')reveal()},26000))}
     else{const pool=MEL.filter(x=>!used.has(x.id));if(pool.length<4)used.clear();const m=MEL.filter(x=>!used.has(x.id))[Math.floor(Math.random()*MEL.filter(x=>!used.has(x.id)).length)];used.add(m.id);
       Q={title:m.t,id:m.id,ev:m.ev.slice(0,24),opts:muOpts(Math.random,m).map(o=>({id:o.id,l:o.t}))};playMel(0)}
