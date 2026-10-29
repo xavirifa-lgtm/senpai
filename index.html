@@ -300,13 +300,17 @@ input[type=range]{accent-color:var(--red)}
 .mu-slot{aspect-ratio:1;border:3px dashed var(--ink);background:var(--paper);font-family:var(--display);font-size:22px;color:#0005}.mu-slot.full{border-style:solid;background:var(--c);color:var(--ink);font-size:30px;cursor:pointer}
 .yt-box{position:relative;width:min(300px,100%);aspect-ratio:16/9;flex:none}#yt-host{position:fixed;left:-20px;top:-20px;width:1px;height:1px;opacity:.01;overflow:hidden;z-index:90;pointer-events:none}#yt-host.over{pointer-events:auto}#yt-host iframe{width:100%;height:100%;border:0;display:block}
 .yt-cover{position:absolute;inset:0;pointer-events:none;background:var(--paper);border:4px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;z-index:2;text-align:center;padding:6px}
-.yt-cover b{display:none;font-family:var(--display);font-size:16px}.yt-cover.wait .yt-wait,.yt-cover.tap .yt-tap,.yt-cover.on .yt-on{display:block}.yt-cover.tap{background:var(--yellow);animation:mubeat 1s infinite}
+.yt-cover b{display:none;font-family:var(--display);font-size:16px}.yt-cover.wait .yt-wait,.yt-cover.tap .yt-tap,.yt-cover.on .yt-on{display:block}.yt-cover.tap{background:var(--yellow)}.yt-cover.tap .yt-tap{display:block;background:var(--red);color:#fff;border:3px solid var(--ink);padding:18px 22px;border-radius:12px;animation:mubeat 1s infinite}
 .sg-row{display:flex;align-items:center;gap:8px;border:3px solid var(--ink);background:var(--paper);padding:6px}.sg-row img{width:64px;height:48px;object-fit:cover;border:2px solid var(--ink)}.sg-row span{flex:1;min-width:0;display:flex;flex-direction:column}.sg-row small{color:var(--ink2)}.sg-row .btn{padding:4px 10px;font-size:14px}
 .inp{font:700 16px var(--body);border:3px solid var(--ink);padding:8px;width:100%;background:var(--paper);color:var(--ink);min-width:0}
 .mu-buzz{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--display);font-size:24px;color:var(--ink);cursor:pointer}
 .mu-dops{flex-direction:column;width:100%}.mu-dops button{font-size:15px!important;text-align:left;width:100%}
 .duo-mid .yt-box{width:200px}
 #du-src .btn.on{background:var(--ink);color:var(--yellow)}
+.gpick{display:flex;flex-direction:column;gap:6px;max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border:3px solid var(--ink);background:var(--paper2);padding:6px}
+.gp{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:3px solid var(--ink);background:var(--paper);padding:6px 8px;font:inherit;color:var(--ink);cursor:pointer;flex:none}.gp img{width:38px;height:38px;object-fit:contain;flex:none}.gp span{display:flex;flex-direction:column;min-width:0}.gp small{color:var(--ink2);font-size:12px}.gp.on{background:var(--yellow);outline:3px solid var(--red)}
+.gsheet{position:fixed;inset:0;z-index:95;background:#0008;display:flex;align-items:flex-end;justify-content:center}.gsheet-in{background:var(--paper);border-top:4px solid var(--ink);width:min(520px,100%);max-height:86vh;display:flex;flex-direction:column;gap:8px;padding:12px 16px calc(12px + env(safe-area-inset-bottom))}.gsheet .gpick{max-height:none;flex:1}
+.gsel{display:flex;align-items:center;gap:8px;width:100%;font-size:16px;text-align:left}.gsel img{width:30px;height:30px;object-fit:contain}.gsel span{flex:1}
 </style>
 
 </head>
@@ -354,7 +358,7 @@ input[type=range]{accent-color:var(--red)}
         <h1>Ranking <button class="grp-btn" hidden style="vertical-align:middle"><span class="grp-name">Grupo</span> ▾</button></h1>
         <div class="seg"><button class="chip on" data-r="day" id="r-day">Hoy</button><button class="chip" data-r="week" id="r-week">Semana</button><button class="chip" data-r="month" id="r-month">Mes</button><button class="chip" data-r="prog" id="r-prog">Mejora</button><button class="chip" data-r="fame" id="r-fame">Récords</button></div>
       </div>
-      <div class="fame-bar" id="fame-bar" hidden><label for="fame-game">Salón de la fama</label><select id="fame-game"></select></div>
+      <div class="fame-bar" id="fame-bar" hidden><small class="eyebrow">Salón de la fama</small><button class="btn ghost gsel" id="fame-game"></button></div>
       <div class="podium" id="podium"></div>
       <p class="fame-note" id="fame-note" hidden></p>
       <div class="list" id="rank-list"></div>
@@ -869,11 +873,13 @@ function demoDuels(){
 function allDuels(){return ONLINE?duelsRemote:demoDuels()}
 function duelState(d){
   const g=G[d.game],now=Date.now(),end=d.created+DUEL_MS;
-  let resp=bestOf(d.to,d.game,d.created,end);
-  if(!ONLINE&&d.to!==me&&now>d.created+120e3){resp=simScore(d.to,d.game,'resp'+d.created)}
+  // un solo intento: cuenta la primera partida del retado a ese juego después del reto
+  let first=null;resultsOf(d.to).forEach(r=>{if(r.game!==d.game)return;const t=r.ts||new Date(r.date+'T12:00:00').getTime();if(t<=d.created||t>end)return;if(!first||t<first.t)first={t,v:+r.score}});
+  let resp=first?first.v:null;
+  if(!ONLINE&&d.to!==me&&now>d.created+120e3){resp=simScore(d.to,d.game,'resp'+d.created);first={t:0,v:resp}}
   const beat=resp!=null&&(g.better==='high'?resp>d.score:resp<d.score);
   if(beat)return {st:'to',resp};
-  if(now>end||(!ONLINE&&d.to!==me&&now>d.created+120e3))return {st:'from',resp};
+  if(first||now>end)return {st:'from',resp};
   return {st:'open',resp,left:end-now};
 }
 const hleft=ms=>{const h=Math.floor(ms/3600e3),m=Math.floor(ms%3600e3/60e3);return h?`${h} h ${m} min`:`${m} min`};
@@ -900,11 +906,11 @@ async function loadDuels(){
 function duelLine(d){
   const s=duelState(d),g=G[d.game],A=P[d.from].name,B=P[d.to].name,mark=fmtShort(d.game,d.score);
   if(s.st==='open'){
-    if(d.to===me)return {cls:'in',html:`<b>${A}</b> te reta en <b>${g.name}</b>: supera ${mark}. Quedan ${hleft(s.left)}.${d.ghost?' 👻 Con su fantasma.':''}`,play:d.game,duel:d.id};
+    if(d.to===me)return {cls:'in',html:`<b>${A}</b> te reta en <b>${g.name}</b>: supera ${mark}. Tienes un solo intento; quedan ${hleft(s.left)}.${d.ghost?' 👻 Con su fantasma.':''}`,play:d.game,duel:d.id};
     return {cls:'out',html:`Has retado a <b>${B}</b> en <b>${g.name}</b> (${mark}). Quedan ${hleft(s.left)}.`};
   }
   if(s.st==='to')return {cls:d.to===me?'win':'lose',html:`<b>${B}</b> ha humillado a <b>${A}</b> en ${g.name} (${fmtShort(d.game,s.resp)} contra ${mark}).`};
-  return {cls:d.from===me?'win':'lose',html:`<b>${A}</b> gana el duelo de ${g.name}: <b>${B}</b> no superó ${mark}.`};
+  return {cls:d.from===me?'win':'lose',html:`<b>${A}</b> gana el duelo de ${g.name}: <b>${B}</b> no superó ${mark}${s.resp!=null?` (hizo ${fmtShort(d.game,s.resp)})`:''}.`};
 }
 function duelWins(id,days){const set=new Set(days);return allDuels().filter(d=>{const s=duelState(d);if(s.st==='open')return false;const w=s.st==='to'?d.to:d.from;return w===id&&set.has(madrid(new Date(d.created)))}).length}
 function openDuelPicker(){
@@ -912,13 +918,14 @@ function openDuelPicker(){
   if(!rivals.length){alertBox('Aún no hay rivales en el grupo.');return}
   if(!mine.length){alertBox('Primero juega algún minijuego para tener una marca con la que retar.');return}
   openOv(`<div class="row" style="justify-content:space-between;width:100%"><h1>Retar a un duelo</h1><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
-    <p class="note" style="margin:0">Tu rival tendrá 24 horas para superar tu mejor marca en el juego que elijas.</p>
+    <p class="note" style="margin:0">Tu rival tendrá 24 horas y <b>un solo intento</b> para superar tu mejor marca en el juego que elijas.</p>
     <div class="picker" id="d-pick">${rivals.map(p=>`<button class="pick" data-pick="${p.id}"><div class="ava" style="--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div>${P[p.id].name}</button>`).join('')}</div>
-    <div class="stack" style="width:100%;text-align:left;gap:6px"><label for="d-game">Juego</label><select id="d-game">${mine.map(g=>`<option value="${g.id}">${g.name} · tu marca ${fmtShort(g.id,bestOf(me,g.id))}</option>`).join('')}</select></div>
+    <div class="stack" style="width:100%;text-align:left;gap:6px"><small class="eyebrow">Juego</small><div class="gpick" id="d-game">${mine.map((g,i)=>`<button class="gp ${i?'':'on'}" data-g="${g.id}"><img src="img/ic_${g.id}.webp" alt=""><span><b>${g.name}</b><small>tu marca ${fmtShort(g.id,bestOf(me,g.id))}</small></span></button>`).join('')}</div></div>
     <p class="note" id="d-err" style="margin:0;color:var(--red);font-weight:900"></p><button class="btn red" id="d-go">Lanzar reto</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;let pick=null;
+  let dgame=mine[0].id;$('#d-game').onclick=e=>{const b=e.target.closest('.gp');if(!b)return;dgame=b.dataset.g;$('#d-game').querySelectorAll('.gp').forEach(x=>x.classList.toggle('on',x===b))};
   $('#d-pick').onclick=e=>{const b=e.target.closest('.pick');if(!b)return;pick=b.dataset.pick;document.querySelectorAll('#d-pick .pick').forEach(x=>x.classList.toggle('on',x===b))};
-  $('#d-go').onclick=async()=>{if(!pick){$('#d-err').textContent='Elige a quién retas.';return}$('#d-go').disabled=true;const err=await createDuel(pick,$('#d-game').value);
+  $('#d-go').onclick=async()=>{if(!pick){$('#d-err').textContent='Elige a quién retas.';return}$('#d-go').disabled=true;const err=await createDuel(pick,dgame);
     if(err){$('#d-err').textContent=err;$('#d-go').disabled=false;return}closeOv();renderAll()};
 }
 function alertBox(msg){openOv(`<h2>${msg}</h2><button class="btn" id="g-close">Vale</button>`,'img/bg_menu.webp');$('#g-close').onclick=closeOv}
@@ -1397,8 +1404,7 @@ function dfmt(gid,d){const g=G[gid];if(g.label==='tiempo')return sec(d);if(gid==
 function renderRank(){
   let rows,unitGame=null;
   $('#fame-bar').hidden=rmode!=='fame';$('#fame-note').hidden=rmode!=='fame';
-  if(rmode==='fame'){const sel=$('#fame-game');if(!sel.options.length)sel.innerHTML=GAMES.map(g=>`<option value="${g.id}">${g.name}</option>`).join('');
-    fameGame=fameGame||todayGame.id;sel.value=fameGame;rows=fameRanking(fameGame);unitGame=fameGame;
+  if(rmode==='fame'){fameGame=fameGame||todayGame.id;$('#fame-game').innerHTML=`<img src="img/ic_${fameGame}.webp" alt=""><span>${G[fameGame].name}</span><b>▾</b>`;rows=fameRanking(fameGame);unitGame=fameGame;
     const pl=rows.filter(r=>r.score!=null);let note='';
     if(pl.length>=2){const last=pl[pl.length-1];note+=`<span class="tag">Farolillo rojo</span> ${P[last.id].name}${last.id===me?' (tú)':''}. `}
     const mi=rows.findIndex(r=>r.id===me);
@@ -2569,7 +2575,12 @@ $('#rank-list').addEventListener('click',e=>{const b=e.target.closest('.item');i
 $('#picker').addEventListener('click',e=>{const b=e.target.closest('.pick');if(!b)return;me=b.dataset.pick;saveAll();renderAll()});
 $('#snd').onclick=()=>{SND.on=!SND.on;store.set('rdm_sound',SND.on);sndBtn();if(SND.on)sfx('ok')};sndBtn();
 $('#btn-admin').onclick=openAdmin;$('#btn-groups').onclick=()=>openGroups();document.querySelectorAll('.grp-btn').forEach(b=>b.onclick=()=>openGroups());
-$('#fame-game').onchange=e=>{fameGame=e.target.value;renderRank()};
+$('#fame-game').onclick=()=>gameSheet(GAMES,fameGame,g=>{fameGame=g;renderRank()});
+// lista de juegos a pantalla completa (sustituye al desplegable del sistema)
+function gameSheet(list,cur,cb){const d=document.createElement('div');d.className='gsheet';
+  d.innerHTML=`<div class="gsheet-in"><div class="row" style="justify-content:space-between"><h2>Elige un juego</h2><button class="btn ghost" data-x="1" style="font-size:14px;padding:6px 10px">Cerrar</button></div><div class="gpick">${list.map(g=>`<button class="gp ${g.id===cur?'on':''}" data-g="${g.id}"><img src="img/ic_${g.id}.webp" alt=""><span><b>${g.name}</b><small>${CATNAME[g.cat]}</small></span></button>`).join('')}</div></div>`;
+  d.onclick=e=>{const b=e.target.closest('[data-g]');if(b){d.remove();cb(b.dataset.g);return}if(e.target===d||e.target.closest('[data-x]'))d.remove()};document.body.appendChild(d);
+  const on=d.querySelector('.gp.on');if(on)on.scrollIntoView({block:'center'})}
 $('#state-sim').onchange=renderAll;$('#power-sim').onchange=renderAll;
 $('#m-summary').onclick=()=>openSummary(new Date(TODAY+'T12:00:00').getDay()===1);
 $('#m-prev').onclick=()=>{moteIdx--;renderMote()};$('#m-next').onclick=()=>{moteIdx++;renderMote()};
@@ -2959,7 +2970,8 @@ function ytApi(){if(window.YT&&YT.Player)return Promise.resolve(window.YT);if(YT
 function ytHost(){let h=document.getElementById('yt-host');if(!h){h=document.createElement('div');h.id='yt-host';h.innerHTML='<div id="yt-pl"></div>';document.body.appendChild(h)}return h}
 function ytPark(){const h=ytHost();clearInterval(YTS.tapIv);YTS.tapIv=null;h.className='';h.removeAttribute('style')}
 // si el navegador no deja arrancar solo (iPhone), el reproductor (invisible) se pone encima de la tapa para que el toque le llegue
-function ytOver(el){const h=ytHost();const put=()=>{if(!el.isConnected){ytPark();return}const r=el.getBoundingClientRect();Object.assign(h.style,{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px'})};
+function ytOver(el){const h=ytHost();const put=()=>{if(!el.isConnected){ytPark();return}const r=el.getBoundingClientRect(),w=Math.min(r.width,176),hh=Math.min(r.height,99);
+  Object.assign(h.style,{left:(r.left+(r.width-w)/2)+'px',top:(r.top+(r.height-hh)/2)+'px',width:w+'px',height:hh+'px'})};
   h.className='over';put();clearInterval(YTS.tapIv);YTS.tapIv=setInterval(put,400)}
 async function ytMake(){if(YTS.p&&YTS.p.getIframe&&document.contains(YTS.p.getIframe()))return YTS.p;const Y=await ytApi();ytHost();
   return new Promise((res,rej)=>{let p;const to=setTimeout(()=>rej(new Error('timeout')),15000);
@@ -2970,7 +2982,10 @@ function ytPlay(p,s,{secs=15,cover,onPlay,onFail}){let started=false,done=false;
   p._cb=(k,v)=>{if(done)return;if(k==='error'){done=true;ytPark();onFail(v);return}
     if(v===1&&!started){started=true;ytPark();C.classList.remove('tap','wait');C.classList.add('on');onPlay();timers.push(setTimeout(()=>{if(!done)try{p.pauseVideo()}catch(e){}},secs*1000))}};
   try{p.loadVideoById({videoId:s.yt,startSeconds:s.start_s||0})}catch(e){done=true;onFail(-1);return {stop(){}}}
-  timers.push(setTimeout(()=>{if(!started&&!done){C.classList.remove('wait');C.classList.add('tap');ytOver(C)}},1800));
+  // solo se pide tocar si YouTube no ha arrancado solo (en iPhone a veces tarda en cargar: mientras carga, se espera)
+  let waited=0;const check=()=>{if(started||done)return;let st=-1;try{st=p.getPlayerState()}catch(e){}
+    if(st===3&&waited<12000){waited+=700;timers.push(setTimeout(check,700));return}
+    C.classList.remove('wait');C.classList.add('tap');ytOver(C)};timers.push(setTimeout(check,2500));
   return {stop(){done=true;ytPark();C.classList.remove('on','tap','wait');try{p.pauseVideo()}catch(e){}},resume(){if(done)return;try{p.playVideo()}catch(e){}}}}
 const ytBoxHTML=(id='yt-c')=>`<div class="yt-box"><div class="yt-cover" id="${id}">${muArt('vinilo',84)}<b class="yt-wait">Cargando la canción…</b><b class="yt-tap">▶ Toca aquí para escuchar</b><b class="yt-on">🎵 Escuchando…</b></div></div>`;
 const decOf=y=>Math.floor(y/10)*10,decLab=d=>d<1960?`años ${d}`:d<2000?`años ${String(d).slice(2)}`:`${d}s`;
