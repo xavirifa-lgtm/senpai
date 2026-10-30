@@ -624,7 +624,7 @@ function dayRanking(date){
 function weekRanking(){return weekRankingOf(WEEK)}
 // ===== Sonido =====
 const SND={on:store.get('rdm_sound',true)};
-function actxGet(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx}catch(e){return null}}
+function actxGet(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state!=='running'&&actx.state!=='closed')actx.resume().catch(()=>{});return actx}catch(e){return null}}
 function tone(f,d,type='square',vol=.06,delay=0,f2=null){if(!SND.on)return;const a=actxGet();if(!a)return;const t=a.currentTime+delay,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0005,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}
 function noise(d,vol=.05,delay=0,hp=1200){if(!SND.on)return;const a=actxGet();if(!a)return;const n=Math.floor(a.sampleRate*d),b=a.createBuffer(1,n,a.sampleRate),ch=b.getChannelData(0);for(let i=0;i<n;i++)ch[i]=(Math.random()*2-1)*(1-i/n);const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();f.type='highpass';f.frequency.value=hp;g.gain.value=vol;s.buffer=b;s.connect(f);f.connect(g);g.connect(a.destination);s.start(a.currentTime+delay)}
 function sfx(k){switch(k){
@@ -2053,17 +2053,22 @@ function minigolf(official){
 }
 
 // --- Magic Tiles ---
-const ODE=[64,64,65,67,67,65,64,62,60,60,62,64,64,62,62,64,64,65,67,67,65,64,62,60,60,62,64,62,60,60];
+// Himno de la alegría entero (A A' B A') y, si aguantas, sigue con el resto de melodías clásicas
+const ODE_FULL=[64,64,65,67,67,65,64,62,60,60,62,64,64,62,62, 64,64,65,67,67,65,64,62,60,60,62,64,62,60,60,
+  62,62,64,60,62,64,65,64,60,62,64,65,64,62,60,62,55, 64,64,65,67,67,65,64,62,60,60,62,64,62,60,60];
+function tilesSeq(){const out=ODE_FULL.map((m,i)=>({m,t:i?null:'Himno de la alegría · Beethoven'}));
+  MEL.filter(M=>M.id!=='alegria').forEach(M=>M.ev.forEach((e,i)=>out.push({m:e.m,t:i?null:`${M.t} · ${M.a}`})));return out}
 function tiles(official){
   const W=320,H=520,LANES=4,TH=120;const r=rngFor('tiles',official);
-  openOv(header('tiles',official)+`<div class="big" id="g-sc" style="font-size:40px">0</div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca cada tecla negra justo cuando cruce la línea roja. Antes de tiempo o tarde, pierdes. Sube el volumen: cada tecla suena (Himno de la alegría, de Beethoven).</p>`,'img/bg_menu.webp');
+  openOv(header('tiles',official)+`<div class="row" style="gap:10px"><div class="big" id="g-sc" style="font-size:40px">0</div><span class="tag" id="tl-song">Himno de la alegría · Beethoven</span></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca cada tecla negra justo cuando cruce la línea roja. Antes de tiempo o tarde, pierdes. Sube el volumen: cada tecla toca una nota del Himno de la alegría entero y, si aguantas, de más piezas clásicas.</p>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);let rows=[],speed=240,score=0,started=false,over=false,next=0,lane=-1,notes=[];const LY=H-120,TOL=26;
-  const note=m=>{if(!SND.on)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.type='triangle';o.frequency.value=440*Math.pow(2,(m-69)/12);g.gain.setValueAtTime(.15,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.5);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.5)}catch(e){}};
+  const SEQ=tilesSeq(),tb=muBus();const note=k=>{const n=SEQ[k%SEQ.length];if(n.t)$('#tl-song').textContent=n.t;if(!SND.on||!MUS.a)return;muNote(tb.node,n.m,MUS.a.currentTime,.45,'piano',1.1)};
   const add=y=>{let l;do{l=Math.floor(r()*LANES)}while(l===lane);lane=l;rows.push({y,l,hit:false})};
   for(let i=0;i<6;i++)add(LY-TH/2-TH*i);
+  if(window.__MUT)window.__MUT.tl=()=>({rows,LY,TOL,TH,W,LANES,over});
   c.addEventListener('pointerdown',e=>{if(over)return;const [px,py]=pos(e);const l=Math.floor(px/(W/LANES));const t=rows.find(t=>!t.hit);if(!t)return;
-    if(t.l===l&&t.y<=LY+TOL&&t.y+TH>=LY-TOL){t.hit=true;notes.push({x:(l+.5)*W/LANES,y:LY-30,t:0.7});note(ODE[score%ODE.length]);score++;ghMark(score);ghFrame([l],0,true);$('#g-sc').textContent=score;started=true}
+    if(t.l===l&&t.y<=LY+TOL&&t.y+TH>=LY-TOL){t.hit=true;notes.push({x:(l+.5)*W/LANES,y:LY-30,t:0.7});note(score);score++;ghMark(score);ghFrame([l],0,true);$('#g-sc').textContent=score;started=true}
     else if(started||t.l!==l){over=true;timers.push(setTimeout(()=>finish('tiles',score,official),700))}});
   fixedLoop(dt=>{if(over)return false;notes.forEach(n=>{n.t-=dt;n.y-=60*dt});notes=notes.filter(n=>n.t>0);if(!started)return;speed+=6*dt;rows.forEach(t=>t.y+=speed*dt);
     const top=Math.min(...rows.map(t=>t.y));if(top>-TH)add(top-TH);
@@ -2642,9 +2647,12 @@ const MUS={a:null,out:null,nb:null,buses:new Set()};const MUT=window.__MUT||null
 // motor propio: suena aunque los efectos (🔊) estén apagados, porque sin sonido estos juegos no tienen sentido
 function muCtx(){const a=actxGet();if(!a)return null;if(MUS.a!==a){MUS.a=a;const c=a.createDynamicsCompressor();c.threshold.value=-12;c.knee.value=10;c.ratio.value=5;c.attack.value=.003;c.release.value=.2;
   const g=a.createGain();g.gain.value=.85;g.connect(c);c.connect(a.destination);MUS.out=g;MUS.nb=null}return a}
-function muUnlock(){const a=muCtx();if(!a)return;try{const s=a.createBufferSource();s.buffer=a.createBuffer(1,1,22050);s.connect(a.destination);s.start(0)}catch(e){}
-  if(a.state==='running')['pointerdown','touchend','keydown'].forEach(k=>document.removeEventListener(k,muUnlock,true))}
-['pointerdown','touchend','keydown'].forEach(k=>document.addEventListener(k,muUnlock,true));
+// En iPhone el audio solo arranca dentro de un toque, y iOS lo vuelve a parar tras una llamada, al pasar a segundo plano
+// o cuando suena un vídeo de YouTube. Por eso se comprueba en CADA toque (no solo el primero) y se reanuda si hace falta.
+function muUnlock(){const a=muCtx();if(!a||a.state==='running'&&MUS.ok)return;
+  try{const s=a.createBufferSource();s.buffer=a.createBuffer(1,1,22050);s.connect(a.destination);s.start(0)}catch(e){}if(a.state==='running')MUS.ok=1;else MUS.ok=0}
+['touchend','pointerdown','click','keydown'].forEach(k=>document.addEventListener(k,muUnlock,true));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){MUS.ok=0;try{if(MUS.a&&MUS.a.state!=='running')MUS.a.resume().catch(()=>{})}catch(e){}}});
 function muBus(){const a=muCtx();const g=a?a.createGain():null;if(g)g.connect(MUS.out);
   const b={node:g,on:true,stop(f=.03){if(!b.on)return;b.on=false;MUS.buses.delete(b);if(!g)return;try{g.gain.setTargetAtTime(0,a.currentTime,f);setTimeout(()=>{try{g.disconnect()}catch(e){}},400)}catch(e){}}};
   MUS.buses.add(b);return b}
