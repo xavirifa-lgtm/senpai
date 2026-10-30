@@ -311,6 +311,9 @@ input[type=range]{accent-color:var(--red)}
 .gp{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:3px solid var(--ink);background:var(--paper);padding:6px 8px;font:inherit;color:var(--ink);cursor:pointer;flex:none}.gp img{width:38px;height:38px;object-fit:contain;flex:none}.gp span{display:flex;flex-direction:column;min-width:0}.gp small{color:var(--ink2);font-size:12px}.gp.on{background:var(--yellow);outline:3px solid var(--red)}
 .gsheet{position:fixed;inset:0;z-index:95;background:#0008;display:flex;align-items:flex-end;justify-content:center}.gsheet-in{background:var(--paper);border-top:4px solid var(--ink);width:min(520px,100%);max-height:86vh;display:flex;flex-direction:column;gap:8px;padding:12px 16px calc(12px + env(safe-area-inset-bottom))}.gsheet .gpick{max-height:none;flex:1}
 .gsel{display:flex;align-items:center;gap:8px;width:100%;font-size:16px;text-align:left}.gsel img{width:30px;height:30px;object-fit:contain}.gsel span{flex:1}
+.champ{display:flex;align-items:center;gap:10px;border:3px solid var(--ink);background:#FFF4CC;box-shadow:3px 3px 0 var(--ink);padding:8px 10px;text-align:left}.champ.mine{background:var(--yellow)}
+.champ img{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);object-fit:cover;object-position:top;flex:none}.champ span{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;word-break:break-word}.champ small{font-size:11px;font-weight:900;color:var(--ink2)}
+.champ .btn{flex:none}.duel-msg{margin-top:4px;font-size:13px;font-style:italic;word-break:break-word}.duel-msg .btn{font-size:11px;padding:2px 6px;font-style:normal}
 </style>
 
 </head>
@@ -928,6 +931,51 @@ function openDuelPicker(){
   $('#d-go').onclick=async()=>{if(!pick){$('#d-err').textContent='Elige a quién retas.';return}$('#d-go').disabled=true;const err=await createDuel(pick,dgame);
     if(err){$('#d-err').textContent=err;$('#d-go').disabled=false;return}closeOv();renderAll()};
 }
+// ===== Mensaje del ganador: el campeón del reto de ayer y el ganador de cada duelo dejan UN mensaje =====
+const MSG_KEY=()=>'rdm_msgs_'+(ONLINE&&GID?GID:'local');let MSGS=null;
+const msgsAll=()=>MSGS||(MSGS=store.get(MSG_KEY(),[]));
+async function loadMsgs(){if(!ONLINE||!sb||!GID)return;
+  const {data,error}=await sb.from('messages').select('id,kind,ref,from_player,body,created_at').eq('group_id',GID).gte('created_at',new Date(Date.now()-10*DAY).toISOString()).limit(300);
+  if(error){if(!/messages/i.test(error.message||''))console.warn('mensajes',error);return}
+  const av=Object.fromEntries(PLAYERS.map(p=>[p.pid,p.id]));MSGS=data.filter(m=>av[m.from_player]).map(m=>({id:m.id,kind:m.kind,ref:String(m.ref),from:av[m.from_player],body:m.body}));store.set(MSG_KEY(),MSGS)}
+const msgOf=(k,ref)=>msgsAll().find(m=>m.kind===k&&m.ref===String(ref));
+// ganador del reto de ayer (hacen falta al menos 2 jugadores; si hay empate, cualquiera de los empatados)
+function retoWinnerY(){const Y=addDays(TODAY,-1),R=dayRanking(Y);if(R.n<2)return null;const best=R.rows[0].score;return {date:Y,game:R.game,ids:R.rows.filter(r=>r.score!=null&&r.score===best).map(r=>r.id)}}
+const duelWinner=d=>{const s=duelState(d);return s.st==='open'?null:s.st==='to'?d.to:d.from};
+const msgCanDel=m=>!!(P[me]&&P[me].admin)&&ONLINE; // solo los administradores (para moderar): el autor no puede borrar y reescribir
+async function postMsg(kind,ref,body){body=(body||'').trim();if(!body)return 'Escribe algo.';if(body.length>80)return 'Máximo 80 letras.';if(/https?:\/\/|www\./i.test(body))return 'Sin enlaces, por favor.';
+  if(msgOf(kind,ref))return 'Ya hay un mensaje para esta victoria.';
+  if(!ONLINE){const l=msgsAll();l.push({id:uuid(),kind,ref:String(ref),from:me,body});store.set(MSG_KEY(),l);return null}
+  if(!sb||!navigator.onLine)return 'Necesitas conexión para publicarlo.';
+  const {error}=await sb.rpc('post_message',{p_group:GID,p_kind:kind,p_ref:String(ref),p_body:body});
+  if(error)return /post_message|function/i.test(error.message||'')&&/not find|does not exist/i.test(error.message||'')?'Falta preparar la base de datos (migracion_mensajes.sql).':error.message;
+  await loadMsgs();return null}
+async function delMsg(id){if(ONLINE&&sb){const {error}=await sb.from('messages').delete().eq('id',id);if(error)return;await loadMsgs()}else{MSGS=msgsAll().filter(m=>String(m.id)!==String(id));store.set(MSG_KEY(),MSGS)}renderAll()}
+const MSG_IDEAS=['¡Aquí manda el Senpai! 😎','Mañana más… si podéis 😏','GG, buena partida 🤝','Entrenad, que se nota 💪','Ni sudé 🧊'];
+function openMsgBox(kind,ref,title){
+  openOv(`<span class="tag">👑 Mensaje del ganador</span><h2>${title}</h2>
+    <p class="note" style="margin:0">Solo puedes escribir <b>un</b> mensaje y no se puede cambiar. Lo verá todo el grupo.</p>
+    <textarea id="mg-t" class="inp" rows="3" maxlength="80" placeholder="Escribe tu mensaje…"></textarea><small class="note" id="mg-n" style="align-self:flex-end;margin:0">0/80</small>
+    <div class="row" style="flex-wrap:wrap;gap:6px;justify-content:center">${MSG_IDEAS.map(t=>`<button class="chip" data-t="${esc(t)}">${esc(t)}</button>`).join('')}</div>
+    <p class="note" id="mg-e" style="margin:0;color:var(--red);font-weight:900"></p>
+    <div class="row" style="gap:8px"><button class="btn red" id="mg-go">Publicar</button><button class="btn ghost" id="g-close">Ahora no</button></div>`,'img/bg_results.webp');
+  $('#g-close').onclick=closeOv;const T=$('#mg-t'),cnt=()=>{$('#mg-n').textContent=T.value.length+'/80'};T.oninput=cnt;
+  ovIn.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{T.value=b.dataset.t;cnt()});
+  $('#mg-go').onclick=async()=>{$('#mg-go').disabled=true;const e=await postMsg(kind,ref,T.value);if(e){$('#mg-e').textContent=e;$('#mg-go').disabled=false;return}closeOv();renderAll()};
+}
+// bloque de la pantalla Hoy
+function champHTML(){const w=retoWinnerY();if(!w)return '';const m=msgOf('reto',w.date);
+  if(m)return `<div class="champ"><img src="img/av_${m.from}.webp" alt="" style="background:${AVC[m.from]||'#FFC93C'}"><span><small>👑 Campeón del reto de ayer · ${w.game.name}</small><div><b>${esc(P[m.from].name)}:</b> «${esc(m.body)}»</div></span>${msgCanDel(m)?`<button class="btn ghost" data-mdel="${m.id}" aria-label="Borrar mensaje">✕</button>`:''}</div>`;
+  if(w.ids.includes(me))return `<div class="champ mine"><span><small>👑 Ganaste el reto de ayer (${w.game.name})</small><b>Deja tu mensaje al grupo</b></span><button class="btn red" id="mg-reto" style="font-size:14px;padding:6px 12px">Escribir</button></div>`;
+  return `<div class="champ"><img src="img/av_${w.ids[0]}.webp" alt="" style="background:${AVC[w.ids[0]]||'#FFC93C'}"><span><small>👑 Campeón del reto de ayer · ${w.game.name}</small><div><b>${esc(P[w.ids[0]].name)}</b>${w.ids.length>1?' (empate)':''} aún no ha dicho nada.</div></span></div>`}
+function bindChamp(el){const w=retoWinnerY();const b=el.querySelector('#mg-reto');if(b&&w)b.onclick=()=>openMsgBox('reto',w.date,'Has ganado el reto de ayer');
+  el.querySelectorAll('[data-mdel]').forEach(b=>b.onclick=()=>delMsg(b.dataset.mdel));
+  el.querySelectorAll('[data-dmsg]').forEach(b=>b.onclick=()=>{const d=allDuels().find(x=>String(x.id)===b.dataset.dmsg);if(d)openMsgBox('duelo',d.id,`Has ganado el duelo de ${G[d.game].name} contra ${P[d.from===me?d.to:d.from].name}`)})}
+// línea extra bajo un duelo terminado
+function duelMsgHTML(d){const w=duelWinner(d);if(!w)return '';const m=msgOf('duelo',d.id);
+  if(m)return `<div class="duel-msg">💬 <b>${esc(P[m.from].name)}:</b> «${esc(m.body)}»${msgCanDel(m)?` <button class="btn ghost" data-mdel="${m.id}" aria-label="Borrar mensaje">✕</button>`:''}</div>`;
+  return w===me?`<button class="btn ghost" data-dmsg="${d.id}" style="font-size:12px;padding:4px 8px;margin-top:4px">💬 Deja tu mensaje de ganador</button>`:''}
+
 function alertBox(msg){openOv(`<h2>${msg}</h2><button class="btn" id="g-close">Vale</button>`,'img/bg_menu.webp');$('#g-close').onclick=closeOv}
 // --- panel en la pantalla Hoy
 function renderExtras(){
@@ -936,6 +984,7 @@ function renderExtras(){
   const ds=allDuels().filter(d=>d.from===me||d.to===me).map(d=>({d,l:duelLine(d)})).sort((a,b)=>({in:0,out:1,win:2,lose:2}[a.l.cls]-{in:0,out:1,win:2,lose:2}[b.l.cls])||b.d.created-a.d.created).slice(0,5);
   const rxm=reactsTo(me);
   el.innerHTML=`
+   ${champHTML()}
    ${rxm.length?`<div class="rx-today"><small class="eyebrow">Stickers de hoy</small><div class="rx-list">${rxm.map(r=>`<div class="rx"><img src="${reactImg(r.from,r.kind)}" alt=""><span>${P[r.from].name} ${(REACT_KINDS.find(k=>k[0]===r.kind)||REACT_KINDS[0])[2]}</span></div>`).join('')}</div></div>`:''}
    <div class="streak ${s.streak?'':'zero'}"><div class="flame">${s.streak}</div><div><b>${s.streak===1?'día':'días'} de racha</b><br><small>${s.today?'Reto de hoy hecho.':s.streak?'Juega el reto de hoy para no perderla.':'Juega el reto de hoy para empezar.'} Comodines: ${'★'.repeat(s.tokens)}${'☆'.repeat(2-s.tokens)}${s.saved?` · ${s.saved} día${s.saved>1?'s':''} salvado${s.saved>1?'s':''}`:''}</small></div></div>
    ${rv?`<div class="rev"><b>Revancha ×2</b> Ayer quedaste último: el reto de hoy te cuenta doble en el ranking semanal.</div>`:''}
@@ -945,8 +994,8 @@ function renderExtras(){
    <div class="panel stack" style="gap:6px"><div class="row" style="justify-content:space-between"><h3>Misiones de la semana</h3><span class="eyebrow">${ms.filter(m=>m.done).length}/3</span></div>
      ${ms.map(m=>`<div class="mis ${m.done?'ok':''}"><span class="chk">${m.done?'✔':''}</span><span>${m.t}<br><small>${m.v}/${m.goal}</small></span></div>`).join('')}</div>
    <div class="panel stack" style="gap:8px"><div class="row" style="justify-content:space-between"><h3>Duelos</h3><button class="btn" id="btn-duel" style="font-size:14px;padding:6px 12px">Retar</button></div>
-     ${ds.length?ds.map(({l})=>`<div class="duel ${l.cls}"><span>${l.html}</span>${l.play?`<button class="btn red" data-play="${l.play}" data-duel="${l.duel}" style="font-size:13px;padding:5px 10px">Jugar</button>`:''}</div>`).join(''):'<p class="note" style="margin:0">Reta a alguien a superar tu marca en un juego. Tendrá 24 horas.</p>'}</div>`;
-  $('#btn-duel').onclick=openDuelPicker;
+     ${ds.length?ds.map(({d,l})=>`<div class="duel ${l.cls}"><span>${l.html}${duelMsgHTML(d)}</span>${l.play?`<button class="btn red" data-play="${l.play}" data-duel="${l.duel}" style="font-size:13px;padding:5px 10px">Jugar</button>`:''}</div>`).join(''):'<p class="note" style="margin:0">Reta a alguien a superar tu marca en un juego. Tendrá 24 horas.</p>'}</div>`;
+  $('#btn-duel').onclick=openDuelPicker;bindChamp(el);
   el.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>{const d=allDuels().find(x=>String(x.id)===b.dataset.duel);GHNEXT=d&&ghFair(d.ghost)?{...d.ghost,n:P[d.from].name}:null;startGame(b.dataset.play,false)});
 }
 // --- resumen de la semana
@@ -3159,6 +3208,7 @@ async function sync(){
       try{const {data:g}=await sb.from('groups').select('name,join_code,weekly_goal').eq('id',GID).maybeSingle();
         const m=curMemb();if(g&&m){m.gname=g.name;m.code=g.join_code;m.goal=g.weekly_goal;store.set('rdm_memb',MEMB);GROUP.goal=g.weekly_goal||null;GROUP.code=g.join_code;GROUP.name=g.name;saveGroup()}}catch(e){}
       try{await loadDuels()}catch(e){}
+      try{await loadMsgs()}catch(e){}
       try{await loadReacts()}catch(e){}
       try{await loadBets()}catch(e){}
       try{await ghUpload()}catch(e){}
