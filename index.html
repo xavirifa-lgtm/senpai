@@ -520,7 +520,8 @@ const GAMES=[
  {id:'notafalsa',name:'La nota falsa',cat:'percepcion',mus:1,since:MUSIC_FROM,desc:'Pulsa justo cuando suene la nota desafinada.',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[350,40],[600,70],[850,95],[1000,100]],round:1},
  {id:'ordena',name:'Ordena la melodía',cat:'logica',mus:1,since:MUSIC_FROM,desc:'Coloca los 4 trozos de la melodía en orden.',better:'low',label:'tiempo',short:sec,long:sec,pts:[[240000,0],[120000,40],[75000,70],[45000,95],[30000,100]],round:100},
  {id:'cancion',name:'Adivina la canción',cat:'memoria',mus:1,yt:1,practice:1,desc:'Canciones de vuestra lista de YouTube. ¿Cuál es?',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[400,40],[700,70],[950,95],[1100,100]],round:1},
- {id:'decada',name:'¿De qué década es?',cat:'memoria',mus:1,yt:1,practice:1,desc:'Suena una canción de vuestra lista. ¿De qué década es?',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[300,40],[550,70],[800,95],[950,100]],round:1}
+ {id:'decada',name:'¿De qué década es?',cat:'memoria',mus:1,yt:1,practice:1,desc:'Suena una canción de vuestra lista. ¿De qué década es?',better:'high',label:'puntos',short:s=>String(s),long:s=>`${s} puntos`,pts:[[0,0],[300,40],[550,70],[800,95],[950,100]],round:1},
+ {id:'conecta',name:'Conecta colores',cat:'logica',since:MUSIC_FROM,desc:'Une cada pareja de colores sin que las líneas se crucen.',better:'low',label:'tiempo',short:sec,long:sec,pts:[[150000,0],[70000,40],[45000,70],[28000,95],[18000,100]],round:100}
 ];
 GAMES.forEach(g=>{g.play=true});
 const G=Object.fromEntries(GAMES.map(g=>[g.id,g]));
@@ -678,6 +679,7 @@ const HOWTO={
  tarta:['Arrastra por la tarta para marcar el trozo.','Empieza arriba y gira como las agujas del reloj.','Las rayitas del borde marcan los cuartos.'],
  fruta:['Desliza el dedo para cortar la fruta.','¡Córtala en la dirección de su flecha!','No toques las bombas.'],
  minigolf:['Arrastra hacia atrás desde cualquier sitio.','La línea blanca marca dirección y fuerza.','Mete la pelota en el hoyo con pocos golpes.'],
+ conecta:['Arrastra el dedo de un punto al otro del mismo color.','Las líneas no se pueden cruzar ni pasar por encima de otro punto: tendrás que rodear.','5 niveles, cada vez con más colores. Cuenta el tiempo total.'],
  tiles:['Las teclas negras bajan.','Tócalas justo cuando crucen la línea roja.','Si fallas o se escapa una, se acaba.'],
 };
 const tutSeen=()=>store.get('rdm_tut',{});
@@ -1333,7 +1335,7 @@ function ghPosAt(){const g=GH&&GH.ghost;if(!g||!g.ps||!g.ps.length||GH.t0==null)
   if(t<=ps[0][0])return ps[0];if(t>=ps[ps.length-1][0])return ps[ps.length-1];
   let lo=0,hi=ps.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(ps[m][0]<=t)lo=m;else hi=m}
   const a=ps[lo],b=ps[hi];if(a[3]!==b[3])return a;const k=(t-a[0])/((b[0]-a[0])||1);return [t,a[1]+(b[1]-a[1])*k,a[2]+(b[2]-a[2])*k,a[3]]}
-const GHLAB={minigolf:v=>`hoyo ${Math.floor(v/100)+1} · ${v%100} golpes`,equilibrio:v=>`${v} s`,zip:v=>`${v}/25 casillas`,flood:v=>`${v}/100 pintadas`,lightsout:v=>`${v}/25 apagadas`,tuberias:v=>`${v}/25 con agua`,deslizante:v=>`${v}/8 en su sitio`,parejas:v=>`${v}/8 parejas`,sopa:v=>`${v}/6 palabras`,angulo:v=>`ronda ${v}`,tarta:v=>`ronda ${v}`,cambio:v=>`${v} puntos`,montones:v=>`${v} puntos`,sudoku:v=>`${v} casillas`,mastermind:v=>`${v} intentos`,semaforo:v=>`ronda ${v}`,tabla:v=>`va por el ${v}`,burbuja:v=>`${v} s dentro`,esquiva:v=>`${v} m`,camarero:v=>`${v} puntos`,intruso:v=>`ronda ${v}`,cuantos:v=>`${v} puntos`,simon:v=>`${v} rondas`};
+const GHLAB={conecta:v=>`nivel ${v+1}`,minigolf:v=>`hoyo ${Math.floor(v/100)+1} · ${v%100} golpes`,equilibrio:v=>`${v} s`,zip:v=>`${v}/25 casillas`,flood:v=>`${v}/100 pintadas`,lightsout:v=>`${v}/25 apagadas`,tuberias:v=>`${v}/25 con agua`,deslizante:v=>`${v}/8 en su sitio`,parejas:v=>`${v}/8 parejas`,sopa:v=>`${v}/6 palabras`,angulo:v=>`ronda ${v}`,tarta:v=>`ronda ${v}`,cambio:v=>`${v} puntos`,montones:v=>`${v} puntos`,sudoku:v=>`${v} casillas`,mastermind:v=>`${v} intentos`,semaforo:v=>`ronda ${v}`,tabla:v=>`va por el ${v}`,burbuja:v=>`${v} s dentro`,esquiva:v=>`${v} m`,camarero:v=>`${v} puntos`,intruso:v=>`ronda ${v}`,cuantos:v=>`${v} puntos`,simon:v=>`${v} rondas`};
 function ghBadge(){
   if(GH&&GH.live){const el=document.createElement('div');el.className='gh-tag live';const first=ovIn.firstElementChild;if(first)first.after(el);else ovIn.prepend(el);
     const lab=v=>v==null?'—':(GHLAB[GH.gid]?GHLAB[GH.gid](v):String(v));
@@ -1565,7 +1567,7 @@ async function openPractice(gid){
 }
 function runGame(gid,official){
   ghBegin(gid,official);
-  ({simon,crono,parejas,zip,flood,stroop,encestar,apilar,laberinto,equilibrio,sopa,cuantos,intruso,fruta,lightsout,tuberias,deslizante,angulo,tarta,minigolf,tiles,cambio,sudoku,mastermind,topos,flappy,arco,semaforo,tabla,montones,camarero,burbuja,esquiva,ritmo,tono,ciegas,afina,metronomo,concierto,acordes,melodia,notafalsa,ordena,cancion,decada})[gid](official);
+  ({simon,crono,parejas,zip,flood,stroop,encestar,apilar,laberinto,equilibrio,sopa,cuantos,intruso,fruta,lightsout,tuberias,deslizante,angulo,tarta,minigolf,tiles,cambio,sudoku,mastermind,topos,flappy,arco,semaforo,tabla,montones,camarero,burbuja,esquiva,ritmo,tono,ciegas,afina,metronomo,concierto,acordes,melodia,notafalsa,ordena,cancion,decada,conecta})[gid](official);
   if(gid===todayGame.id&&todayMod)applyMod(todayMod);
   ghBadge();
 }
@@ -2080,6 +2082,54 @@ function tiles(official){
     ghFramesIn(220).forEach(f=>{x.save();x.globalAlpha=GHA;x.fillStyle='#8E44FF';x.fillRect(f[1]*W/LANES+6,LY-TOL,W/LANES-12,TOL*2);x.globalAlpha=.7;x.font='16px sans-serif';x.textAlign='center';x.fillText('👻',(f[1]+.5)*W/LANES,LY-TOL-6);x.restore()});
     notes.forEach(n=>{x.globalAlpha=Math.min(1,n.t*2);dimg(x,'notas',n.x,n.y,56);x.globalAlpha=1});
     if(!started){x.fillStyle='#FFC93C';x.font='400 18px Dela Gothic One,sans-serif';x.textAlign='center';const t=rows[0];x.fillText('Empieza',t.l*W/LANES+W/LANES/2,t.y+TH/2+6)}});
+}
+
+// --- Conecta colores: une cada pareja con un trazo libre sin cruzar otras líneas ---
+function conecta(official){
+  const W=340,H=340,R=15,M=44,r=rngFor('conecta',official),LEVELS=[2,3,3,4,5];
+  const COL=['#2BB673','#E63946','#3A86FF','#FFC93C','#9B5DE5'];
+  const sd=(px,py,ax,ay,bx,by)=>{const dx=bx-ax,dy=by-ay,L=dx*dx+dy*dy;let t=L?((px-ax)*dx+(py-ay)*dy)/L:0;t=Math.max(0,Math.min(1,t));return Math.hypot(px-ax-t*dx,py-ay-t*dy)};
+  const cross=(a,b,c,d)=>{const o=(p,q,s)=>Math.sign((q[0]-p[0])*(s[1]-p[1])-(q[1]-p[1])*(s[0]-p[0]));return o(a,b,c)!==o(a,b,d)&&o(c,d,a)!==o(c,d,b)};
+  const segD=(a,b,c,d)=>cross(a,b,c,d)?0:Math.min(sd(a[0],a[1],c[0],c[1],d[0],d[1]),sd(b[0],b[1],c[0],c[1],d[0],d[1]),sd(c[0],c[1],a[0],a[1],b[0],b[1]),sd(d[0],d[1],a[0],a[1],b[0],b[1]));
+  // cada nivel: puntos separados y colocados para que las rectas se crucen (hay que rodear)
+  const levels=LEVELS.map(n=>{let best=null;for(let t=0;t<400;t++){const pts=[];let g=0;
+      while(pts.length<n*2&&g++<3000){const p=[M+r()*(W-2*M),M+r()*(H-2*M)];if(pts.every(q=>Math.hypot(p[0]-q[0],p[1]-q[1])>78))pts.push(p)}
+      if(pts.length<n*2)continue;const pairs=Array.from({length:n},(_,i)=>[pts[2*i],pts[2*i+1]]);
+      let x=0;for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)if(cross(...pairs[i],...pairs[j]))x++;
+      let blk=0;pairs.forEach((p,i)=>pairs.forEach((q,j)=>{if(i!==j)q.forEach(d=>{if(sd(d[0],d[1],p[0][0],p[0][1],p[1][0],p[1][1])<R+6)blk++})}));
+      const sc=x*2+blk;if(!best||sc>best.sc)best={pairs,sc};if(x>=Math.min(n-1,3)&&blk>=1)break}return best.pairs});
+  openOv(header('conecta',official)+`<div class="row" style="gap:12px">${clockEl()}<span class="tag" id="cn-k">Nivel 1 de ${LEVELS.length}</span></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Arrastra el dedo desde un punto hasta el otro del mismo color. Las líneas no se pueden cruzar ni pasar por encima de otro punto: rodea. Toca un punto para borrar su línea.</p>`,'img/bg_reveal.webp');
+  $('#g-close').onclick=closeOv;
+  const {c,x,pos}=makeCanvas(W,H);const sw=stopwatch();let k=0,paths=[],cur=null,bad=null,over=false,flash=0;
+  const P=()=>levels[k];
+  const hitDot=(px,py)=>{for(let i=0;i<P().length;i++)for(let e=0;e<2;e++){const d=P()[i][e];if(Math.hypot(px-d[0],py-d[1])<R+10)return {i,e}}return null};
+  const blocked=(a,b,ci)=>{if(b[0]<4||b[1]<4||b[0]>W-4||b[1]>H-4)return true;
+    for(let i=0;i<P().length;i++){if(i===ci)continue;for(const d of P()[i])if(sd(d[0],d[1],a[0],a[1],b[0],b[1])<R+3)return true;
+      const pt=paths[i];if(pt)for(let s=1;s<pt.length;s++)if(segD(a,b,pt[s-1],pt[s])<9)return true}
+    return false};
+  c.addEventListener('pointerdown',e=>{if(over)return;e.preventDefault();try{c.setPointerCapture(e.pointerId)}catch(_){}const [px,py]=pos(e);const h=hitDot(px,py);if(!h)return;
+    paths[h.i]=null;const d=P()[h.i][h.e];cur={i:h.i,to:P()[h.i][1-h.e],pts:[[d[0],d[1]]]};bad=null;sfx('tick')});
+  c.addEventListener('pointermove',e=>{if(!cur)return;const [px,py]=pos(e),pts=cur.pts,last=pts[pts.length-1];if(Math.hypot(px-last[0],py-last[1])<5)return;
+    // ¿llega al otro punto?
+    if(Math.hypot(px-cur.to[0],py-cur.to[1])<R+6){if(blocked(last,cur.to,cur.i)){bad=[px,py];return}pts.push([cur.to[0],cur.to[1]]);paths[cur.i]=pts;cur=null;sfx('ok');check();return}
+    if(blocked(last,[px,py],cur.i)){bad=[px,py];return}bad=null;pts.push([px,py])});
+  const up=()=>{if(cur){cur=null;bad=null;sfx('bad')}};c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);
+  function check(){if(P().every((_,i)=>paths[i])){k++;ghMark(k);flash=1;sfx('perfect');
+    if(k>=LEVELS.length){over=true;timers.push(setTimeout(()=>finish('conecta',Math.round(sw.ms()),official),700));return}
+    timers.push(setTimeout(()=>{paths=[];$('#cn-k').textContent=`Nivel ${k+1} de ${LEVELS.length}`},650))}}
+  const line=(pts,col,w)=>{if(pts.length<2)return;x.lineCap='round';x.lineJoin='round';x.beginPath();x.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)x.lineTo(pts[i][0],pts[i][1]);
+    x.strokeStyle=INK;x.lineWidth=w+5;x.stroke();x.strokeStyle=col;x.lineWidth=w;x.stroke()};
+  if(window.__MUT)window.__MUT.cn=()=>({levels,k,paths:paths.map(p=>!!p),over});
+  function draw(){if(!c.isConnected)return;x.fillStyle='#fff';x.fillRect(0,0,W,H);
+    const lv=levels[Math.min(k,levels.length-1)];
+    paths.forEach((p,i)=>p&&line(p,COL[i],9));if(cur)line(cur.pts,COL[cur.i],9);
+    if(cur&&bad){const l=cur.pts[cur.pts.length-1];x.strokeStyle='#E63946';x.lineWidth=3;x.setLineDash([5,5]);x.beginPath();x.moveTo(l[0],l[1]);x.lineTo(bad[0],bad[1]);x.stroke();x.setLineDash([])}
+    lv.forEach((pr,i)=>pr.forEach(d=>{x.fillStyle='rgba(0,0,0,.18)';x.beginPath();x.arc(d[0]-3,d[1]+4,R,0,7);x.fill();x.fillStyle=COL[i];x.beginPath();x.arc(d[0],d[1],R,0,7);x.fill();
+      x.lineWidth=3;x.strokeStyle=INK;x.stroke();x.fillStyle='rgba(255,255,255,.55)';x.beginPath();x.arc(d[0]-4,d[1]-5,4,0,7);x.fill()}));
+    if(flash>0){x.fillStyle=`rgba(255,201,60,${flash*.5})`;x.fillRect(0,0,W,H);flash=Math.max(0,flash-.04)}
+    x.strokeStyle=INK;x.lineWidth=4;x.strokeRect(2,2,W-4,H-4);
+    raf=requestAnimationFrame(draw)}
+  sw.start();showClock(sw);ghMark(0);draw();
 }
 
 // ===== tanda 3 de minijuegos =====
