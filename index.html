@@ -215,7 +215,7 @@ label{font-weight:900;font-size:12px;letter-spacing:.06em;text-transform:upperca
 .duo-msg{font-family:var(--display);font-size:20px;min-height:1.3em;text-align:center}
 .sema.sm{width:190px;height:78px;flex-direction:row;border-radius:20px;cursor:default;box-shadow:4px 4px 0 var(--ink)}.sema.sm .l{width:54px;height:54px}
 .duo-cv{width:100%;max-width:440px;height:auto;border:3px solid var(--ink)}
-.duo.hk .duo-half{flex:0 0 auto}.duo-hockey{align-self:center;touch-action:none;border:4px solid var(--ink);display:block}
+.duo.hk .duo-half{flex:0 0 auto;padding:6px 12px}.duo.hk .duo-zone{display:none}.duo.hk{justify-content:space-between;align-items:stretch}.duo-hockey{align-self:center;touch-action:none;border:4px solid var(--ink);display:block}
 .duo-q{font-family:var(--display);font-size:32px;text-align:center;word-break:break-word}.duo-ops{display:flex;gap:10px}.duo-ops button{font-family:var(--display);font-size:28px;min-width:74px;padding:10px;border:3px solid var(--ink);background:var(--paper);box-shadow:3px 3px 0 var(--ink);color:var(--ink)}.duo-ops .ok{background:#CDEFD9}.duo-ops .bad{background:#FFD9DC}
 .duo-x{position:absolute!important;right:8px;top:8px;font-size:14px;padding:4px 8px;z-index:5!important}
 #toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,40px);opacity:0;background:var(--ink);color:var(--yellow);padding:10px 16px;border:3px solid var(--yellow);font-weight:900;z-index:60;transition:all .25s;max-width:90vw;text-align:center}#toast.on{opacity:1;transform:translate(-50%,0)}
@@ -298,9 +298,9 @@ input[type=range]{accent-color:var(--red)}
 .mu-chunk{display:flex;flex-direction:column;border:3px solid var(--ink);background:var(--c);box-shadow:3px 3px 0 var(--ink)}.mu-chunk.used{opacity:.35}
 .mu-chunk button{font:inherit;border:0;background:none;cursor:pointer;color:var(--ink)}.mu-play{font-size:26px;padding:10px 0}.mu-put{font-weight:900;font-size:13px;background:var(--paper)!important;border-top:3px solid var(--ink)!important;padding:6px 0}
 .mu-slot{aspect-ratio:1;border:3px dashed var(--ink);background:var(--paper);font-family:var(--display);font-size:22px;color:#0005}.mu-slot.full{border-style:solid;background:var(--c);color:var(--ink);font-size:30px;cursor:pointer}
-.yt-box{position:relative;width:min(300px,100%);aspect-ratio:16/9;flex:none}#yt-host{position:fixed;left:-20px;top:-20px;width:1px;height:1px;opacity:.01;overflow:hidden;z-index:90;pointer-events:none}#yt-host.over{pointer-events:auto}#yt-host iframe{width:100%!important;height:100%!important;border:0;display:block}
+.yt-box{position:relative;width:min(300px,100%);aspect-ratio:16/9;flex:none}#yt-host{position:absolute;top:-999px;left:-999px;opacity:.1;pointer-events:none}#yt-host iframe{width:1px;height:1px;border:none}#yt-host.over{position:fixed;opacity:.01;overflow:hidden;z-index:90;pointer-events:auto}#yt-host.over iframe{width:100%;height:100%;display:block}
 .yt-cover{position:absolute;inset:0;pointer-events:none;background:var(--paper);border:4px solid var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;z-index:2;text-align:center;padding:6px}
-.yt-cover b{display:none;font-family:var(--display);font-size:16px}.yt-cover.wait .yt-wait,.yt-cover.tap .yt-tap,.yt-cover.on .yt-on,.yt-cover.ad .yt-ad{display:block}.yt-cover.ad .yt-ad{font-size:13px}.yt-cover.tap{background:var(--yellow)}.yt-cover.tap .yt-tap{display:block;background:var(--red);color:#fff;border:3px solid var(--ink);padding:18px 22px;border-radius:12px;animation:mubeat 1s infinite}
+.yt-cover b{display:none;font-family:var(--display);font-size:16px}.yt-cover.wait .yt-wait,.yt-cover.tap .yt-tap,.yt-cover.on .yt-on{display:block}.yt-cover.tap{background:var(--yellow)}.yt-cover.tap .yt-tap{display:block;background:var(--red);color:#fff;border:3px solid var(--ink);padding:18px 22px;border-radius:12px;animation:mubeat 1s infinite}
 .sg-row{display:flex;align-items:center;gap:8px;border:3px solid var(--ink);background:var(--paper);padding:6px}.sg-row img{width:64px;height:48px;object-fit:cover;border:2px solid var(--ink)}.sg-row span{flex:1;min-width:0;display:flex;flex-direction:column}.sg-row small{color:var(--ink2)}.sg-row .btn{padding:4px 10px;font-size:14px}
 .inp{font:700 16px var(--body);border:3px solid var(--ink);padding:8px;width:100%;background:var(--paper);color:var(--ink);min-width:0}
 .mu-buzz{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--display);font-size:24px;color:var(--ink);cursor:pointer}
@@ -314,6 +314,7 @@ input[type=range]{accent-color:var(--red)}
 .champ{display:flex;align-items:center;gap:10px;border:3px solid var(--ink);background:#FFF4CC;box-shadow:3px 3px 0 var(--ink);padding:8px 10px;text-align:left}.champ.mine{background:var(--yellow)}
 .champ img{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);object-fit:cover;object-position:top;flex:none}.champ span{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;word-break:break-word}.champ small{font-size:11px;font-weight:900;color:var(--ink2)}
 .champ .btn{flex:none}.duel-msg{margin-top:4px;font-size:13px;font-style:italic;word-break:break-word}.duel-msg .btn{font-size:11px;padding:2px 6px;font-style:normal}
+.sopa .sc.sprev{background:#FFD1D5;color:var(--red)}#sp-w .sprev{color:var(--red);font-weight:900;text-decoration:underline}
 </style>
 
 </head>
@@ -669,7 +670,7 @@ const HOWTO={
  apilar:['El bloque se mueve de lado a lado.','Toca para soltarlo encima del anterior.','Lo que sobresale se cae y el bloque encoge.'],
  laberinto:['Sujeta el móvil plano.','Inclínalo para que ruede la canica (sin giroscopio, arrastra el dedo).','Llévala hasta la meta verde.'],
  equilibrio:['Inclina el móvil a los lados para que la pelota no se caiga.','Sin giroscopio, arrastra el dedo.','El viento la empuja cada vez más fuerte.'],
- sopa:['Cada raya es una letra de una palabra escondida.','Arrastra el dedo en línea recta sobre la palabra.','Encuentra las 6 lo antes posible.'],
+ sopa:['Cada raya es una letra de una palabra escondida.','Arrastra el dedo en línea recta sobre la palabra.','Encuentra las 6 lo antes posible. Si te rindes, te enseña las que faltan (y suma 30 s por cada una).'],
  lightsout:['Toca una luz: cambian ella y sus 4 vecinas.','Apágalas todas.','Cuantos menos toques, mejor.'],
  tuberias:['Toca una pieza para girarla.','El agua sale del círculo rojo del centro.','Haz que llegue a todas las piezas.'],
  deslizante:['Toca una ficha junto al hueco para moverla.','Ordénalas del 1 al 8.','El hueco tiene que quedar abajo a la derecha.'],
@@ -1284,11 +1285,16 @@ async function enablePush(){
   const err=await savePush(sub);if(err)return 'No se pudo guardar: '+err;
   store.set('rdm_push_nudge',1);testPush();return null;
 }
+// iOS a veces cambia o anula la suscripción (al actualizar la app, tras días sin abrirla…): al abrir la app se vuelve a guardar
+async function refreshPush(){try{if(!ONLINE||!sb||!myUid||!pushOK()||Notification.permission!=='granted')return;let sub=await pushSub();
+  if(!sub&&VAPID){const r=await swReg();if(r)sub=await r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(VAPID)})}if(sub)await savePush(sub)}catch(e){}}
 async function disablePush(){const sub=await pushSub();if(sub){try{if(sb)await sb.rpc('delete_push',{p_endpoint:sub.endpoint})}catch(e){}try{await sub.unsubscribe()}catch(e){}}}
 async function testPush(){
   try{const {data:{session}}=await sb.auth.getSession();if(!session)return 'Sin sesión';
     const r=await fetch(`${CONFIG.supabaseUrl}/functions/v1/avisos`,{method:'POST',headers:{'Content-Type':'application/json',apikey:CONFIG.supabaseAnonKey,Authorization:'Bearer '+session.access_token},body:JSON.stringify({type:'test'})});
-    const j=await r.json().catch(()=>({}));if(!r.ok)return 'El servidor respondió '+r.status+(j.error?': '+j.error:'');return j.sent?null:'No hay ningún móvil suscrito.';
+    const j=await r.json().catch(()=>({}));if(!r.ok)return 'El servidor respondió '+r.status+(j.error?': '+j.error:'');
+    const det=(j.detail||[]).map(t=>t.replace('web.push.apple.com','iPhone (Apple)').replace(/fcm\.googleapis\.com|android\.googleapis\.com/,'Android (Google)')).join(' · ');
+    return j.sent?(j.fail||j.gone?'Enviado a '+j.sent+'. '+det:null):(det?'No ha llegado: '+det:'No hay ningún móvil suscrito.');
   }catch(e){return 'No se pudo contactar con la función de avisos.'}
 }
 async function renderPush(){
@@ -1296,7 +1302,7 @@ async function renderPush(){
   const sub=await pushSub(),on=!!sub&&typeof Notification!=='undefined'&&Notification.permission==='granted';
   el.innerHTML=`<h3>Avisos</h3><p class="note" style="margin:0">${on?'Activados en este móvil: reto del día, racha en peligro, duelos, stickers y cuando alguien te supera.':isIOS&&!standalone()?'En iPhone solo funcionan con la app añadida a la pantalla de inicio y abierta desde ese icono.':'Te avisamos del reto del día, de tu racha, de los duelos y de cuando alguien te supera.'}</p>
    <div class="row" style="flex-wrap:wrap">${on?'<button class="btn" id="pu-test" style="font-size:14px;padding:6px 12px">Probar</button><button class="btn ghost" id="pu-off" style="font-size:14px;padding:6px 12px">Desactivar</button>':'<button class="btn red" id="pu-on" style="font-size:14px;padding:6px 12px">Activar avisos</button>'}</div>
-   <p class="note" id="pu-msg" style="margin:0;font-weight:900"></p>`;
+   <p class="note" id="pu-msg" style="margin:0;font-weight:900"></p>${isIOS?`<small class="note" style="margin:0">iPhone · ${standalone()?'app de la pantalla de inicio ✓':'abierta en Safari ✗'} · permiso: ${typeof Notification==='undefined'?'no disponible':Notification.permission} · ${sub?'suscrito ✓':'sin suscripción'}</small>`:''}`;
   const msg=t=>{$('#pu-msg').textContent=t};
   if($('#pu-on'))$('#pu-on').onclick=async()=>{$('#pu-on').disabled=true;const e=await enablePush();if(e){msg(e);$('#pu-on').disabled=false;return}await renderPush();$('#pu-msg').textContent='¡Listo! Te debería llegar un aviso de prueba.'};
   if($('#pu-off'))$('#pu-off').onclick=async()=>{await disablePush();renderPush()};
@@ -1836,15 +1842,15 @@ function cellAtXY(e,sel){const el=document.elementFromPoint(e.clientX,e.clientY)
 const SOPA_W=['SOL','PLAYA','TIENDA','MAR','BICI','PELOTA','HELADO','PISCINA','CAMPING','ARENA','GAFAS','TOALLA','BARCO','PERRO','LUNA','NUBE','FUEGO','GORRA','SIESTA','LINTERNA'];
 function sopa(official){
   const N=9,r=rngFor('sopa',official); const D=[[1,0],[0,1],[1,1],[1,-1]];
-  let grid,words;
-  for(let tries=0;tries<50;tries++){grid=Array(N*N).fill('');words=[];const pool=shuffle(SOPA_W.slice(),r);
+  let grid,words,wpos;
+  for(let tries=0;tries<50;tries++){grid=Array(N*N).fill('');words=[];wpos={};const pool=shuffle(SOPA_W.slice(),r);
     for(const w of pool){if(words.length===6)break;if(w.length>N)continue;let ok=false;
       for(let k=0;k<80&&!ok;k++){const [dx,dy]=D[Math.floor(r()*D.length)];const x0=Math.floor(r()*N),y0=Math.floor(r()*N);const x1=x0+dx*(w.length-1),y1=y0+dy*(w.length-1);
         if(x1<0||x1>=N||y1<0||y1>=N)continue;let fit=true;for(let i=0;i<w.length;i++){const c=grid[(y0+dy*i)*N+x0+dx*i];if(c&&c!==w[i]){fit=false;break}}
-        if(fit){for(let i=0;i<w.length;i++)grid[(y0+dy*i)*N+x0+dx*i]=w[i];words.push(w);ok=true}}}
+        if(fit){for(let i=0;i<w.length;i++)grid[(y0+dy*i)*N+x0+dx*i]=w[i];wpos[w]=Array.from({length:w.length},(_,i)=>(y0+dy*i)*N+x0+dx*i);words.push(w);ok=true}}}
     if(words.length===6)break}
   const AB='ABCDEFGHIJLMNOPRSTUVZ';grid=grid.map(c=>c||AB[Math.floor(r()*AB.length)]);
-  openOv(header('sopa',official)+clockEl()+`<div class="words" id="sp-w">${words.map(w=>`<span data-w="${w}">${'_ '.repeat(w.length).trim()} <small>${w.length}</small></span>`).join('')}</div><div class="sopa" id="sp" style="grid-template-columns:repeat(${N},1fr);grid-template-rows:repeat(${N},1fr)">${grid.map((c,i)=>`<div class="sc" data-i="${i}">${c}</div>`).join('')}</div><p class="note" style="margin:0">Cada raya es una letra. Busca palabras del verano y el camping y arrástralas en línea recta: horizontal, vertical o diagonal.</p>`,'img/bg_menu.webp');
+  openOv(header('sopa',official)+`<div class="row" style="gap:12px">${clockEl()}<button class="btn ghost" id="sp-giveup" style="font-size:14px;padding:6px 12px">🏳️ Rendirse</button></div><div class="words" id="sp-w">${words.map(w=>`<span data-w="${w}">${'_ '.repeat(w.length).trim()} <small>${w.length}</small></span>`).join('')}</div><div class="sopa" id="sp" style="grid-template-columns:repeat(${N},1fr);grid-template-rows:repeat(${N},1fr)">${grid.map((c,i)=>`<div class="sc" data-i="${i}">${c}</div>`).join('')}</div><p class="note" style="margin:0">Cada raya es una letra. Busca palabras del verano y el camping y arrástralas en línea recta: horizontal, vertical o diagonal.</p>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const el=$('#sp'),cells=[...el.children],sw=stopwatch();let a=null,sel=[],found=new Set(),done=false;
   const line=(i,j)=>{const x0=i%N,y0=(i/N)|0,x1=j%N,y1=(j/N)|0,dx=x1-x0,dy=y1-y0;if(!(dx===0||dy===0||Math.abs(dx)===Math.abs(dy)))return null;const n=Math.max(Math.abs(dx),Math.abs(dy));const sx=Math.sign(dx),sy=Math.sign(dy);return Array.from({length:n+1},(_,k)=>(y0+sy*k)*N+x0+sx*k)};
@@ -1856,6 +1862,11 @@ function sopa(official){
       if(found.size===words.length){done=true;const ms=Math.round(sw.ms());cancelAnimationFrame(raf);timers.push(setTimeout(()=>finish('sopa',ms,official),700))}}
     a=null;sel=[];paint()};
   el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+  // rendirse: se enseñan las palabras que faltaban. Cuenta como el tiempo jugado + 30 s por palabra sin encontrar (máx. 5 min)
+  $('#sp-giveup').onclick=()=>{if(done)return;const btn=$('#sp-giveup');if(btn.dataset.sure!=='1'){btn.dataset.sure='1';btn.textContent='¿Seguro? Toca otra vez';timers.push(setTimeout(()=>{if(!done){btn.dataset.sure='';btn.textContent='🏳️ Rendirse'}},3000));return}
+    done=true;a=null;sel=[];paint();cancelAnimationFrame(raf);btn.disabled=true;btn.textContent='Te has rendido';sfx('bad');
+    const left=words.filter(w=>!found.has(w));left.forEach(w=>{wpos[w].forEach(i=>cells[i].classList.add('sprev'));const tg=document.querySelector(`#sp-w [data-w="${w}"]`);tg.classList.add('sprev');tg.textContent=w});
+    const ms=Math.min(300000,Math.round(sw.ms())+30000*left.length);timers.push(setTimeout(()=>finish('sopa',ms,official),3500))};
   sw.start();showClock(sw);ghMark(0); // el reloj arranca al terminar la cuenta atrás
 }
 
@@ -2494,6 +2505,11 @@ function duoHockey(A,B){
   duoShell('hockey',A,B,'');$('#du-mid').remove();
   const host=document.createElement('canvas');host.className='duo-hockey';host.id='du-cv';document.querySelector('.duo').insertBefore(host,$('#du-bot'));
   const W=360,H=600,GW=130,PR=26,DR=16;const dpr=Math.min(2,devicePixelRatio||1);host.width=W*dpr;host.height=H*dpr;const x=host.getContext('2d');x.scale(dpr,dpr);
+  // la pista cabe entera en la pantalla (las dos porterías a la vista), entre los dos marcadores
+  const duoEl=document.querySelector('.duo');duoEl.classList.add('hk');
+  const fit=()=>{if(!host.isConnected){removeEventListener('resize',fit);return}const vh=window.visualViewport?visualViewport.height:innerHeight,vw=window.visualViewport?visualViewport.width:innerWidth;
+    const avail=vh-$('#du-top').offsetHeight-$('#du-bot').offsetHeight-12,h=Math.max(200,Math.min(avail,(vw-12)*H/W));host.style.height=h+'px';host.style.width=(h*W/H)+'px'};
+  fit();addEventListener('resize',fit);timers.push(setTimeout(fit,300));
   let pa={x:W/2,y:H-80,vx:0,vy:0},pb={x:W/2,y:80,vx:0,vy:0},d={x:W/2,y:H/2,vx:0,vy:0},sa=0,sb=0,pause=0.8,msg='';const ptr={};
   const toXY=e=>{const r=host.getBoundingClientRect();return [(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height]};
   const mv=e=>{const [px,py]=toXY(e);const who=ptr[e.pointerId]||(py>H/2?'a':'b');ptr[e.pointerId]=who;const P_=who==='a'?pa:pb;const ny=who==='a'?Math.max(H/2+PR,Math.min(H-PR,py)):Math.max(PR,Math.min(H/2-PR,py));const nx=Math.max(PR,Math.min(W-PR,px));P_.tx=nx;P_.ty=ny};
@@ -3082,27 +3098,21 @@ function ytOver(el){const h=ytHost();const put=()=>{if(!el.isConnected){ytPark()
   h.className='over';put();clearInterval(YTS.tapIv);YTS.tapIv=setInterval(put,400)}
 async function ytMake(){if(YTS.p&&YTS.p.getIframe&&document.contains(YTS.p.getIframe()))return YTS.p;const Y=await ytApi();ytHost();
   return new Promise((res,rej)=>{let p;const to=setTimeout(()=>rej(new Error('timeout')),15000);
-  p=new Y.Player('yt-pl',{width:'1',height:'1',playerVars:{autoplay:0,controls:0,disablekb:1,playsinline:1,rel:0,fs:0,iv_load_policy:3,modestbranding:1},
+  p=new Y.Player('yt-pl',{height:'1',width:'1',videoId:'',playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,modestbranding:1,rel:0,showinfo:0,playsinline:1},
     events:{onReady:()=>{clearTimeout(to);YTS.p=p;res(p)},onStateChange:e=>p._cb&&p._cb('state',e.data),onError:e=>p._cb&&p._cb('error',e.data)}})})}
+window.addEventListener('load',()=>setTimeout(()=>{if(navigator.onLine&&ONLINE)ytMake().catch(()=>{})},500));
 function ytStop(){try{if(YTS.p){YTS.p._cb=null;YTS.p.stopVideo&&YTS.p.stopVideo()}}catch(e){}ytPark()}
-// Igual que en Chronobeats: preparar el vídeo (cue) y luego darle a play; pararlo del todo (stop) entre canciones.
-// Además: el reproductor empieza SILENCIADO y solo se activa el sonido cuando de verdad suena la canción
-// (si YouTube mete un anuncio antes, no se oye, se avisa en pantalla y el tiempo de la ronda no corre).
-function ytPlay(p,s,{secs=15,cover,onPlay,onFail}){let started=false,done=false,poll=null;const C=cover,st0=s.start_s||0;C.classList.remove('tap','on','ad');C.classList.add('wait');
-  const real=()=>{let t=0;try{t=p.getCurrentTime()||0}catch(e){}return t>=st0-1.5};
-  const go=()=>{started=true;clearInterval(poll);ytPark();try{p.unMute();p.setVolume(100)}catch(e){}C.classList.remove('tap','wait','ad');C.classList.add('on');onPlay();
-    timers.push(setTimeout(()=>{if(!done)try{p.pauseVideo()}catch(e){}},secs*1000))};
-  p._cb=(k,v)=>{if(done)return;if(k==='error'){done=true;clearInterval(poll);ytPark();onFail(v);return}
-    if(v===1&&!started){if(real()){go();return}
-      // está sonando otra cosa (anuncio): esperar callados a que empiece la canción
-      ytPark();C.classList.remove('tap','wait');C.classList.add('ad');clearInterval(poll);poll=setInterval(()=>{if(done||started){clearInterval(poll);return}if(real())go()},300);timers.push(poll)}};
-  try{p.mute();p.cueVideoById({videoId:s.yt,startSeconds:st0});p.playVideo()}catch(e){done=true;onFail(-1);return {stop(){}}}
-  // solo se pide tocar si YouTube no ha arrancado solo (en iPhone a veces tarda en cargar: mientras carga, se espera)
-  let waited=0;const check=()=>{if(started||done||C.classList.contains('ad'))return;let st=-1;try{st=p.getPlayerState()}catch(e){}
+// Igual que Chronobeats: el vídeo se prepara (cue, desde el segundo 0), luego play + unMute; entre canciones, stop.
+function ytPlay(p,s,{secs=15,cover,onPlay,onFail}){let started=false,done=false;const C=cover;C.classList.remove('tap','on');C.classList.add('wait');
+  p._cb=(k,v)=>{if(done)return;if(k==='error'){done=true;ytPark();onFail(v);return}
+    if(v===1&&!started){started=true;ytPark();C.classList.remove('tap','wait');C.classList.add('on');onPlay();timers.push(setTimeout(()=>{if(!done)try{p.pauseVideo()}catch(e){}},secs*1000))}};
+  try{p.cueVideoById({videoId:s.yt,startSeconds:s.base?0:(s.start_s||0)});p.playVideo();p.unMute()}catch(e){done=true;onFail(-1);return {stop(){}}}
+  // solo en iPhone: si el navegador no deja arrancar sin tocar, se pide un toque
+  let waited=0;const check=()=>{if(started||done)return;let st=-1;try{st=p.getPlayerState()}catch(e){}
     if(st===3&&waited<12000){waited+=700;timers.push(setTimeout(check,700));return}
     C.classList.remove('wait');C.classList.add('tap');ytOver(C)};timers.push(setTimeout(check,2500));
-  return {stop(){done=true;clearInterval(poll);ytPark();C.classList.remove('on','tap','wait','ad');try{p.stopVideo()}catch(e){}},resume(){if(done)return;try{p.unMute();p.playVideo()}catch(e){}}}}
-const ytBoxHTML=(id='yt-c')=>`<div class="yt-box"><div class="yt-cover" id="${id}">${muArt('vinilo',84)}<b class="yt-wait">Cargando la canción…</b><b class="yt-tap">▶ Toca aquí para escuchar</b><b class="yt-on">🎵 Escuchando…</b><b class="yt-ad">📺 YouTube está poniendo un anuncio (sin sonido). En cuanto acabe, suena la canción.</b></div></div>`;
+  return {stop(){done=true;ytPark();C.classList.remove('on','tap','wait');try{p.stopVideo()}catch(e){}},resume(){if(done)return;try{p.playVideo();p.unMute()}catch(e){}}}}
+const ytBoxHTML=(id='yt-c')=>`<div class="yt-box"><div class="yt-cover" id="${id}">${muArt('vinilo',84)}<b class="yt-wait">Cargando la canción…</b><b class="yt-tap">▶ Toca aquí para escuchar</b><b class="yt-on">🎵 Escuchando…</b></div></div>`;
 const decOf=y=>Math.floor(y/10)*10,decLab=d=>d<1960?`años ${d}`:d<2000?`años ${String(d).slice(2)}`:`${d}s`;
 
 function cancion(official){ytGame('cancion')}
@@ -3274,6 +3284,7 @@ async function sync(){
       try{const {data:g}=await sb.from('groups').select('name,join_code,weekly_goal').eq('id',GID).maybeSingle();
         const m=curMemb();if(g&&m){m.gname=g.name;m.code=g.join_code;m.goal=g.weekly_goal;store.set('rdm_memb',MEMB);GROUP.goal=g.weekly_goal||null;GROUP.code=g.join_code;GROUP.name=g.name;saveGroup()}}catch(e){}
       try{await loadDuels()}catch(e){}
+      try{await refreshPush()}catch(e){}
       try{await loadMsgs()}catch(e){}
       try{await loadReacts()}catch(e){}
       try{await loadBets()}catch(e){}
