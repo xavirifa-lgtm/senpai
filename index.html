@@ -3605,15 +3605,25 @@ function distancia(official){
   ()=>{const R=rounds[Math.min(k,N-1)];const bgd=spr('fondo_distancia');if(bgd)x.drawImage(bgd,0,0,W,H);else{x.fillStyle='#DFF1FF';x.fillRect(0,0,W,H);x.fillStyle='#9CCC65';x.fillRect(0,ROAD+12,W,H-ROAD)}x.fillStyle='#616161';x.fillRect(0,ROAD-6,W,22);
     x.strokeStyle='#fff';x.lineWidth=2;x.setLineDash([12,10]);x.beginPath();x.moveTo(0,ROAD+5);x.lineTo(W,ROAD+5);x.stroke();x.setLineDash([]);
     for(let m=0;m<=Math.floor(R.vis);m++){x.fillStyle=INK;x.fillRect(X(m)-1,ROAD+16,2,8);x.font='700 10px sans-serif';x.textAlign='center';x.fillText(m+' m',X(m),ROAD+36)}
-    // coche
-    const cxp=X(p);if(!dimg(x,'coche',cxp-14,ROAD-14,56)){x.fillStyle='#E63946';x.fillRect(cxp-40,ROAD-24,40,16);x.fillRect(cxp-32,ROAD-36,24,14);x.strokeStyle=INK;x.lineWidth=2;x.strokeRect(cxp-40,ROAD-24,40,16);x.fillStyle=INK;x.beginPath();x.arc(cxp-32,ROAD-7,6,0,7);x.arc(cxp-9,ROAD-7,6,0,7);x.fill()}
-    // túnel (al parar se vuelve transparente para ver dónde quedó)
-    const tx=X(R.vis);x.globalAlpha=state==='stop'?.35:1;const tun=spr('tunel');let topY=ROAD-62;
-    if(tun){const tw=330,th=tw*tun.naturalHeight/tun.naturalWidth;topY=ROAD+8-th;x.drawImage(tun,tx,topY,tw,th);topY+=th*.09;x.globalAlpha=1}else{x.fillStyle='#8D6E63';x.fillRect(tx,ROAD-62,W-tx,64);x.fillStyle='#5D4037';x.fillRect(tx,ROAD-62,W-tx,10);
-    x.fillStyle='#3E2723';x.beginPath();x.moveTo(tx,ROAD+2);x.lineTo(tx,ROAD-44);x.quadraticCurveTo(tx+14,ROAD-56,tx+28,ROAD-44);x.lineTo(tx+28,ROAD+2);x.fill();x.globalAlpha=1;x.strokeStyle=INK;x.lineWidth=3;x.strokeRect(tx,ROAD-62,W-tx,64)}
+    // coche (la referencia es el morro: cxp)
+    const cxp=X(p),tx=X(R.vis),stopv=state==='stop';
+    const car=()=>{if(!dimg(x,'coche',cxp-28,ROAD-14,56)){x.fillStyle='#E63946';x.fillRect(cxp-40,ROAD-24,40,16);x.fillRect(cxp-32,ROAD-36,24,14);x.strokeStyle=INK;x.lineWidth=2;x.strokeRect(cxp-40,ROAD-24,40,16);x.fillStyle=INK;x.beginPath();x.arc(cxp-32,ROAD-7,6,0,7);x.arc(cxp-9,ROAD-7,6,0,7);x.fill()}};
+    // túnel: colina con la boca a la izquierda. El hueco negro del dibujo ocupa del 11,7 % al 19,1 % del ancho y del 39 % al 89 % del alto;
+    // se coloca para que el borde derecho del hueco quede en tx (ahí el coche desaparece del todo).
+    const tun=spr('tunel'),TP=[1,.82,.61,.41,.23,.18,.09,.04,.01,.03,.03,.03,.03,.05,.07,.06,.09,.11,.11,.11,.12,.14,.16,.17,.18,.2,.22,.24,.25,.24,.26,.28,.26,.29,.32,.35,.38,.43,.47,.45,.5,.55,.59,.61,.66,.79,.89,1];let topY=ROAD-62,flagY=()=>topY,hole=null;
+    x.globalAlpha=stopv?.35:1;
+    if(tun){const D=600,Hh=D*tun.naturalHeight/tun.naturalWidth,L=tx-.198*D,T=ROAD+2-.888*Hh;x.drawImage(tun,L,T,D,Hh);hole={l:L+.098*D,r:tx,t:T+.37*Hh,b:T+.888*Hh};
+      flagY=fx=>{const u=Math.max(0,Math.min(1,(fx-L)/D))*(TP.length-1),i0=Math.floor(u),f=u-i0;return T+(TP[i0]*(1-f)+TP[Math.min(TP.length-1,i0+1)]*f)*Hh+3};topY=T}
+    else{x.fillStyle='#8D6E63';x.fillRect(tx,topY,W-tx,ROAD+16-topY);x.fillStyle='#3E2723';x.fillRect(tx-30,ROAD-36,30,40);x.strokeStyle=INK;x.lineWidth=3;x.strokeRect(tx,topY,W-tx+4,ROAD+16-topY)}
+    x.globalAlpha=1;
+    if(stopv)car();
+    else{// el coche se ve fuera de la colina y, dentro de la boca (que es redonda por arriba), sobre la oscuridad, cada vez más oscuro
+      const h=hole||{l:tx-30,r:tx,t:ROAD-36,b:ROAD+4},rr=(h.r-h.l)/2,arch=()=>{x.moveTo(h.l,h.b+2);x.lineTo(h.l,h.t+rr);x.arc(h.l+rr,h.t+rr,rr,Math.PI,0);x.lineTo(h.r,h.b+2);x.closePath()};
+      x.save();x.beginPath();x.rect(-60,0,h.l+60,H);arch();x.clip();car();x.restore();
+      x.save();x.beginPath();arch();x.clip();const sh=x.createLinearGradient(h.l,0,h.r,0);sh.addColorStop(0,'rgba(5,5,5,.25)');sh.addColorStop(1,'rgba(5,5,5,.95)');x.fillStyle=sh;x.fillRect(h.l,h.t,h.r-h.l,h.b-h.t+2);x.restore()}
     // bandera
-    const fx=X(R.T);{const bi=spr('bandera');if(bi){const bh=50,bw=bh*bi.naturalWidth/bi.naturalHeight;x.drawImage(bi,fx-bw*.025,topY+2-bh,bw,bh)}else{x.strokeStyle=INK;x.lineWidth=3;x.beginPath();x.moveTo(fx,topY);x.lineTo(fx,topY-42);x.stroke();x.fillStyle='#E63946';x.beginPath();x.moveTo(fx,topY-42);x.lineTo(fx+26,topY-34);x.lineTo(fx,topY-26);x.fill();x.stroke()}}
-    if(state==='stop'){x.strokeStyle='#E63946';x.setLineDash([4,4]);x.beginPath();x.moveTo(fx,topY);x.lineTo(fx,ROAD+12);x.stroke();x.setLineDash([]);x.strokeStyle='#3A86FF';x.beginPath();x.moveTo(cxp,ROAD-40);x.lineTo(cxp,ROAD+12);x.stroke()}
+    const fx=X(R.T);{const bi=spr('bandera');if(bi){const bh=50,bw=bh*bi.naturalWidth/bi.naturalHeight;x.drawImage(bi,fx-bw*.025,flagY(fx)-bh,bw,bh)}else{const fy=flagY(fx);x.strokeStyle=INK;x.lineWidth=3;x.beginPath();x.moveTo(fx,fy);x.lineTo(fx,fy-42);x.stroke();x.fillStyle='#E63946';x.beginPath();x.moveTo(fx,fy-42);x.lineTo(fx+26,fy-34);x.lineTo(fx,fy-26);x.fill();x.stroke()}}
+    if(state==='stop'){x.strokeStyle='#E63946';x.setLineDash([4,4]);x.beginPath();x.moveTo(fx,flagY(fx));x.lineTo(fx,ROAD+12);x.stroke();x.setLineDash([]);x.strokeStyle='#3A86FF';x.beginPath();x.moveTo(cxp,ROAD-40);x.lineTo(cxp,ROAD+12);x.stroke()}
     if(state==='wait'){x.font='400 20px Dela Gothic One,sans-serif';x.textAlign='center';x.fillStyle=INK;x.fillText('Preparados…',W/2,46)}
     if(msg){x.font='400 22px Dela Gothic One,sans-serif';x.textAlign='center';x.lineWidth=5;x.strokeStyle='#fff';x.strokeText(msg,W/2,40);x.fillStyle=INK;x.fillText(msg,W/2,40)}
     x.lineWidth=4;x.strokeStyle=INK;x.strokeRect(2,2,W-4,H-4)});
