@@ -4413,7 +4413,7 @@ function duoTanques(A,B){
     if(shot.x<0||shot.x>W){shot=null;msg='¡Fuera!';timers.push(setTimeout(()=>{msg='';turn=turn==='a'?'b':'a';newWind();say()},900));return}
     const hitT=['a','b'].some(k=>Math.hypot(T[k].x-shot.x,gy(T[k].x)-10-shot.y)<14);
     if(shot.y>=gy(shot.x)||hitT){const s=shot;shot=null;explode(s.x,Math.min(s.y,gy(s.x)))}},
-  ()=>{if(!c.isConnected)return;const bg=spr('fondo_tanques');if(bg)x.drawImage(bg,0,0,W,H);else{const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#BDE3FF');g.addColorStop(1,'#FFF3D6');x.fillStyle=g;x.fillRect(0,0,W,H)}
+  ()=>{if(!c.isConnected)return;const bg=spr('fondo_tanques');if(bg){x.fillStyle='#E4F3FB';x.fillRect(0,0,W,H);x.drawImage(bg,0,0,W,H*.8)}else{const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#BDE3FF');g.addColorStop(1,'#FFF3D6');x.fillStyle=g;x.fillRect(0,0,W,H)}
     x.fillStyle='#8BC34A';x.beginPath();x.moveTo(0,H);for(let i=0;i<=W;i+=2)x.lineTo(i,ground[i]);x.lineTo(W,H);x.closePath();x.fill();x.strokeStyle=INK;x.lineWidth=3;x.beginPath();for(let i=0;i<=W;i+=2)x.lineTo(i,ground[i]);x.stroke();
     x.fillStyle='#6D4C41';x.beginPath();x.moveTo(0,H);for(let i=0;i<=W;i+=2)x.lineTo(i,ground[i]+12);x.lineTo(W,H);x.closePath();x.fill();
     ['a','b'].forEach(k=>{const t=T[k],ty=gy(t.x);if(!dimg(x,k==='a'?'tanque_azul':'tanque_rojo',t.x,ty-12,44)){x.fillStyle=k==='a'?AC:BC;x.fillRect(t.x-16,ty-18,32,14);x.strokeStyle=INK;x.lineWidth=2;x.strokeRect(t.x-16,ty-18,32,14);x.beginPath();x.arc(t.x,ty-18,8,Math.PI,0);x.fill();x.stroke()}
@@ -4469,10 +4469,11 @@ function duoDamas(A,B){
 
 // --- Mancala (Kalah): 6 hoyos y un granero cada uno. Siembra en sentido contrario a las agujas del reloj ---
 function duoMancala(A,B){
-  const W=360,H=200;const {c,x,toXY}=duoBoard('mancala',A,B,W,H,'min(360px,94vw)');
+  const W=360,H=190,BY=20,BH=150;const {c,x,toXY}=duoBoard('mancala',A,B,W,H,'min(360px,94vw)');
   // 0..5: hoyos de abajo (A) de izquierda a derecha; 6: granero de A (derecha); 7..12: hoyos de arriba (B) de derecha a izquierda; 13: granero de B (izquierda)
   let pits=Array(14).fill(4);pits[6]=0;pits[13]=0;let turn='a',busy=false,over=false,hl=-1,msg='';
-  const PX=i=>i<6?72+i*43+21:i===6?W-28:i<13?72+(12-i)*43+21:28,PY=i=>i<6?150:i===6||i===13?100:50;
+  // posiciones sacadas del dibujo del tablero (1362×565 → 360×150)
+  const PX=i=>i<6?73.2+i*42.8:i===6?330:i<13?73.2+(12-i)*42.8:30.4,PY=i=>i<6?BY+109.7:i===6||i===13?BY+74:BY+39.6;
   const mine=(t,i)=>t==='a'?i>=0&&i<6:i>=7&&i<13;
   const say=()=>{duoSay(msg||(turn==='a'?'Te toca: elige un hoyo tuyo':`Turno de ${esc(duoName(B))}`),msg||(turn==='b'?'Te toca: elige un hoyo tuyo':`Turno de ${esc(duoName(A))}`),turn);duoScore(pits[6],pits[13])};
   c.addEventListener('pointerdown',e=>{e.preventDefault();if(busy||over)return;const [px,py]=toXY(e);let pick=-1;for(let i=0;i<14;i++){if(i===6||i===13)continue;if(Math.hypot(px-PX(i),py-PY(i))<22)pick=i}
@@ -4490,16 +4491,16 @@ function duoMancala(A,B){
         timers.push(setTimeout(()=>duoEnd('mancala',A,B,pits[6],pits[13]),1500));return}
       if(!again)turn=turn==='a'?'b':'a';busy=false;say();timers.push(setTimeout(()=>{if(msg){msg='';say()}},1100))};
     timers.push(setTimeout(step,150))}
-  function draw(){if(!c.isConnected)return;const tb=spr('tablero_mancala');if(tb)x.drawImage(tb,0,0,W,H);else{x.fillStyle='#C98B4F';x.beginPath();x.roundRect?x.roundRect(4,4,W-8,H-8,30):x.rect(4,4,W-8,H-8);x.fill();x.strokeStyle=INK;x.lineWidth=4;x.stroke()}
-    for(let i=0;i<14;i++){const cx=PX(i),cy=PY(i),big=i===6||i===13;x.fillStyle=i===hl?'rgba(255,201,60,.75)':'rgba(62,39,35,.55)';x.beginPath();big?x.ellipse(cx,cy,20,70,0,0,7):x.arc(cx,cy,19,0,7);x.fill();
+  function draw(){if(!c.isConnected)return;x.clearRect(0,0,W,H);const tb=spr('tablero_mancala');if(tb)x.drawImage(tb,0,BY,W,BH);else{x.fillStyle='#C98B4F';x.beginPath();x.roundRect?x.roundRect(4,BY,W-8,BH,30):x.rect(4,BY,W-8,BH);x.fill();x.strokeStyle=INK;x.lineWidth=4;x.stroke()}
+    for(let i=0;i<14;i++){const cx=PX(i),cy=PY(i),big=i===6||i===13;x.fillStyle=i===hl?'rgba(255,201,60,.6)':tb?'rgba(0,0,0,0)':'rgba(62,39,35,.55)';x.beginPath();big?x.ellipse(cx,cy,17,55,0,0,7):x.arc(cx,cy,17,0,7);x.fill();
       if(!tb){x.strokeStyle=INK;x.lineWidth=2;x.stroke()}
       // semillas
       const n=pits[i],rr=mulberry32(i*77+n);for(let s=0;s<Math.min(n,14);s++){const a=rr()*6.28,d=rr()*(big?14:11),sx=cx+Math.cos(a)*d,sy=cy+Math.sin(a)*d*(big?3:1);x.fillStyle=['#FFC93C','#2BB673','#3A86FF','#E63946','#9B5DE5'][s%5];x.beginPath();x.arc(sx,sy,4,0,7);x.fill();x.strokeStyle='rgba(0,0,0,.4)';x.lineWidth=1;x.stroke()}
-      x.fillStyle='#fff';x.textAlign='center';x.lineWidth=4;x.strokeStyle=INK;x.font=big?'400 22px Dela Gothic One,sans-serif':'900 13px sans-serif';const ty=big?cy+8:(i<6?cy+34:cy-26);x.strokeText(n,cx,ty);x.fillText(n,cx,ty)}
+      x.fillStyle='#fff';x.textAlign='center';x.lineWidth=4;x.lineJoin='round';x.strokeStyle=INK;x.font=big?'400 22px Dela Gothic One,sans-serif':'900 13px sans-serif';const ty=big?cy+8:(i<6?cy+33:cy-23);x.strokeText(n,cx,ty);x.fillText(n,cx,ty)}
     // de quién es cada fila
-    x.fillStyle=AC;x.fillRect(64,185,6*43+12,5);x.fillStyle=BC;x.fillRect(64,10,6*43+12,5);
+    x.fillStyle=AC;x.fillRect(52,H-13,256,5);x.fillStyle=BC;x.fillRect(52,8,256,5);
     x.strokeStyle=turn==='a'?AC:BC;x.lineWidth=4;x.strokeRect(2,2,W-4,H-4);raf=requestAnimationFrame(draw)}
-  say();draw();if(MUT)MUT.du=()=>({pits,turn,busy,over});
+  say();draw();if(MUT)MUT.du=()=>({pits,turn,busy,over,pos:pits.map((_,i)=>[PX(i),PY(i)])});
 }
 
 // --- Sumo: cada uno empuja a su luchador arrastrando el dedo en su mitad. Echa al otro del círculo ---
