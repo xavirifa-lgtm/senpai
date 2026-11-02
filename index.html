@@ -48,9 +48,9 @@ h3{font-size:16px}
 .btn:disabled{background:var(--paper2);color:var(--ink2);cursor:not-allowed}
 .btn:focus-visible,.tab:focus-visible,.pick:focus-visible,.chip:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .note{font-size:12px;color:var(--ink2)}
-.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:grid;grid-template-columns:repeat(4,1fr);background:var(--ink);padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}
-.tab{background:none;border:0;color:var(--paper);font-family:var(--display);font-size:13px;padding:10px 4px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
-.tab img{width:30px;height:30px;object-fit:contain;filter:grayscale(1) brightness(1.6)}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:grid;grid-template-columns:repeat(6,1fr);background:var(--ink);padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}
+.tab{background:none;border:0;color:var(--paper);font-family:var(--display);font-size:11px;padding:9px 2px 11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tab img{width:28px;height:28px;object-fit:contain;filter:grayscale(1) brightness(1.6)}
 .tab.on{color:var(--yellow)}
 .tab.on img{filter:none}
 
@@ -341,6 +341,22 @@ input[type=range]{accent-color:var(--red)}
 .bq-mini .bq{width:min(170px,50vw);gap:2px}.bq-mini .bq-c{border-width:1px}.bq-cover{display:flex;flex-direction:column;align-items:center;gap:12px;padding:30px 0}
 .duo-ops.ppt button{width:86px;height:86px;padding:8px;border-radius:16px}.duo-ops.ppt .t5e{font-size:46px}.ppt-i{width:52px;height:52px;object-fit:contain;display:inline-block;vertical-align:middle}.t5e.ppt-i{width:auto;height:auto;font-size:44px;display:inline-block}
 .duo-ops.du-dec{flex-wrap:wrap;justify-content:center;gap:8px}.duo-ops.du-dec button{font-size:20px;min-width:110px}.duo-ops.du-dec button:disabled{opacity:.4}.duo-ops button.bad{background:var(--red);color:#fff}
+/* portada y pestañas nuevas */
+.hoy-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:6px}
+.hchip{border:3px solid var(--ink);background:var(--paper);box-shadow:3px 3px 0 var(--ink);padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--ink);font-family:var(--body);cursor:pointer}
+.hchip .hc-i{font-size:24px;line-height:1}.hchip b{font-family:var(--display);font-size:22px;line-height:1.1}.hchip small{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;text-align:center}
+.hchip.hot{background:var(--yellow);animation:hcpulse 1.6s ease-in-out infinite}@keyframes hcpulse{50%{transform:scale(1.04)}}
+.g-filter{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.g-filter .chip{flex:none}
+.game{position:relative}.game .fav{position:absolute;top:2px;right:4px;font-style:normal;font-size:18px;line-height:1;color:#B0A9A0;padding:2px}.game .fav.on{color:#F4B400;text-shadow:0 0 1px var(--ink)}
+.duo-grid{width:100%}
+.podio{display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:end;gap:6px;width:100%}
+.pd-c{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}.pd-c img{width:76px;height:76px;border-radius:50%;border:3px solid var(--ink);object-fit:cover;object-position:top}.pd-c.p1 img{width:100px;height:100px}
+.pd-c b{font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pd-c small{font-size:12px;font-weight:900}
+.pd-b{width:100%;border:3px solid var(--ink);display:flex;align-items:flex-start;justify-content:center;font-family:var(--display);font-size:28px;padding-top:4px;background:#CFD8DC}
+.pd-c.p1 .pd-b{height:96px;background:var(--yellow)}.pd-c.p2 .pd-b{height:70px}.pd-c.p3 .pd-b{height:50px;background:#E0B48A}
+.rul{position:relative;display:flex;align-items:center;gap:8px}.rul-win{width:130px;height:110px;overflow:hidden;border:4px solid var(--ink);background:#fff;box-shadow:4px 4px 0 var(--ink)}
+.rul-it{height:110px;display:flex;align-items:center;justify-content:center}.rul-it img{width:90px;height:90px;object-fit:contain}.rul-it.win img{animation:pop .5s}
+.rul-arrow{font-size:30px;color:var(--red)}
 </style>
 
 </head>
@@ -368,16 +384,29 @@ input[type=range]{accent-color:var(--red)}
         <button class="btn red" id="btn-reto">Jugar reto</button>
         <button class="btn ghost" id="btn-practice">Practicar</button>
       </div>
-      <p class="note" id="reto-status" style="margin:0">Un intento oficial por día. El mismo reto para todos.</p>
+      <p class="note" id="reto-status" style="margin:0">Un intento. El mismo reto para todos.</p>
       <div class="ch-mod" id="ch-mod" hidden></div>
-      <div class="stack" id="hoy-news"></div>
+      <div class="hoy-chips" id="hoy-chips"></div>
+    </div>
+  </section>
+
+  <!-- JUGAR -->
+  <section class="screen" id="s-jugar">
+    <div class="stack">
+      <h1>Jugar</h1>
       <div class="stack" id="hoy-live"></div>
+      <div class="g-filter" id="g-filter"></div>
+      <div class="games" id="games"></div>
+    </div>
+  </section>
+
+  <!-- GRUPO -->
+  <section class="screen" id="s-grupo">
+    <div class="stack">
+      <h1>Grupo</h1>
+      <div class="stack" id="hoy-news"></div>
       <div class="stack" id="hoy-porra"></div>
       <div class="stack" id="hoy-extra"></div>
-
-      <h2 style="margin-top:10px">Minijuegos</h2>
-      <div class="games" id="games"></div>
-      <p class="note" style="margin:0">Todos se pueden practicar sin límite. El reto del día sale de cualquiera de los <span class="ngames">21</span>, el mismo para todos.</p>
     </div>
   </section>
 
@@ -408,7 +437,7 @@ input[type=range]{accent-color:var(--red)}
       <div class="panel stack" style="gap:8px">
         <div class="row" style="justify-content:space-between"><h3>Poder</h3><span class="eyebrow" id="p-form">Novato</span></div>
         <div class="form" id="p-formbar"></div>
-        <p class="note" style="margin:0">Sube jugando cada día y batiendo récords. Nunca toca la puntuación del reto.</p>
+        <p class="note" style="margin:0">Sube jugando y batiendo récords.</p>
       </div>
       <div class="panel">
         <h3 style="margin-bottom:6px">Perfil de habilidad</h3>
@@ -418,7 +447,7 @@ input[type=range]{accent-color:var(--red)}
       <div class="panel stack" style="gap:8px">
         <h3>Mis récords</h3>
         <div class="recs" id="p-recs"></div>
-        <p class="note" style="margin:0">Cuentan las partidas de práctica y las del reto. Con 3 partidas de un juego, su categoría pasa a calcularse con tus resultados.</p>
+        
       </div>
       <div class="panel stack" style="gap:8px" id="p-sk"></div>
       <div class="panel stack" style="gap:10px">
@@ -429,9 +458,9 @@ input[type=range]{accent-color:var(--red)}
         <h3>¿Quién eres?</h3>
         <div class="picker" id="picker"></div>
       </div>
-      <div class="panel stack" id="grp-panel" style="gap:8px" hidden><h3>Grupos y cuenta</h3><p class="note" style="margin:0">Cambia de grupo, invita con el código, crea otro o cierra sesión.</p><button class="btn" id="btn-groups">Mis grupos</button></div>
+      <div class="panel stack" id="grp-panel" style="gap:8px" hidden><h3>Grupos y cuenta</h3><button class="btn" id="btn-groups">Mis grupos</button></div>
       <div class="panel stack" id="push-panel" style="gap:8px" hidden></div>
-      <div class="panel stack" id="adm-panel" style="gap:8px" hidden><h3>Administración</h3><p class="note" style="margin:0">Jugadores, nombre, código y objetivo semanal del grupo.</p><button class="btn" id="btn-admin">Abrir panel</button></div>
+      <div class="panel stack" id="adm-panel" style="gap:8px" hidden><h3>Administración</h3><button class="btn" id="btn-admin">Abrir panel</button></div>
       <div class="panel stack" style="gap:10px">
         <label for="state-sim">Probar estado (demo)</label>
         <select id="state-sim">
@@ -468,6 +497,8 @@ input[type=range]{accent-color:var(--red)}
 
   <nav class="tabs" aria-label="Secciones">
     <button class="tab on" data-s="s-hoy"><img src="img/ic_crono.webp" alt="">Hoy</button>
+    <button class="tab" data-s="s-jugar"><img src="img/ic_simon.webp" alt="">Jugar</button>
+    <button class="tab" data-s="s-grupo"><img src="img/ic_grupo.webp" alt="">Grupo</button>
     <button class="tab" data-s="s-rank"><img src="img/app.webp" alt="">Ranking</button>
     <button class="tab" data-s="s-perfil"><img src="img/cat_memoria.webp" alt="">Perfil</button>
     <button class="tab" data-s="s-mote"><img src="img/ic_stroop.webp" alt="">Mote</button>
@@ -1036,7 +1067,7 @@ function renderExtras(){
    ${rv?`<div class="rev"><b>Revancha ×2</b> Ayer quedaste último: el reto de hoy te cuenta doble en el ranking semanal.</div>`:''}
    <div class="panel stack" style="gap:8px"><div class="row" style="justify-content:space-between"><h3>Objetivo del grupo</h3><span class="eyebrow">${gg.total}/${gg.target} partidas</span></div>
      <div class="bar"><i style="width:${Math.min(100,gg.total/gg.target*100)}%"></i></div>
-     <p class="note" style="margin:0">${gg.done?'¡Conseguido! Esta semana todos lleváis el sello de equipo en el perfil.':'Entre todos, esta semana. Cada partida suma, de práctica o de reto.'}</p></div>
+     <p class="note" style="margin:0">${gg.done?'¡Conseguido! Sello de equipo para todos.':'Entre todos. Cada partida suma.'}</p></div>
    <div class="panel stack" style="gap:6px"><div class="row" style="justify-content:space-between"><h3>Misiones de la semana</h3><span class="eyebrow">${ms.filter(m=>m.done).length}/3</span></div>
      ${ms.map(m=>`<div class="mis ${m.done?'ok':''}"><span class="chk">${m.done?'✔':''}</span><span>${m.t}<br><small>${m.v}/${m.goal}</small></span></div>`).join('')}</div>
    <div class="panel stack" style="gap:8px"><div class="row" style="justify-content:space-between"><h3>Duelos</h3><button class="btn" id="btn-duel" style="font-size:14px;padding:6px 12px">Retar</button></div>
@@ -1215,6 +1246,7 @@ function chronicle(date){
 function chronicleText(c){const d=new Date(c.date+'T12:00:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});return `📰 Crónica del ${d} · Senpai de la Semana\n`+c.lines.join('\n')}
 async function shareText(txt,el){try{if(navigator.share){await navigator.share({text:txt});return}await navigator.clipboard.writeText(txt);if(el){el.textContent='Copiado. Pégalo en el grupo.';el.hidden=false}}catch(e){if(el&&e&&e.name!=='AbortError'){el.textContent=txt;el.hidden=false}}}
 let chronDay=null;
+let chronAll=false;
 function renderNews(){
   const el=$('#hoy-news');if(!el)return;
   const today=dayRanking(TODAY).n>0;const d=chronDay||(today?TODAY:addDays(TODAY,-1));const c=chronicle(d);
@@ -1228,12 +1260,13 @@ function renderNews(){
      <small>Tu daño: <b>${mine}</b>${B.mvp?` · Más daño: <b>${P[B.mvp].name}</b> (${B.per[B.mvp]})`:''}</small></div></div>
    <div class="panel stack news" style="gap:6px"><div class="row" style="justify-content:space-between"><h3><img class="hic" src="img/ic_cronica.webp" alt="" style="width:30px;height:30px"> Crónica</h3>
      <div class="seg"><button class="chip ${d!==TODAY?'on':''}" id="cn-ay">Ayer</button><button class="chip ${d===TODAY?'on':''}" id="cn-hoy">Hoy</button></div></div>
-     ${c.lines.map((l,i)=>`<p style="margin:0" class="${i?'':'lead'}">${l}</p>`).join('')}
+     ${c.lines.map((l,i)=>`<p style="margin:0" class="${i?'':'lead'}" ${i>=3&&!chronAll?'hidden':''}>${l}</p>`).join('')}${c.lines.length>3&&!chronAll?`<button class="btn ghost" id="cn-more" style="font-size:13px;padding:4px 10px;align-self:flex-start">Ver más (${c.lines.length-3})</button>`:''}
      <div class="row"><button class="btn" id="cn-share" style="font-size:14px;padding:6px 12px">Compartir crónica</button></div><p class="note" id="cn-ok" style="margin:0" hidden></p></div>
    ${sk.next||gs?`<div class="panel stack" style="gap:6px">${sk.next?`<div class="row" style="justify-content:space-between"><h3>Próxima recompensa</h3><span class="eyebrow">${sk.best}/${sk.next.d} días</span></div>
      <div class="bar"><i style="width:${Math.min(100,sk.best/sk.next.d*100)}%"></i></div><p class="note" style="margin:0"><img class="hic" src="img/md_${SK_TIERS.indexOf(sk.next)}.webp" alt="" style="width:30px;height:30px;filter:grayscale(.85);opacity:.7"> <b>${sk.next.t}</b>: ${sk.next.r}. Se gana con tu mejor racha y no se pierde nunca.</p>`:''}
      ${gs?`<p class="note" style="margin:0"><img class="hic" src="img/ic_grupo.webp" alt="" style="width:24px;height:24px"> <b>Racha de grupo: ${gs} ${gs===1?'día':'días'}</b> jugando todos el reto.${gs>=7?' ¡Sello de grupo imparable!':gs>=3?' ¡Seguid así!':''}</p>`:''}</div>`:''}`;
-  $('#cn-ay').onclick=()=>{chronDay=addDays(TODAY,-1);renderNews()};$('#cn-hoy').onclick=()=>{chronDay=TODAY;renderNews()};
+  if($('#cn-more'))$('#cn-more').onclick=()=>{chronAll=true;renderNews()};
+  $('#cn-ay').onclick=()=>{chronDay=addDays(TODAY,-1);chronAll=false;renderNews()};$('#cn-hoy').onclick=()=>{chronDay=TODAY;renderNews()};
   $('#cn-share').onclick=()=>shareText(chronicleText(c),$('#cn-ok'));
   if($('#pn-yes')){$('#pn-yes').onclick=async()=>{const e=await enablePush();if(e){store.set('rdm_push_nudge',1);alertBox(e)}renderNews();renderPush()};$('#pn-no').onclick=()=>{store.set('rdm_push_nudge',1);renderNews()}}
 }
@@ -1275,7 +1308,7 @@ function renderPorra(){
   if(PLAYERS.length<2){el.innerHTML='';return}
   const mb=myBet(TOMORROW),y=betDay(addDays(TODAY,-1)),others=allBets().filter(b=>b.date===TOMORROW&&b.from!==me&&P[b.from]&&P[b.pick]);
   el.innerHTML=`<div class="panel stack" style="gap:8px"><div class="row" style="justify-content:space-between"><h3><img class="hic" src="img/ic_porra.webp" alt="" style="width:30px;height:30px"> Porra de mañana</h3><span class="eyebrow">${betPoints(WEEK)[me]||0} pts esta semana</span></div>
-    <p class="note" style="margin:0">¿Quién ganará el reto de mañana? Acertar da 2 puntos, 3 si eres el único. Puedes cambiarla hasta medianoche.</p>
+    <p class="note" style="margin:0">¿Quién gana mañana? Acierto: 2 pts (3 si eres el único).</p>
     <div class="picker porra" id="bt-pick">${PLAYERS.map(p=>`<button class="pick ${mb&&mb.pick===p.id?'on':''}" data-pick="${p.id}"><div class="ava" style="--s:46px;--c:${p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div><small>${p.name}</small></button>`).join('')}</div>
     <p class="note" id="bt-msg" style="margin:0;font-weight:900">${mb?`Tu apuesta: <b>${P[mb.pick].name}</b>${mb.pick===me?' (¡confianza ciega!)':''}.`:'Aún no has apostado.'}</p>
     ${others.length?`<p class="note" style="margin:0">${others.map(b=>`${P[b.from].name} → ${P[b.pick].name}`).join(' · ')}</p>`:''}
@@ -1475,10 +1508,10 @@ function renderHoy(){
   $('#ch-cat').textContent=CATNAME[todayGame.cat]; $('#ch-desc').textContent=todayGame.desc;
   const m=myOfficial(TODAY);
   $('#btn-reto').disabled=!!m; $('#btn-reto').textContent=m?'Reto hecho':'Jugar reto';
-  $('#reto-status').textContent=m?`Tu resultado de hoy: ${fmt(todayGame.id,m.score)}. Mañana, nuevo reto.`:'Un intento oficial por día. El mismo reto para todos.';
-  {const cm=$('#ch-mod');cm.hidden=!todayMod;if(todayMod)cm.innerHTML=`<img class="hic" src="img/mod_${todayMod.k}.webp" alt="" style="width:34px;height:34px;float:left;margin-right:8px"><b>Modificador: ${todayMod.name}</b>${todayMod.desc} Igual para todos, también al practicarlo.`}
+  $('#reto-status').textContent=m?`Hoy: ${fmt(todayGame.id,m.score)}. Mañana, otro reto.`:'Un intento. El mismo reto para todos.';
+  {const cm=$('#ch-mod');cm.hidden=!todayMod;if(todayMod)cm.innerHTML=`<img class="hic" src="img/mod_${todayMod.k}.webp" alt="" style="width:34px;height:34px;float:left;margin-right:8px"><b>${todayMod.name}</b>${todayMod.desc}`}
   document.querySelectorAll('.ngames').forEach(e=>e.textContent=GAMES.length);
-  $('#games').innerHTML=GAMES.map(g=>`<button class="game ${g.play?'':'lock'}" data-g="${g.id}" ${g.play?'':'aria-disabled="true"'}><img src="img/ic_${g.id}.webp" alt=""><span>${g.name}</span><small>${CATNAME[g.cat]}${g.practice?' · práctica':''}</small></button>`).join('');
+  renderGames();try{renderChips()}catch(e){}
   net();
 }
 function fmt(game,s){return G[game].long(s)}
@@ -1581,7 +1614,7 @@ const GYRO=new Set(['huevo','pinball','laberinto','equilibrio','camarero','burbu
 function askGyro(gid){if(!GYRO.has(gid)||GYRO_OK)return Promise.resolve();
   try{if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')return DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')GYRO_OK=true}).catch(()=>{})}catch(e){}
   GYRO_OK=true;return Promise.resolve()}
-const stepsHTML=gid=>`<div class="tut">${(HOWTO[gid]||[G[gid].desc]).map((t,i)=>`<div class="tut-step"><b>${i+1}</b><span>${t}</span></div>`).join('')}</div>${G[gid].mus?'<div class="note" style="margin:0">🎧 <b>Juego con sonido.</b> Sube el volumen o ponte cascos.</div>':''}`;
+const stepsHTML=gid=>`<div class="tut">${(HOWTO[gid]||[G[gid].desc]).map((t,i)=>`<div class="tut-step"><b>${i+1}</b><span>${t}</span></div>`).join('')}</div>${G[gid].mus?'<div class="note" style="margin:0">🎧 Con sonido.</div>':''}`;
 function countdown(next){openOv(`<div class="count" id="cd"></div>`,'img/bg_reveal.webp');let n=3;const el=$('#cd');
   const step=()=>{if(n>0){el.textContent=n;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');sfx('count');n--;timers.push(setTimeout(step,700))}
     else{el.textContent='¡YA!';el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');sfx('go');timers.push(setTimeout(next,500))}};step()}
@@ -1638,7 +1671,7 @@ function simon(official){
   timers.push(setTimeout(()=>{ghMark(0);play()},700));
 }
 function crono(official){
-  openOv(header('crono',official)+`<div class="say" id="cr-say">Para el reloj a 10,00 s</div><div class="big" id="cr-t">0,00</div><button class="btn red" id="cr-btn" style="font-size:24px;padding:18px 34px">Empezar</button><p class="note" style="margin:0">El reloj desaparece a los 3 segundos.</p>`,'img/bg_reveal.webp');
+  openOv(header('crono',official)+`<div class="say" id="cr-say">Para el reloj a 10,00 s</div><div class="big" id="cr-t">0,00</div><button class="btn red" id="cr-btn" style="font-size:24px;padding:18px 34px">Empezar</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   let t0=0,run=false; const tEl=$('#cr-t');
   function tick(){const t=performance.now()-t0; tEl.textContent=t<3000?(t/1000).toFixed(2).replace('.',','):'¿?'; raf=requestAnimationFrame(tick)}
@@ -1669,7 +1702,7 @@ const PAT={};function pat(x,n){if(PAT[n])return PAT[n];const i=spr(n);if(!i)retu
 function parejas(official){
   const r=rngFor('parejas',official); const faces=['simon','crono','zip','flood','stroop','encestar','apilar','laberinto'];
   const deck=shuffle([...faces,...faces],r);
-  openOv(header('parejas',official)+clockEl()+`<div class="cards" id="cards">${deck.map((f,i)=>`<button class="card" data-i="${i}" aria-label="Carta ${i+1}"><img src="img/ic_${f}.webp" alt=""></button>`).join('')}</div><p class="note" style="margin:0">Encuentra las 8 parejas lo antes posible.</p>`,'img/bg_menu.webp');
+  openOv(header('parejas',official)+clockEl()+`<div class="cards" id="cards">${deck.map((f,i)=>`<button class="card" data-i="${i}" aria-label="Carta ${i+1}"><img src="img/ic_${f}.webp" alt=""></button>`).join('')}</div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const sw=stopwatch(); let open=[],done=0,busy=false; const cards=[...document.querySelectorAll('.card')];
   $('#cards').onclick=e=>{const b=e.target.closest('.card');if(!b||busy||b.classList.contains('up'))return;
@@ -1691,7 +1724,7 @@ function zipPath(N,r){const nb=i=>{const x=i%N,y=(i/N)|0,o=[];if(x>0)o.push(i-1)
 function zip(official){
   const N=5,K=6,r=rngFor('zip',official); const sol=zipPath(N,r); const num={};
   for(let k=0;k<K;k++) num[sol[Math.round(k*(N*N-1)/(K-1))]]=k+1;
-  openOv(header('zip',official)+clockEl()+`<div class="zip" id="zip" style="grid-template-columns:repeat(${N},1fr)">${Array.from({length:N*N},(_,i)=>`<div class="zc" data-i="${i}">${num[i]?`<b>${num[i]}</b>`:''}</div>`).join('')}</div><p class="note" style="margin:0">Une los números en orden con un solo trazo que pase por todas las casillas. Desliza el dedo; vuelve atrás para corregir.</p>`,'img/bg_menu.webp');
+  openOv(header('zip',official)+clockEl()+`<div class="zip" id="zip" style="grid-template-columns:repeat(${N},1fr)">${Array.from({length:N*N},(_,i)=>`<div class="zc" data-i="${i}">${num[i]?`<b>${num[i]}</b>`:''}</div>`).join('')}</div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const grid=$('#zip'),cells=[...grid.children],sw=stopwatch(); let path=[],drag=false,won=false;
   const adj=(a,b)=>(Math.abs(a-b)===1&&((a/N)|0)===((b/N)|0))||Math.abs(a-b)===N;
@@ -1721,7 +1754,7 @@ function floodPar(b,N){let cur=b.slice(),m=0;while(floodRegion(cur,N).size<N*N&&
   for(let k=0;k<FCOL.length;k++){if(k===cur[0])continue;const s=floodRegion(floodApply(cur,N,k),N).size;if(s>bs){bs=s;best=k}}cur=floodApply(cur,N,best);m++}return m}
 function flood(official){
   const N=10,r=rngFor('flood',official); let b=Array.from({length:N*N},()=>Math.floor(r()*FCOL.length)); const par=floodPar(b,N),cap=par+10; let moves=0,over=false;
-  openOv(header('flood',official)+`<div class="say" id="fl-s">0 movimientos · par ${par}</div><div class="flood" id="fl" style="grid-template-columns:repeat(${N},1fr)"></div><div class="row" id="fl-b" style="justify-content:center;flex-wrap:wrap">${FCOL.map((c,k)=>`<button class="sw" data-k="${k}" style="background:${c}" aria-label="Color ${k+1}"></button>`).join('')}</div><p class="note" style="margin:0">Pinta todo el tablero de un color desde la esquina de arriba a la izquierda. Cuentan los movimientos, no el tiempo.</p>`,'img/bg_menu.webp');
+  openOv(header('flood',official)+`<div class="say" id="fl-s">0 movimientos · par ${par}</div><div class="flood" id="fl" style="grid-template-columns:repeat(${N},1fr)"></div><div class="row" id="fl-b" style="justify-content:center;flex-wrap:wrap">${FCOL.map((c,k)=>`<button class="sw" data-k="${k}" style="background:${c}" aria-label="Color ${k+1}"></button>`).join('')}</div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const draw=()=>{$('#fl').innerHTML=b.map(c=>`<i style="background:${FCOL[c]}"></i>`).join('');$('#fl-s').textContent=`${moves} movimientos · par ${par}`};draw();
   $('#fl-b').onclick=e=>{const s=e.target.closest('.sw');if(!s||over)return;const k=+s.dataset.k;if(k===b[0])return;if(!moves)ghMark(floodRegion(b,N).size);b=floodApply(b,N,k);moves++;ghMark(floodRegion(b,N).size);sfx('tick');draw();
@@ -1744,7 +1777,7 @@ function stroop(official){
 // --- Encestar ---
 function encestar(official){
   const W=360,H=520,r=rngFor('encestar',official),DUR=30;
-  openOv(header('encestar',official)+`<div class="row" style="gap:20px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Arrastra desde cualquier punto hacia atrás, como un tirachinas, y suelta. ${DUR} segundos.</p>`,'img/bg_menu.webp');
+  openOv(header('encestar',official)+`<div class="row" style="gap:20px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H); let hx=180,hy=150,ball,score=0,t=0,start=null,drag=null,aim=null,over=false,swish=0,pop=0; const RIM=34,BR=23,K=6.2,G=1400,Y0=415;
   const scl=()=>1-0.2*Math.max(0,Math.min(1,(Y0-ball.y)/(Y0-hy)));
@@ -1791,7 +1824,7 @@ function encestar(official){
 // --- Apilar ---
 function apilar(official){
   const W=360,H=520,BH=26,r=rngFor('apilar',official); const COLS=['#E63946','#FFC93C','#3A86FF','#2BB673'];const Y0=H*0.78;
-  openOv(header('apilar',official)+`<div class="big" id="g-sc" style="font-size:34px">0</div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca para soltar el bloque. Lo que sobresale se cae.</p>`,'img/bg_menu.webp');
+  openOv(header('apilar',official)+`<div class="big" id="g-sc" style="font-size:34px">0</div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x}=makeCanvas(W,H); const stack=[{x:80,w:200}]; let mv,over=false,cam=0,falling=[],fx=[];
   const blk=(bx,by,bw,col)=>{const im=spr('bloque_apilar');if(!im){x.fillStyle=col;x.fillRect(bx,by,bw,BH);x.strokeRect(bx,by,bw,BH);return}x.save();x.fillStyle=col;x.fillRect(bx+2,by+2,bw-6,BH-6);x.globalCompositeOperation='multiply';x.drawImage(im,bx,by,bw,BH);x.restore()};
@@ -1838,7 +1871,7 @@ function laberinto(official){
   while(st.length){const i=st[st.length-1],x=i%CO,y=(i/CO)|0;const o=[];if(y>0&&!seen.has(i-CO))o.push(['n',i-CO,'s']);if(y<RO-1&&!seen.has(i+CO))o.push(['s',i+CO,'n']);if(x>0&&!seen.has(i-1))o.push(['w',i-1,'e']);if(x<CO-1&&!seen.has(i+1))o.push(['e',i+1,'w']);
     if(!o.length){st.pop();continue}const [d,j,b]=o[Math.floor(r()*o.length)];walls[i][d]=0;walls[j][b]=0;seen.add(j);st.push(j)}
   const rects=[];walls.forEach((w,i)=>{const x=(i%CO)*S,y=((i/CO)|0)*S;if(w.n)rects.push([x,y-TH/2,S,TH]);if(w.w)rects.push([x-TH/2,y,TH,S]);if(w.s&&((i/CO)|0)===RO-1)rects.push([x,y+S-TH/2,S,TH]);if(w.e&&i%CO===CO-1)rects.push([x+S-TH/2,y,TH,S])});
-  openOv(header('laberinto',official)+`<div class="row" style="gap:12px">${clockEl()}<button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Sujeta el móvil plano e inclínalo para mover la canica hasta la meta verde. Sin giroscopio, arrastra el dedo.</p>`,'img/bg_menu.webp');
+  openOv(header('laberinto',official)+`<div class="row" style="gap:12px">${clockEl()}<button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);const tilt=tiltControl(c,pos);const sw=stopwatch();let b={x:S/2,y:S/2,vx:0,vy:0},over=false,go=false;
   $('#g-go').onclick=()=>{enableGyro(tilt,c);go=true;$('#g-go').hidden=true;sw.start();ghMark(0);(function f(){const el=$('#g-t');if(!el||over)return;el.textContent=(sw.ms()/1000).toFixed(1).replace('.',',');requestAnimationFrame(f)})()};
@@ -1857,7 +1890,7 @@ function laberinto(official){
 // --- Bola equilibrio ---
 function equilibrio(official){
   const W=360,H=340,r=rngFor('equilibrio',official),L=150,MAX=60;
-  openOv(header('equilibrio',official)+`<div class="row" style="gap:12px">${clockEl()}<button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Inclina el móvil a izquierda y derecha para mantener la bola sobre la tabla. Sin giroscopio, arrastra el dedo. El viento sopla cada vez más. Máximo ${MAX} s.</p>`,'img/bg_menu.webp');
+  openOv(header('equilibrio',official)+`<div class="row" style="gap:12px">${clockEl()}<button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);const tilt=tiltControl(c,pos);let th=0,s=0,v=0,gust=0,next=1.2,t=0,on=false,over=false;
   $('#g-go').onclick=()=>{enableGyro(tilt,c);on=true;$('#g-go').hidden=true;ghMark(0)};
@@ -1893,7 +1926,7 @@ function sopa(official){
         if(fit){for(let i=0;i<w.length;i++)grid[(y0+dy*i)*N+x0+dx*i]=w[i];wpos[w]=Array.from({length:w.length},(_,i)=>(y0+dy*i)*N+x0+dx*i);words.push(w);ok=true}}}
     if(words.length===6)break}
   const AB='ABCDEFGHIJLMNOPRSTUVZ';grid=grid.map(c=>c||AB[Math.floor(r()*AB.length)]);
-  openOv(header('sopa',official)+`<div class="row" style="gap:12px">${clockEl()}<button class="btn ghost" id="sp-giveup" style="font-size:14px;padding:6px 12px">🏳️ Rendirse</button></div><div class="words" id="sp-w">${words.map(w=>`<span data-w="${w}">${'_ '.repeat(w.length).trim()} <small>${w.length}</small></span>`).join('')}</div><div class="sopa" id="sp" style="grid-template-columns:repeat(${N},1fr);grid-template-rows:repeat(${N},1fr)">${grid.map((c,i)=>`<div class="sc" data-i="${i}">${c}</div>`).join('')}</div><p class="note" style="margin:0">Cada raya es una letra. Busca palabras del verano y el camping y arrástralas en línea recta: horizontal, vertical o diagonal.</p>`,'img/bg_menu.webp');
+  openOv(header('sopa',official)+`<div class="row" style="gap:12px">${clockEl()}<button class="btn ghost" id="sp-giveup" style="font-size:14px;padding:6px 12px">🏳️ Rendirse</button></div><div class="words" id="sp-w">${words.map(w=>`<span data-w="${w}">${'_ '.repeat(w.length).trim()} <small>${w.length}</small></span>`).join('')}</div><div class="sopa" id="sp" style="grid-template-columns:repeat(${N},1fr);grid-template-rows:repeat(${N},1fr)">${grid.map((c,i)=>`<div class="sc" data-i="${i}">${c}</div>`).join('')}</div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const el=$('#sp'),cells=[...el.children],sw=stopwatch();let a=null,sel=[],found=new Set(),done=false;
   const line=(i,j)=>{const x0=i%N,y0=(i/N)|0,x1=j%N,y1=(j/N)|0,dx=x1-x0,dy=y1-y0;if(!(dx===0||dy===0||Math.abs(dx)===Math.abs(dy)))return null;const n=Math.max(Math.abs(dx),Math.abs(dy));const sx=Math.sign(dx),sy=Math.sign(dy);return Array.from({length:n+1},(_,k)=>(y0+sy*k)*N+x0+sx*k)};
@@ -1918,7 +1951,7 @@ function cuantos(official){
   const W=340,H=250,ROUNDS=8,r=rngFor('cuantos',official),COLS=['#E63946','#FFC93C','#3A86FF','#2BB673'];
   const rounds=Array.from({length:ROUNDS},(_,k)=>{const n=5+Math.floor(r()*(5+k));const pts=[];let g=0;while(pts.length<n&&g<2000){g++;const p=[24+r()*(W-48),24+r()*(H-48)];if(pts.every(q=>Math.hypot(p[0]-q[0],p[1]-q[1])>40))pts.push(p)}
     const opts=new Set([pts.length]);while(opts.size<4){opts.add(Math.max(1,pts.length+Math.floor(r()*7)-3))}return {pts,cols:pts.map(()=>COLS[Math.floor(r()*4)]),opts:shuffle([...opts],r)}});
-  openOv(header('cuantos',official)+`<div class="say" id="cu-s">Ronda 1 de ${ROUNDS}</div>`+cvHTML(W,H)+`<div class="opts" id="cu-o"></div><button class="btn red" id="cu-go">Empezar</button><p class="note" style="margin:0">Las estrellas aparecen un segundo. ¿Cuántas había? Acertar rápido suma más.</p>`,'img/bg_reveal.webp');
+  openOv(header('cuantos',official)+`<div class="say" id="cu-s">Ronda 1 de ${ROUNDS}</div>`+cvHTML(W,H)+`<div class="opts" id="cu-o"></div><button class="btn red" id="cu-go">Empezar</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const {x}=makeCanvas(W,H);let k=0,pts=0,shownAt=0;
   const starP=(cx,cy,R,c)=>{if(dimg(x,'estrella_'+COLS.indexOf(c),cx,cy,R*2.3))return;x.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?R*.45:R;x.lineTo(cx+rr*Math.cos(a),cy+rr*Math.sin(a))}x.closePath();x.fillStyle=c;x.fill();x.lineWidth=3;x.strokeStyle=INK;x.stroke()};
@@ -1936,7 +1969,7 @@ const PAIRS=[['O','Q'],['E','F'],['b','d'],['M','N'],['8','B'],['p','q'],['C','G
 function intruso(official){
   const ROUNDS=10,r=rngFor('intruso',official);
   const rounds=Array.from({length:ROUNDS},(_,k)=>{const n=4+Math.floor(k/3);const pr=PAIRS[Math.floor(r()*PAIRS.length)];const swap=r()<.5;return {n,base:swap?pr[1]:pr[0],odd:swap?pr[0]:pr[1],at:Math.floor(r()*n*n)}});
-  openOv(header('intruso',official)+clockEl()+`<div class="say" id="in-s">Ronda 1 de ${ROUNDS}</div><div class="intr" id="in"></div><p class="note" style="margin:0">Toca la letra distinta. Cada fallo suma 3 segundos.</p>`,'img/bg_reveal.webp');
+  openOv(header('intruso',official)+clockEl()+`<div class="say" id="in-s">Ronda 1 de ${ROUNDS}</div><div class="intr" id="in"></div>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const sw=stopwatch();let k=0,pen=0;
   function show(){const R=rounds[k];$('#in-s').textContent=`Ronda ${k+1} de ${ROUNDS}`;const el=$('#in');el.style.gridTemplateColumns=`repeat(${R.n},1fr)`;el.style.fontSize=`${Math.round(150/R.n)}px`;
@@ -1953,7 +1986,7 @@ const FDIR=[[0,1,'↓'],[0,-1,'↑'],[1,0,'→'],[-1,0,'←']];
 function fruta(official){
   const W=360,H=520,DUR=30,r=rngFor('fruta',official),FR=[['#FF8A3D','#FFC93C'],['#E63946','#FAF7F0'],['#2BB673','#E63946'],['#FFC93C','#FAF7F0']];
   const sched=[];for(let t=0.6;t<DUR-1;t+=0.6+r()*0.6){const n=1+(r()<.35?1:0)+(t>15&&r()<.3?1:0);for(let j=0;j<n;j++){const x0=60+r()*240;sched.push({t:t+j*0.12,x:x0,y:H+30,vx:(180-x0)*(0.4+r()*0.5),vy:-(790+r()*170),bomb:r()<0.14,k:Math.floor(r()*4),R:27+r()*5,d:Math.floor(r()*4),rot:r()*6,vr:(r()-.5)*5})}}
-  openOv(header('fruta',official)+`<div class="row" style="gap:20px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Corta cada fruta en la dirección de su flecha. Si cortas al revés, no cuenta. Las bombas restan 3.</p>`,'img/bg_menu.webp');
+  openOv(header('fruta',official)+`<div class="row" style="gap:20px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);let t=0,si=0,live=[],halves=[],flash=[],juice=[],score=0,trail=[],down=false,started=true,over=false;
   c.addEventListener('pointerdown',e=>{down=true;if(!started)ghMark(0);started=true;trail=[pos(e)];c.setPointerCapture(e.pointerId)});
@@ -1988,7 +2021,7 @@ function lightsout(official){
   const N=5,r=rngFor('lightsout',official);let b=Array(N*N).fill(0);const presses=new Set();while(presses.size<6)presses.add(Math.floor(r()*N*N));
   const tog=(bd,i)=>{const x0=i%N,y0=(i/N)|0;[[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy])=>{const a=x0+dx,c=y0+dy;if(a>=0&&a<N&&c>=0&&c<N)bd[c*N+a]^=1})};
   presses.forEach(i=>tog(b,i));const par=presses.size,cap=par+20;let moves=0,over=false;
-  openOv(header('lightsout',official)+`<div class="say" id="lo-s">0 movimientos · par ${par}</div><div class="lo" id="lo">${b.map((v,i)=>`<button data-i="${i}" aria-label="Casilla ${i+1}"></button>`).join('')}</div><p class="note" style="margin:0">Apaga todas las luces. Cada toque cambia la casilla y sus cuatro vecinas.</p>`,'img/bg_menu.webp');
+  openOv(header('lightsout',official)+`<div class="say" id="lo-s">0 movimientos · par ${par}</div><div class="lo" id="lo">${b.map((v,i)=>`<button data-i="${i}" aria-label="Casilla ${i+1}"></button>`).join('')}</div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const cells=[...$('#lo').children];const draw=()=>{cells.forEach((c,i)=>c.classList.toggle('on',!!b[i]));$('#lo-s').textContent=`${moves} movimientos · par ${par}`};draw();
   $('#lo').onclick=e=>{const c=e.target.closest('button');if(!c||over)return;if(!moves)ghMark(b.filter(v=>!v).length);tog(b,+c.dataset.i);moves++;ghMark(b.filter(v=>!v).length);sfx('tick');draw();const off=b.every(v=>!v);
@@ -2004,7 +2037,7 @@ function tuberias(official){
   if(seen.size<N*N){for(let i=0;i<N*N;i++)if(!seen.has(i)){const x0=i%N,y0=(i/N)|0;for(let d=0;d<4;d++){const a=x0+DIR[d][0],c=y0+DIR[d][1];if(a>=0&&a<N&&c>=0&&c<N&&seen.has(c*N+a)){con[i][d]=1;con[c*N+a][(d+2)%4]=1;seen.add(i);break}}}}
   const rot=con.map(()=>Math.floor(r()*4));if(rot.every(v=>v===0))rot[0]=1;
   const eff=i=>{const k=rot[i];return [0,1,2,3].map(d=>con[i][(d-k+4)%4])};
-  openOv(header('tuberias',official)+clockEl()+`<div class="pipes" id="pp"></div><p class="note" style="margin:0">Gira las piezas hasta que el agua llegue a todas desde el centro.</p>`,'img/bg_menu.webp');
+  openOv(header('tuberias',official)+clockEl()+`<div class="pipes" id="pp"></div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const sw=stopwatch();let over=false;
   function flow(){const wet=new Set([12]),q=[12];while(q.length){const i=q.shift(),x0=i%N,y0=(i/N)|0,e=eff(i);e.forEach((v,d)=>{if(!v)return;const a=x0+DIR[d][0],c=y0+DIR[d][1];if(a<0||a>=N||c<0||c>=N)return;const j=c*N+a;if(eff(j)[(d+2)%4]&&!wet.has(j)){wet.add(j);q.push(j)}})}return wet}
@@ -2027,7 +2060,7 @@ function deslizante(official){
   const N=3,r=rngFor('deslizante',official);let b=[1,2,3,4,5,6,7,8,0];let last=-1;
   for(let k=0;k<60;k++){const z=b.indexOf(0),x0=z%N,y0=(z/N)|0;const o=[];[[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy])=>{const a=x0+dx,c=y0+dy;if(a>=0&&a<N&&c>=0&&c<N&&c*N+a!==last)o.push(c*N+a)});const j=o[Math.floor(r()*o.length)];b[z]=b[j];b[j]=0;last=z}
   if(b.join()==='1,2,3,4,5,6,7,8,0'){[b[0],b[1]]=[b[1],b[0]];[b[3],b[4]]=[b[4],b[3]]}
-  openOv(header('deslizante',official)+clockEl()+`<div class="say" id="dz-s">0 movimientos</div><div class="slide" id="dz"></div><p class="note" style="margin:0">Ordena del 1 al 8 deslizando las fichas al hueco.</p>`,'img/bg_menu.webp');
+  openOv(header('deslizante',official)+clockEl()+`<div class="say" id="dz-s">0 movimientos</div><div class="slide" id="dz"></div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const COLS=['#E63946','#FFC93C','#3A86FF','#2BB673'];const sw=stopwatch();let moves=0,over=false;
   const draw=()=>{$('#dz').innerHTML=b.map((v,i)=>v?`<button data-i="${i}" style="color:${COLS[(v-1)%4]}">${v}</button>`:`<span></span>`).join('');$('#dz-s').textContent=`${moves} movimientos`};draw();
@@ -2040,7 +2073,7 @@ function deslizante(official){
 // --- Copia el ángulo ---
 function angulo(official){
   const ROUNDS=8,W=340,H=330+40,r=rngFor('angulo',official);const rounds=Array.from({length:ROUNDS},()=>({a:20+Math.floor(r()*141),rot:0,rot2:0}));
-  openOv(header('angulo',official)+`<div class="say" id="an-s">Ronda 1 de ${ROUNDS}</div>`+cvHTML(W,H)+`<button class="btn red" id="an-ok">Confirmar</button><p class="note" style="margin:0">Copia abajo el ángulo de arriba: arrastra el brazo azul hasta que la abertura sea igual. Cuenta el error total en grados.</p>`,'img/bg_reveal.webp');
+  openOv(header('angulo',official)+`<div class="say" id="an-s">Ronda 1 de ${ROUNDS}</div>`+cvHTML(W,H)+`<button class="btn red" id="an-ok">Confirmar</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);let k=0,err=0,locked=false,mine=null,down=false;const L=110,C1=[W/2-70,150],C2=[W/2-70,300];
   const norm360=v=>((v%360)+360)%360;
@@ -2060,7 +2093,7 @@ function angulo(official){
 // --- Divide la tarta ---
 function tarta(official){
   const FR=[[1,2],[1,4],[3,4],[1,3],[2,3],[1,6]];const ROUNDS=6,W=340,H=340,r=rngFor('tarta',official);const rounds=shuffle(FR.slice(),r).slice(0,ROUNDS);
-  openOv(header('tarta',official)+`<div class="say" id="ta-s">Corta 1/2 de la tarta</div>`+cvHTML(W,H)+`<button class="btn red" id="ta-ok">Cortar</button><p class="note" style="margin:0">Arrastra por el borde para marcar el corte. El trozo empieza arriba y va en el sentido del reloj. Cuenta el error total en %.</p>`,'img/bg_reveal.webp');
+  openOv(header('tarta',official)+`<div class="say" id="ta-s">Corta 1/2 de la tarta</div>`+cvHTML(W,H)+`<button class="btn red" id="ta-ok">Cortar</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);let k=0,ang=Math.PI*0.6,err=0,locked=false,down=false;const cx=W/2,cy=H/2,R=138;
   const target=()=>rounds[k][0]/rounds[k][1];
@@ -2085,7 +2118,7 @@ const HOLES=[
 ];
 function minigolf(official){
   const W=360,H=560,BR=9,HR=14;const order=shuffle([0,1,2],rngFor('minigolf',official));
-  openOv(header('minigolf',official)+`<div class="say" id="mg-s">Hoyo 1 de 3 · 0 golpes</div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Arrastra desde cualquier punto hacia atrás, como un tirachinas, y suelta. La línea blanca marca dirección y fuerza. Cuantos menos golpes, mejor (máximo 8 por hoyo).</p>`,'img/bg_menu.webp');
+  openOv(header('minigolf',official)+`<div class="say" id="mg-s">Hoyo 1 de 3 · 0 golpes</div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);let hi=0,b,strokes=0,total=0,aim=null,aim0=null,over=false,sinking=0;
   const load=()=>{const L=HOLES[order[hi]];b={x:L.b[0],y:L.b[1],vx:0,vy:0};strokes=0;$('#mg-s').textContent=`Hoyo ${hi+1} de 3 · 0 golpes`};load();
@@ -2116,7 +2149,7 @@ function tilesSeq(){const out=ODE_FULL.map((m,i)=>({m,t:i?null:'Himno de la aleg
   MEL.filter(M=>M.id!=='alegria').forEach(M=>M.ev.forEach((e,i)=>out.push({m:e.m,t:i?null:`${M.t} · ${M.a}`})));return out}
 function tiles(official){
   const W=320,H=520,LANES=4,TH=120;const r=rngFor('tiles',official);
-  openOv(header('tiles',official)+`<div class="row" style="gap:10px"><div class="big" id="g-sc" style="font-size:40px">0</div><span class="tag" id="tl-song">Himno de la alegría · Beethoven</span></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca cada tecla negra justo cuando cruce la línea roja. Antes de tiempo o tarde, pierdes. Sube el volumen: cada tecla toca una nota del Himno de la alegría entero y, si aguantas, de más piezas clásicas.</p>`,'img/bg_menu.webp');
+  openOv(header('tiles',official)+`<div class="row" style="gap:10px"><div class="big" id="g-sc" style="font-size:40px">0</div><span class="tag" id="tl-song">Himno de la alegría · Beethoven</span></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);let rows=[],speed=240,score=0,started=false,over=false,next=0,lane=-1,notes=[];const LY=H-120,TOL=26;
   const SEQ=tilesSeq(),tb=muBus();const note=k=>{const n=SEQ[k%SEQ.length];if(n.t)$('#tl-song').textContent=n.t;if(!SND.on||!MUS.a)return;muNote(tb.node,n.m,MUS.a.currentTime,.45,'piano',1.1)};
@@ -2152,7 +2185,7 @@ function conecta(official){
       let x=0;for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)if(cross(...pairs[i],...pairs[j]))x++;
       let blk=0;pairs.forEach((p,i)=>pairs.forEach((q,j)=>{if(i!==j)q.forEach(d=>{if(sd(d[0],d[1],p[0][0],p[0][1],p[1][0],p[1][1])<R+6)blk++})}));
       const sc=x*2+blk;if(!best||sc>best.sc)best={pairs,sc};if(x>=Math.min(n-1,3)&&blk>=1)break}return best.pairs});
-  openOv(header('conecta',official)+`<div class="row" style="gap:12px">${clockEl()}<span class="tag" id="cn-k">Nivel 1 de ${LEVELS.length}</span></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Arrastra el dedo desde un punto hasta el otro del mismo color. Las líneas no se pueden cruzar ni pasar por encima de otro punto: rodea. Toca un punto para borrar su línea.</p>`,'img/bg_reveal.webp');
+  openOv(header('conecta',official)+`<div class="row" style="gap:12px">${clockEl()}<span class="tag" id="cn-k">Nivel 1 de ${LEVELS.length}</span></div>`+cvHTML(W,H)+``,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);const sw=stopwatch();let k=0,paths=[],cur=null,bad=null,over=false,flash=0;
   const P=()=>levels[k];
@@ -2267,7 +2300,7 @@ function orbita(official){
   const r=rngFor('orbita',official),LV=[1,2,3];
   openOv(header('orbita',official)+`<div class="row" style="gap:10px"><span class="tag" id="ob-k">Partida 1 de 3 · fácil</span><div class="big" id="ob-p" style="font-size:30px">0</div></div>
     <div class="say" id="ob-s" style="font-size:16px;min-height:2.6em;text-align:center"></div><canvas id="ob-cv" class="cv" style="width:min(340px,92vw);aspect-ratio:1;touch-action:none"></canvas>
-    <p class="note" style="margin:0">Tú eres <b style="color:${ORB_COL[1]}">azul</b>. En tu turno puedes mover una bola roja a una casilla de al lado (tócala y elige destino), luego colocas la tuya y el tablero gira solo ↺. Gana el primer 4 en línea tras el giro.</p>`,'img/bg_reveal.webp');
+    <p class="note" style="margin:0">Tú eres <b style="color:${ORB_COL[1]}">azul</b>.</p>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;let k=0,pts=0;
   const names=['Senpai Novato','Senpai Listo','Senpai Maestro'];
   function game(){$('#ob-k').textContent=`Partida ${k+1} de 3 · ${['fácil','media','difícil'][k]}`;
@@ -2298,7 +2331,7 @@ const objHTML=k=>`<img src="img/sp_obj_${k}.webp" alt="" onerror="this.replaceWi
 function cambio(official){
   const ROUNDS=6,r=rngFor('cambio',official);
   const rounds=Array.from({length:ROUNDS},(_,k)=>{const set=shuffle([...Array(16).keys()],r);const show=set.slice(0,8),rest=set.slice(8);const at=Math.floor(r()*8);const nw=rest[Math.floor(r()*rest.length)];const after=show.slice();after[at]=nw;return {show,after,at,ms:Math.round(3200-k*250)}});
-  openOv(header('cambio',official)+`<div class="say" id="cb-s">Ronda 1 de ${ROUNDS}</div><div class="objs" id="cb"></div><button class="btn red" id="cb-go" disabled>Cargando…</button><p class="note" style="margin:0">Memoriza los objetos. Se tapan y uno cambia: tócalo. Rápido suma más.</p>`,'img/bg_reveal.webp');
+  openOv(header('cambio',official)+`<div class="say" id="cb-s">Ronda 1 de ${ROUNDS}</div><div class="objs" id="cb"></div><button class="btn red" id="cb-go" disabled>Cargando…</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   let k=0,pts=0,shownAt=0,live=false;const el=$('#cb');
   // las 16 imágenes se cargan antes de empezar: si no, la casilla que cambia se queda un instante en blanco y lo delata
@@ -2336,7 +2369,7 @@ function sdOk(b,i,v){const y=(i/4)|0,x=i%4;for(let k=0;k<4;k++){if(k!==x&&b[y*4+
 const SDCOL=['','#E63946','#3A86FF','#2BB673','#F4B400'];
 function sudoku(official){
   const r=rngFor('sudoku',official),N=3;const boards=Array.from({length:N},()=>sudokuGen(r));
-  openOv(header('sudoku',official)+clockEl()+`<div class="say" id="sd-s">Tablero 1 de ${N}</div><div class="sdk" id="sd"></div><div class="row" id="sd-k" style="justify-content:center">${[1,2,3,4].map(v=>`<button class="sdk-n" data-v="${v}" style="color:${SDCOL[v]}">${v}</button>`).join('')}<button class="sdk-n" data-v="0">⌫</button></div><p class="note" style="margin:0">Cada fila, cada columna y cada cuadrado de 2×2 lleva 1, 2, 3 y 4 sin repetir. Toca una casilla y luego el número.</p>`,'img/bg_menu.webp');
+  openOv(header('sudoku',official)+clockEl()+`<div class="say" id="sd-s">Tablero 1 de ${N}</div><div class="sdk" id="sd"></div><div class="row" id="sd-k" style="justify-content:center">${[1,2,3,4].map(v=>`<button class="sdk-n" data-v="${v}" style="color:${SDCOL[v]}">${v}</button>`).join('')}<button class="sdk-n" data-v="0">⌫</button></div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const sw=stopwatch();let k=0,cur=boards[0].puz.slice(),sel=-1,over=false,filled=0;
   const draw=()=>{const B=boards[k];$('#sd').innerHTML=cur.map((v,i)=>{const fixed=!!B.puz[i],bad=v&&!fixed&&!sdOk(cur,i,v);return `<button data-i="${i}" class="${fixed?'fix':''} ${i===sel?'sel':''} ${bad?'bad':''} ${i%4===1?'br':''} ${((i/4)|0)===1?'bb':''}" style="color:${v?SDCOL[v]:'inherit'}">${v||''}</button>`}).join('')};draw();
@@ -2375,7 +2408,7 @@ function mastermind(official){
 function topos(official){
   const W=360,H=420,DUR=30,r=rngFor('topos',official);const HOLES=[];for(let y=0;y<3;y++)for(let x=0;x<3;x++)HOLES.push([60+x*120,95+y*125]);
   const sched=[];for(let t=0.5;t<DUR-0.6;){const k=t/DUR;sched.push({t,h:Math.floor(r()*9),helm:r()<0.22,dur:1.1-0.5*k+r()*0.25});t+=0.75-0.4*k+r()*0.3}
-  openOv(header('topos',official)+`<div class="row" style="gap:20px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Golpea los topos. ¡Los del casco restan 2!</p>`,'img/bg_menu.webp');
+  openOv(header('topos',official)+`<div class="row" style="gap:20px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);let t=0,si=0,live=[],score=0,started=true,over=false,fx=[];
   let ham=null;c.addEventListener('pointerdown',e=>{if(over)return;const [px,py]=pos(e);ham={x:px,y:py,t:0.22};
@@ -2401,7 +2434,7 @@ function topos(official){
 // --- Ninja saltarín ---
 function flappy(official){
   const W=360,H=520,r=rngFor('flappy',official),NX=90,GAP0=170;
-  openOv(header('flappy',official)+`<div class="big" id="g-sc" style="font-size:40px">0</div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca para saltar y pasa entre los bambús sin tocarlos.</p>`,'img/bg_menu.webp');
+  openOv(header('flappy',official)+`<div class="big" id="g-sc" style="font-size:40px">0</div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x}=makeCanvas(W,H);let y=H/2,vy=-330,started=true,over=false,score=0,cols=[],dist=0,next=0,spd=150;
   const addCol=()=>{const gap=Math.max(120,GAP0-cols.length*1.5-score*1.5);const cy=90+r()*(H-180-gap)+gap/2;cols.push({x:W+40,cy,gap,pass:false})};
@@ -2424,7 +2457,7 @@ function flappy(official){
 function arco(official){
   const W=360,H=440,N=10,r=rngFor('arco',official),TY=190;
   const shots=Array.from({length:N},(_,k)=>({wx:(r()-.5)*2*(10+k*4),wy:(r()-.5)*2*(5+k*2),gx:(r()-.5)*2*(4+k*2),ax:46+k*7+r()*10,ay:32+k*5+r()*8,fx:1.3+r()*1.1,fy:1.6+r()*1.2,ph:r()*6,tr:104-k*5,mv:k>=6?(0.9+r()*0.6)*(r()<.5?-1:1):0,mp:r()*6}));
-  openOv(header('arco',official)+`<div class="row" style="gap:16px"><div class="say" id="ar-s">Flecha 1 de ${N}</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca para disparar. Compensa el viento de la veleta (puede cambiar un poco en el vuelo). Si esperas mucho, te tiembla el pulso. 5 s por flecha. Las últimas, con la diana en movimiento.</p>`,'img/bg_menu.webp');
+  openOv(header('arco',official)+`<div class="row" style="gap:16px"><div class="say" id="ar-s">Flecha 1 de ${N}</div><div class="big" id="g-sc" style="font-size:34px;color:var(--red)">0</div></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x}=makeCanvas(W,H);let k=0,t=0,tt=0,score=0,hits=[],cool=0,over=false,started=true,fly=null;
   const tx=(S,time)=>180+(S.mv?Math.sin(time*S.mv+S.mp)*70:0);
@@ -2454,7 +2487,7 @@ function arco(official){
 // --- Semáforo de reflejos ---
 function semaforo(official){
   const ROUNDS=5,r=rngFor('semaforo',official);const waits=Array.from({length:ROUNDS},()=>1300+Math.floor(r()*2600));
-  openOv(header('semaforo',official)+`<div class="say" id="se-s">Toca cuando se ponga VERDE</div><button class="sema" id="se" aria-label="Semáforo"><span class="l r"></span><span class="l g"></span></button><div class="say" id="se-t" style="min-height:1.4em"></div><p class="note" style="margin:0">${ROUNDS} rondas. Si tocas en rojo es salida falsa: esa ronda cuenta 1 segundo.</p>`,'img/bg_reveal.webp');
+  openOv(header('semaforo',official)+`<div class="say" id="se-s">Toca cuando se ponga VERDE</div><button class="sema" id="se" aria-label="Semáforo"><span class="l r"></span><span class="l g"></span></button><div class="say" id="se-t" style="min-height:1.4em"></div>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const el=$('#se');let k=0,state='idle',t0=0,times=[];
   const set=s=>{state=s;el.classList.toggle('red',s==='red');el.classList.toggle('green',s==='green')};
@@ -2470,7 +2503,7 @@ function semaforo(official){
 // --- Del 1 al 25 ---
 function tabla(official){
   const r=rngFor('tabla',official),nums=shuffle([...Array(25)].map((_,i)=>i+1),r);
-  openOv(header('tabla',official)+clockEl()+`<div class="say" id="tb-s">Busca el 1</div><div class="tab25" id="tb">${nums.map(n=>`<button data-n="${n}">${n}</button>`).join('')}</div><p class="note" style="margin:0">Toca del 1 al 25 en orden. Cada fallo suma 1 segundo.</p>`,'img/bg_menu.webp');
+  openOv(header('tabla',official)+clockEl()+`<div class="say" id="tb-s">Busca el 1</div><div class="tab25" id="tb">${nums.map(n=>`<button data-n="${n}">${n}</button>`).join('')}</div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const sw=stopwatch();let want=1,pen=0,over=false;
   $('#tb').onclick=e=>{const b=e.target.closest('button');if(!b||over)return;if(!sw.started()){sw.start();showClock(sw);ghMark(0)}
@@ -2488,7 +2521,7 @@ function montones(official){
   const rounds=Array.from({length:ROUNDS},(_,k)=>{const a=12+Math.floor(r()*16);const d=Math.max(1,Math.round(a*(0.28-k*0.017)));const b=a+(r()<.5?d:-d);
     const trick=r()<0.55;const big=a<b?0:1;const rA=trick&&big===0?11:trick?7:8+r()*2,rB=trick&&big===1?11:trick?7:8+r()*2;const left=pile(a,0,rA),right=pile(Math.max(3,b),W/2,rB);
     const mix=k>=6;return {left:left.map(p=>[p[0],p[1],rA,mix?COLS[Math.floor(r()*4)]:null]),right:right.map(p=>[p[0],p[1],rB,mix?COLS[Math.floor(r()*4)]:null]),col:COLS[Math.floor(r()*4)],ans:left.length>right.length?0:1,ms:Math.max(380,780-k*36)}});
-  openOv(header('montones',official)+`<div class="say" id="mo-s">Ronda 1 de ${ROUNDS}</div>`+cvHTML(W,H)+`<div class="row" id="mo-o" style="justify-content:center"></div><button class="btn red" id="mo-go">Empezar</button><p class="note" style="margin:0">Cuenta cuántas estrellas hay, no lo que ocupan: a veces las del lado con menos son más grandes. Tienes 2,5 s para contestar.</p>`,'img/bg_reveal.webp');
+  openOv(header('montones',official)+`<div class="say" id="mo-s">Ronda 1 de ${ROUNDS}</div>`+cvHTML(W,H)+`<div class="row" id="mo-o" style="justify-content:center"></div><button class="btn red" id="mo-go">Empezar</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const {x}=makeCanvas(W,H);let k=0,pts=0,shownAt=0,live=false;
   const blank=t=>{x.fillStyle=PAPER;x.fillRect(0,0,W,H);x.strokeStyle=INK;x.lineWidth=3;x.beginPath();x.moveTo(W/2,10);x.lineTo(W/2,H-10);x.stroke();if(t){x.fillStyle=INK;x.font='400 34px Dela Gothic One,sans-serif';x.textAlign='center';x.fillText('?',W/4,H/2+12);x.fillText('?',W*3/4,H/2+12)}};blank(true);
@@ -2512,7 +2545,7 @@ function camarero(official){
   const ITEMS=[{n:'vaso_alto',w:32,h:60,c:'#FF8A3D'},{n:'taza',w:38,h:44,c:'#FAF7F0'},{n:'tarta_plato',w:46,h:38,c:'#F7D9A0'}];
   const itemImg=(o,cx,bottom)=>{const im=spr(o.n);if(!im)return false;const hh=o.h,ww=hh*im.naturalWidth/im.naturalHeight;x.drawImage(im,cx-ww/2,bottom-hh,ww,hh);return true};
   const ev=[];for(let t=2.2;t<DUR;t+=1.4+r()*1.6){const dog=t>12&&r()<.25;ev.push({t,f:(r()<.5?-1:1)*(dog?2.2:1)*(0.5+t/DUR*0.9+r()*0.4),dog})}
-  openOv(header('camarero',official)+`<div class="row" style="gap:12px">${clockEl()}<div class="big" id="g-sc" style="font-size:30px;color:var(--green)">0 €</div><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Llevas la bandeja por el restaurante. Inclina el móvil para que nada se caiga con los baches y los empujones. Cada segundo, cada cosa que sigue en la bandeja te da 1 € de propina. Sin giroscopio, arrastra el dedo.</p>`,'img/bg_menu.webp');
+  openOv(header('camarero',official)+`<div class="row" style="gap:12px">${clockEl()}<div class="big" id="g-sc" style="font-size:30px;color:var(--green)">0 €</div><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);const tilt=tiltControl(c,pos);
   let it=[{s:-38,v:0},{s:4,v:0},{s:46,v:0}].map((o,i)=>({...o,...ITEMS[i],on:true,fy:0,fr:0}));let th=0,kick=0,t=0,ei=0,score=0,acc=0,on=false,over=false,walk=0,msg='',msgT=0,bob=0;
@@ -2543,7 +2576,7 @@ function camarero(official){
 // --- Nivel de burbuja (2D) ---
 function burbuja(official){
   const W=340,H=340,r=rngFor('burbuja',official),DUR=30,R=140,Z=34;const cx=W/2,cy=H/2;const ph=[r()*6,r()*6,r()*6,r()*6],fq=[0.31+r()*0.2,0.53+r()*0.2,0.27+r()*0.2,0.61+r()*0.2];
-  openOv(header('burbuja',official)+`<div class="row" style="gap:12px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:30px;color:var(--green)">0,0 s</div><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">El suelo se mueve solo. Inclina el móvil para mantener la burbuja dentro del círculo verde. Cuenta el tiempo que está dentro. Sin giroscopio, arrastra el dedo.</p>`,'img/bg_menu.webp');
+  openOv(header('burbuja',official)+`<div class="row" style="gap:12px"><div class="big" id="g-t" style="font-size:34px">30</div><div class="big" id="g-sc" style="font-size:30px;color:var(--green)">0,0 s</div><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);const tilt=tiltControl(c,pos);let bx=0,by=0,vx=0,vy=0,t=0,inside=0,on=false,over=false,lastS=-1;
   $('#g-go').onclick=()=>{enableGyro(tilt,c);on=true;$('#g-go').hidden=true;ghMark(0)};
@@ -2564,7 +2597,7 @@ function burbuja(official){
 // --- Esquiva inclinando ---
 function esquiva(official){
   const W=340,H=520,r=rngFor('esquiva',official),BY=H-110,BR=16;const KINDS=['roca','cono','cangrejo'];
-  openOv(header('esquiva',official)+`<div class="row" style="gap:12px"><div class="big" id="g-sc" style="font-size:34px">0 m</div><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Inclina el móvil a los lados para esquivar. Cada vez va más rápido. Sin giroscopio, arrastra el dedo.</p>`,'img/bg_menu.webp');
+  openOv(header('esquiva',official)+`<div class="row" style="gap:12px"><div class="big" id="g-sc" style="font-size:34px">0 m</div><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);const tilt=tiltControl(c,pos);let bx=W/2,vx=0,dist=0,spd=170,obs=[],next=0,on=false,over=false,rot=0,lastM=-1;
   const add=()=>{const n=dist<1500?1:(r()<.45?2:1);const used=[];for(let i=0;i<n;i++){let ox;let g=0;do{ox=30+r()*(W-60);g++}while(used.some(u=>Math.abs(u-ox)<90)&&g<20);used.push(ox);obs.push({x:ox,y:-40,k:KINDS[Math.floor(r()*3)],s:22+r()*10})}};
@@ -2590,13 +2623,16 @@ let duoPick=null;
 function openDuo(){
   const pool=(ONLINE?PLAYERS:DEMO_PLAYERS);const sel=duoPick||[me,(pool.find(p=>p.id!==me)||pool[0]).id];
   openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">En este móvil</span><button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px">Salir</button></div>
-   <h1>Duelo cara a cara</h1><p class="note" style="margin:0">Dos jugadores, un móvil en la mesa. Cada uno toca su mitad. No cuenta para el ranking: es para picarse en directo.</p>
+   <h1>Duelo cara a cara</h1>
    <div class="stack" style="width:100%;gap:6px;text-align:left"><small class="eyebrow">Jugador de abajo</small><div class="picker" id="du-a">${pool.map(p=>`<button class="pick ${p.id===sel[0]?'on':''}" data-pick="${p.id}"><div class="ava" style="--s:46px;--c:${AVC[p.id]||p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div></button>`).join('')}</div>
    <small class="eyebrow">Jugador de arriba</small><div class="picker" id="du-b">${pool.map(p=>`<button class="pick ${p.id===sel[1]?'on':''}" data-pick="${p.id}"><div class="ava" style="--s:46px;--c:${AVC[p.id]||p.c}"><div class="face"><img src="img/av_${p.id}.webp" alt=""></div></div></button>`).join('')}</div></div>
-   <div class="stack" style="width:100%;gap:8px">${DUO.map(d=>`<button class="gh-opt" data-d="${d.id}"><img src="img/ic_duo_${d.id}.webp" alt="" onerror="this.style.visibility='hidden'"><span><b>${d.name}</b><small>${d.desc}</small></span></button>`).join('')}</div>`,'img/bg_menu.webp');
+   <div class="games duo-grid">${DUO.map(d=>`<button class="game" data-d="${d.id}"><img src="img/ic_duo_${d.id}.webp" alt="" onerror="this.style.visibility='hidden'"><span>${d.name}</span></button>`).join('')}</div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const bind=(id,k)=>{$(id).onclick=e=>{const b=e.target.closest('.pick');if(!b)return;sel[k]=b.dataset.pick;$(id).querySelectorAll('.pick').forEach(x=>x.classList.toggle('on',x===b))}};bind('#du-a',0);bind('#du-b',1);
-  ovIn.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{duoPick=sel.slice();runDuo(b.dataset.d,sel[0],sel[1])});
+  ovIn.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{duoPick=sel.slice();const d=DUO.find(x=>x.id===b.dataset.d);
+    openOv(`<img src="img/ic_duo_${d.id}.webp" alt="" style="width:110px;height:110px;object-fit:contain" class="pop"><h1>${d.name}</h1><div class="bubble" style="width:100%;text-align:left">${d.desc}</div>
+      <button class="btn red" id="dd-go" style="font-size:22px;padding:14px 30px">¡A jugar!</button><button class="btn ghost" id="dd-back" style="font-size:14px;padding:6px 12px">Otro duelo</button>`,'img/bg_menu.webp');
+    $('#dd-go').onclick=()=>runDuo(d.id,sel[0],sel[1]);$('#dd-back').onclick=openDuo});
 }
 const duoName=id=>(P[id]&&P[id].name)||id;
 function duoShell(d,A,B,inner){
@@ -2726,7 +2762,7 @@ function renderLive(){
     ${ONLINE&&on.length?`<div class="row" style="gap:4px;flex-wrap:wrap">${on.map(m=>`<span class="lv-on"><img src="img/av_${m.id}.webp" alt="">${m.name}</span>`).join('')}</div>`:''}
     ${races.map(r=>`<div class="duel in"><span><b>${r.hostName}</b> ha abierto una carrera de <b>${G[r.g].name}</b>.</span><button class="btn red" data-rid="${r.rid}" style="font-size:13px;padding:5px 10px">Unirme</button></div>`).join('')}
     <div class="row" style="flex-wrap:wrap">${ONLINE?'<button class="btn" id="lv-new" style="font-size:14px;padding:6px 12px">Carrera en directo</button>':''}<button class="btn" id="du-open" style="font-size:14px;padding:6px 12px">Duelo en este móvil</button></div>
-    <p class="note" style="margin:0">${ONLINE?'Carrera: todos a la vez, mismo nivel, y veis a los demás mientras jugáis. ':''}Duelo: dos jugadores cara a cara en un solo móvil.</p></div>`;
+    </div>`;
   if($('#lv-new'))$('#lv-new').onclick=lvCreate;$('#du-open').onclick=openDuo;
   el.querySelectorAll('[data-rid]').forEach(b=>b.onclick=()=>{const r=races.find(x=>x.rid===b.dataset.rid);if(r)lvEnter(r,false)});
 }
@@ -2832,11 +2868,13 @@ function finish(gid,score,official){
 
 // ---------- navegación ----------
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.s===id));if(id==='s-mote'){moteIdx=0;renderMote()}window.scrollTo(0,0)}
-function renderAll(){SKC={};BOSSC={};PALC=null;renderHoy();renderNews();renderLive();renderPorra();renderExtras();renderRank();renderPerfil()}
+function renderAll(){SKC={};BOSSC={};PALC=null;renderHoy();renderNews();renderLive();renderPorra();renderExtras();renderRank();renderPerfil();try{renderChips()}catch(e){}}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>show(t.dataset.s));
 $('#btn-reto').onclick=()=>{if(!myOfficial(TODAY))startGame(todayGame.id,true)};
 $('#btn-practice').onclick=()=>openPractice(todayGame.id);
-$('#games').addEventListener('click',e=>{const b=e.target.closest('.game');if(b&&G[b.dataset.g].play)openPractice(b.dataset.g)});
+$('#games').addEventListener('click',e=>{const f=e.target.closest('[data-fav]');if(f){e.stopPropagation();toggleFav(f.dataset.fav);return}const b=e.target.closest('.game');if(b&&G[b.dataset.g].play)openPractice(b.dataset.g)});
+$('#g-filter').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;GFILT=b.dataset.f;store.set('rdm_gfilt',GFILT);renderGames()});
+$('#hoy-chips').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(!b)return;show('s-grupo');const t=document.querySelector(b.dataset.go);if(t)setTimeout(()=>t.scrollIntoView({behavior:'smooth',block:'center'}),60)});
 document.querySelectorAll('#s-rank .chip').forEach(c=>c.onclick=()=>{rmode=c.dataset.r;document.querySelectorAll('#s-rank .chip').forEach(x=>x.classList.toggle('on',x===c));renderRank()});
 $('#rank-list').addEventListener('click',e=>{const b=e.target.closest('.item');if(!b)return;openPlayer(b.dataset.p)});
 $('#picker').addEventListener('click',e=>{const b=e.target.closest('.pick');if(!b)return;me=b.dataset.pick;saveAll();renderAll()});
@@ -2941,7 +2979,7 @@ function ritmo(official){if(muNoAudio())return;
   const pats=Array.from({length:ROUNDS},(_,k)=>{const n=3+Math.floor(k*.6),e=60/(96+k*3)/2,set=k<3?[2,2,4]:k<6?[1,2,2,3,4]:[1,1,2,2,3];const ts=[0];let acc=0;
     for(let i=0;i<n-1;i++){acc+=set[Math.floor(r()*set.length)]*e;ts.push(acc)}return ts});
   openOv(header('ritmo',official)+`<div class="say" id="ri-s">Escucha…</div><div class="row" style="gap:14px"><span class="tag" id="ri-k">Ronda 1 de ${ROUNDS}</span><div class="big" id="ri-p" style="font-size:30px">0</div></div>
-    <button class="mu-drum" id="ri-d" aria-label="Tambor" disabled>${muArt('tambor',190)}</button><div class="mu-dots" id="ri-dots"></div><p class="note" style="margin:0">Toca el tambor con el mismo ritmo que has oído.</p>`,'img/bg_reveal.webp');
+    <button class="mu-drum" id="ri-d" aria-label="Tambor" disabled>${muArt('tambor',190)}</button><div class="mu-dots" id="ri-dots"></div>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   let k=0,pts=0,taps=[],live=false,tmo=null;const D=$('#ri-d'),S=$('#ri-s'),tb=muBus();const hit=()=>muPulse(D);
   const arm=ms=>{clearTimeout(tmo);tmo=setTimeout(judge,ms);timers.push(tmo)};
@@ -2983,7 +3021,7 @@ function tono(official){if(muNoAudio())return;
 function ciegas(official){if(muNoAudio())return;
   const r=rngFor('ciegas',official),seq=Array.from({length:40},()=>Math.floor(r()*5)),NOTES=[72,74,76,79,81],COL=['#E63946','#FF8A3D','#FFC93C','#2BB673','#3A86FF'];
   openOv(header('ciegas',official)+`<div class="say" id="ci-s">Escucha las 5 notas</div><div class="mu-xilo" id="ci-x">${NOTES.map((n,i)=>`<button data-i="${i}" style="--c:${COL[i]};--h:${100-i*10}%" aria-label="Nota ${i+1}" disabled></button>`).join('')}</div>
-    <div class="big" id="ci-n">0</div><p class="note" style="margin:0">rondas completadas · la melodía suena sin luces</p>`,'img/bg_reveal.webp');
+    <div class="big" id="ci-n">0</div><p class="note" style="margin:0">rondas completadas</p>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const bars=[...ovIn.querySelectorAll('#ci-x button')],S=$('#ci-s'),tb=muBus();let level=1,input=0,locked=true;
   const lit=i=>{bars[i].classList.add('lit');timers.push(setTimeout(()=>bars[i].classList.remove('lit'),200))};
@@ -3004,7 +3042,7 @@ function afina(official){if(muNoAudio())return;
   openOv(header('afina',official)+`<div class="say" id="af-s">Escucha la nota</div><div class="row" style="gap:12px"><span class="tag" id="af-k">Nota 1 de ${N}</span><span class="tag" id="af-t">Error: 0</span></div>${muArt('diapason',110,'af-a')}
     <button class="btn ghost" id="af-ref">▶ Escuchar la nota</button>
     <div class="mu-slide" id="af-sl"><span class="mu-lo">grave</span><span class="mu-hi">aguda</span><div class="mu-knob" id="af-kn"></div></div>
-    <button class="btn red" id="af-ok" disabled>Fijar</button><p class="note" style="margin:0">Arrastra el dedo por la barra: suena mientras lo mueves. Suéltalo cuando suene igual que la nota y pulsa Fijar.</p>`,'img/bg_reveal.webp');
+    <button class="btn red" id="af-ok" disabled>Fijar</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   let k=0,tot=0,pos=0,moved=false,hold=null,live=false;const SL=$('#af-sl'),KN=$('#af-kn'),S=$('#af-s');
   const mAt=p=>R[k].lo+p*(R[k].hi-R[k].lo);const draw=()=>{KN.style.left=(pos*100)+'%'};
@@ -3026,7 +3064,7 @@ function metronomo(official){if(muNoAudio())return;
   const r=rngFor('metronomo',official),pool=[72,84,96,108,120,132],bpms=[];while(bpms.length<3){const b=pool[Math.floor(r()*pool.length)];if(!bpms.includes(b))bpms.push(b)}
   openOv(header('metronomo',official)+`<div class="say" id="mt-s">Prepárate</div><div class="row" style="gap:12px"><span class="tag" id="mt-k">Ronda 1 de 3</span><span class="tag" id="mt-e">—</span></div>
     <button class="mu-drum mu-pad" id="mt-p" aria-label="Toca aquí">${muArt('metronomo',150,'mt-a')}<b>TOCA AQUÍ</b></button><div class="mu-beats" id="mt-b">${'<i></i>'.repeat(16)}</div>
-    <p class="note" style="margin:0">Suenan 8 clics: tócalos a la vez. Luego se callan: sigue tocando 8 veces más al mismo ritmo.</p>`,'img/bg_reveal.webp');
+    `,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   let k=0,taps=[],t0=0,T=0,live=false;const errs=[],S=$('#mt-s'),dots=[...ovIn.querySelectorAll('#mt-b i')],tb=muBus();
   $('#mt-p').addEventListener('pointerdown',e=>{e.preventDefault();if(!live)return;const t=muNow();taps.push(t);muDrum(tb.node,'clic',MUS.a.currentTime,.35);muPulse($('#mt-a'));
@@ -3053,7 +3091,7 @@ function acordes(official){if(muNoAudio())return;
       if(ms.every((a,i)=>ms.every((b,j)=>i===j||Math.abs(a-b)%12)))break}return {n,ms}});
   openOv(header('acordes',official)+`<div class="say" id="ac-s">¿Cuántas notas suenan a la vez?</div><div class="row" style="gap:12px"><span class="tag" id="ac-k">Ronda 1 de ${ROUNDS}</span><div class="big" id="ac-p" style="font-size:30px">0</div></div>${muArt('altavoz',120,'ac-a')}
     <div class="mu-nums" id="ac-o">${[1,2,3,4].map(n=>`<button class="btn" data-n="${n}" disabled>${n}</button>`).join('')}</div><button class="btn ghost" id="ac-r" disabled>🔁 Otra vez</button>
-    <p class="note" style="margin:0">Las notas suenan juntas, como un acorde. Puede haber de 1 a 4. Puedes repetirlo una vez por ronda.</p>`,'img/bg_reveal.webp');
+    `,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   let k=0,pts=0,live=false,t1=0,rep=false;const S=$('#ac-s'),btn=[...ovIn.querySelectorAll('#ac-o button')];
   const chord=()=>{const a=muCtx(),b=muBus(),t=a.currentTime+.25,q=R[k];q.ms.forEach(m=>muNote(b.node,m,t,1.5,'organo',1/Math.sqrt(q.n)));timers.push(setTimeout(()=>muPulse($('#ac-a')),250))};
@@ -3072,7 +3110,7 @@ function melodia(official){if(muNoAudio())return;
   const r=rngFor('melodia',official),ROUNDS=8,order=shuffle(MEL.slice(),r).slice(0,ROUNDS),opts=order.map(M=>muOpts(r,M));
   openOv(header('melodia',official)+`<div class="say" id="ml-s">Escucha…</div><div class="row" style="gap:12px"><span class="tag" id="ml-k">Ronda 1 de ${ROUNDS}</span><div class="big" id="ml-p" style="font-size:30px">0</div></div>
     ${muArt('vinilo',120,'ml-a')}<div class="tag" id="ml-c">0 notas</div><button class="btn red" id="ml-b" style="font-size:24px;padding:14px 30px" disabled>¡La sé!</button><div class="mu-opts" id="ml-o"></div>
-    <p class="note" style="margin:0">Pulsa «¡La sé!» en cuanto la reconozcas: cuantas menos notas necesites, más puntos.</p>`,'img/bg_reveal.webp');
+    `,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   let k=0,pts=0,live=false,bus=null,t0=0,heard=0,late=false,rid=0;const S=$('#ml-s'),A=$('#ml-a');
   function play(){const M=order[k],ev=M.ev.slice(0,24),a=muCtx(),my=++rid;bus=muBus();t0=a.currentTime+.4;muPlayEv(bus,ev,t0);live=true;late=false;heard=0;
@@ -3095,7 +3133,7 @@ function notafalsa(official){if(muNoAudio())return;
     const j=cand[Math.floor(r()*cand.length)];const sh=shuffle([1,-1,2,-2],r).find(s=>!pcs.has((ev[j].m+s+120)%12)&&ev[j].m+s!==(ev[j-1]||{}).m&&ev[j].m+s!==(ev[j+1]||{}).m)||1;ev[j].m+=sh;return {M,ev,j}});
   openOv(header('notafalsa',official)+`<div class="say" id="nf-s">Escucha…</div><div class="row" style="gap:12px"><span class="tag" id="nf-k">Ronda 1 de ${ROUNDS}</span><div class="big" id="nf-p" style="font-size:30px">0</div></div>
     <div class="tag" id="nf-t"></div>${muArt('altavoz',120,'nf-a')}<button class="btn red" id="nf-b" style="font-size:26px;padding:16px 34px" disabled>¡Esa!</button>
-    <p class="note" style="margin:0">Una nota de la melodía está desafinada. Pulsa justo cuando suene. Si te adelantas, pierdes la ronda.</p>`,'img/bg_reveal.webp');
+    `,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   let k=0,pts=0,live=false,bus=null,t0=0,rid=0;const S=$('#nf-s');
   function play(){const q=R[k],a=muCtx(),my=++rid;bus=muBus();t0=a.currentTime+.6;muPlayEv(bus,q.ev,t0);live=true;$('#nf-b').disabled=false;$('#nf-k').textContent=`Ronda ${k+1} de ${ROUNDS}`;
@@ -3117,7 +3155,7 @@ function ordena(official){if(muNoAudio())return;
   openOv(header('ordena',official)+`<div class="row" style="gap:12px">${clockEl()}<span class="tag" id="or-k">Melodía 1 de ${ROUNDS}</span></div><div class="say" id="or-s"></div>
     <small class="eyebrow">Trozos (toca para oír)</small><div class="mu-chunks" id="or-c"></div><small class="eyebrow">Tu orden</small><div class="mu-slots" id="or-l"></div>
     <div class="row" style="gap:8px"><button class="btn ghost" id="or-p" disabled>▶ Oír mi orden</button><button class="btn red" id="or-ok" disabled>Comprobar</button></div>
-    <p class="note" style="margin:0">La melodía está cortada en 4 trozos. Toca un trozo para oírlo y «Poner» para colocarlo. Toca un hueco para quitarlo. Cada fallo suma 5 s.</p>`,'img/bg_reveal.webp');
+    `,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const sw=stopwatch();let k=0,pen=0,slots=[],bus=null;const S=$('#or-s');
   const playChunks=list=>{if(bus)bus.stop();const a=muCtx();bus=muBus();let t=a.currentTime+.1;list.forEach(c=>{const b0=c[0].t;c.forEach(e=>muNote(bus.node,e.m,t+e.t-b0,e.d));const L=c[c.length-1];t+=L.t-b0+L.d/.92})};
@@ -3146,7 +3184,7 @@ function concierto(official){if(muNoAudio())return;
     songs.push({t:T,M});ev.forEach(e=>{if(e.t-last<.15)return;last=e.t;notes.push({t:T+e.t,m:e.m,lane:e.m<lo?0:e.m<hi||lo===hi?1:2,st:0})});
     const L=ev[ev.length-1],end=L.t+L.d,sp=60/bpm;for(let b=0;b*sp<end;b++)beats.push({t:T+b*sp,sp});T+=end+sp*2});
   const END=notes[notes.length-1].t+1;
-  openOv(header('concierto',official)+`<div class="row" style="gap:12px"><div class="big" id="co-p" style="font-size:30px">100 %</div><span class="tag" id="co-t"></span></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Toca la columna de cada nota cuando llegue a la línea: si aciertas, suena la melodía. Tocar a lo loco resta.</p>`,'img/bg_reveal.webp');
+  openOv(header('concierto',official)+`<div class="row" style="gap:12px"><div class="big" id="co-p" style="font-size:30px">100 %</div><span class="tag" id="co-t"></span></div>`+cvHTML(W,H)+``,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);const a=muCtx(),bk=muBus(),tb=muBus(),T0=a.currentTime+.3;let pts=0,judged=0,hits=0,over=false;const fx=[];
   beats.forEach(o=>{muDrum(bk.node,'bombo',T0+o.t,.55);muDrum(bk.node,'charles',T0+o.t+o.sp/2,.7)});
@@ -3386,7 +3424,7 @@ const T5PAL=['#E63946','#3A86FF','#2BB673','#FFC93C','#9B5DE5','#FF8A3D'];
 // --- Torres de Hanói ---
 function hanoi(official){
   const W=340,H=250,LV=[4,5],PX=[58,170,282],BASE=226,DH=22;
-  openOv(header('hanoi',official)+`<div class="row" style="gap:10px;flex-wrap:wrap;justify-content:center">${clockEl()}<span class="tag" id="hn-k"></span><span class="tag" id="hn-m"></span></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Pasa toda la torre al palo de la derecha. Toca un palo para coger el disco de arriba y otro para dejarlo. Un disco nunca puede ir encima de uno más pequeño.</p>`,'img/bg_reveal.webp');
+  openOv(header('hanoi',official)+`<div class="row" style="gap:10px;flex-wrap:wrap;justify-content:center">${clockEl()}<span class="tag" id="hn-k"></span><span class="tag" id="hn-m"></span></div>`+cvHTML(W,H)+``,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);const sw=stopwatch();let k=0,pegs=[],sel=null,moves=0,total=0,over=false,flash=0,shake=0;
   const setup=()=>{const n=LV[k];pegs=[Array.from({length:n},(_,i)=>n-i),[],[]];sel=null;moves=0;$('#hn-k').textContent=`Torre ${k+1} de ${LV.length}`;$('#hn-m').textContent=`0 de ${2**n-1} movimientos (mínimo)`};
@@ -3430,7 +3468,7 @@ function nonograma(official){
   const r=rngFor('nonograma',official),SIZES=[5,5,6],puz=SIZES.map(N=>nonoMake(r,N));
   openOv(header('nonograma',official)+`<div class="row" style="gap:10px">${clockEl()}<span class="tag" id="nn-k"></span></div><div id="nn-b"></div>
     <div class="row" style="gap:8px"><button class="btn red" id="nn-p" style="font-size:15px;padding:8px 14px">■ Pintar</button><button class="btn ghost" id="nn-x" style="font-size:15px;padding:8px 14px">✕ Marcar</button></div>
-    <p class="note" style="margin:0">Los números dicen cuántas casillas seguidas hay que pintar en cada fila y columna (en ese orden, con al menos un hueco entre grupos). «Marcar» sirve para apuntar las que seguro van vacías. Puedes arrastrar el dedo.</p>`,'img/bg_reveal.webp');
+    `,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;const sw=stopwatch();let k=0,st=[],mode=1,act=null,over=false;
   const setMode=m=>{mode=m;$('#nn-p').className='btn '+(m===1?'red':'ghost');$('#nn-x').className='btn '+(m===2?'red':'ghost')};
   $('#nn-p').onclick=()=>setMode(1);$('#nn-x').onclick=()=>setMode(2);
@@ -3458,7 +3496,7 @@ function nonograma(official){
 // --- Camino del ladrón: mira el recorrido y repítelo ---
 function camino(official){
   const N=5,r=rngFor('camino',official);
-  openOv(header('camino',official)+`<div class="say" id="cm-s">Mira por dónde va el ladrón…</div><div class="row" style="gap:12px"><span class="tag" id="cm-k">Ronda 1</span><span class="tag" id="cm-v">❤️❤️</span></div><div class="cm" id="cm">${Array.from({length:N*N},(_,i)=>`<button class="cm-c" data-i="${i}"></button>`).join('')}</div><p class="note" style="margin:0">El ladrón cruza la plaza casilla a casilla. Luego toca las casillas por las que pasó, en el mismo orden. Cada ronda el camino es más largo.</p>`,'img/bg_reveal.webp');
+  openOv(header('camino',official)+`<div class="say" id="cm-s">Mira por dónde va el ladrón…</div><div class="row" style="gap:12px"><span class="tag" id="cm-k">Ronda 1</span><span class="tag" id="cm-v">❤️❤️</span></div><div class="cm" id="cm">${Array.from({length:N*N},(_,i)=>`<button class="cm-c" data-i="${i}"></button>`).join('')}</div>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;
   const cells=[...$('#cm').children];let L=4,round=0,lives=2,path=[],at=0,live=false;
   const walk=len=>{for(let t=0;t<200;t++){const p=[Math.floor(r()*N*N)];while(p.length<len){const c=p[p.length-1],cx=c%N,cy=(c/N)|0;const o=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]].map(([dx,dy])=>[cx+dx,cy+dy]).filter(([a,b])=>a>=0&&b>=0&&a<N&&b<N).map(([a,b])=>b*N+a).filter(i=>!p.includes(i));if(!o.length)break;p.push(o[Math.floor(r()*o.length)])}if(p.length===len)return p}return null};
@@ -3488,7 +3526,7 @@ function balanza(official){
     if(n>=4){const a=Math.floor(r()*n);let b=Math.floor(r()*n);if(b===a)b=(a+1)%n;comps.push(w[a]>w[b]?[a,b]:[b,a])}
     const ans=w.indexOf(light?0:n-1);return {ids,light,ans,comps:shuffle(comps,r).map(([h,l])=>r()<.5?{L:h,R:l,heavy:'L'}:{L:l,R:h,heavy:'R'})}});
   openOv(header('balanza',official)+`<div class="say" id="bz-s"></div><div class="row" style="gap:12px"><span class="tag" id="bz-k"></span><div class="big" id="bz-p" style="font-size:30px">0</div></div><div class="bz-list" id="bz-l"></div><div class="bz-ops" id="bz-o"></div>
-    <p class="note" style="margin:0">Mira las pesadas: el lado que baja pesa más. Deduce cuál es la fruta más pesada (o la más ligera, si lo pide). Rápido suma más.</p>`,'img/bg_reveal.webp');
+    `,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;let k=0,pts=0,t0=0,live=false;
   const beam=c=>{const a=c.heavy==='L'?-11:11;return `<div class="bz"><svg viewBox="0 0 200 92" class="bz-svg"><path d="M100 30 L86 88 H114 Z" fill="#C98B4F" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/><g transform="rotate(${a} 100 30)"><rect x="18" y="25" width="164" height="10" rx="5" fill="#8D6E63" stroke="${INK}" stroke-width="4"/><circle cx="100" cy="30" r="7" fill="#FFC93C" stroke="${INK}" stroke-width="3"/></g></svg>
     <span class="bz-p l" style="--dy:${c.heavy==='L'?11:-13}px">${balObj(rounds[k].ids[c.L])}</span><span class="bz-p r" style="--dy:${c.heavy==='R'?11:-13}px">${balObj(rounds[k].ids[c.R])}</span></div>`};
@@ -3509,7 +3547,7 @@ function vaso(official){
   const W=340,H=430,r=rngFor('vaso',official),N=6,GT=150,GB=400,TAPY=40,TAPX=W/2;
   const SH=[h=>1,h=>.55+.45*h,h=>1-.45*h,h=>.75+.35*Math.sin(h*Math.PI),h=>.6+.4*h*h,h=>1-.35*Math.sin(h*Math.PI)];
   const glasses=Array.from({length:N},(_,k)=>({sh:k===0?0:1+Math.floor(r()*5),mark:.45+r()*.4,q:.32+k*.05+r()*.06,acc:k>=3?.5+r()*.5:0,w:120+r()*40}));
-  openOv(header('vaso',official)+`<div class="row" style="gap:12px"><span class="tag" id="vs-k"></span><div class="big" id="vs-e" style="font-size:28px">0,0 %</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Mantén pulsado para echar agua y suelta cuando llegue a la raya roja. Ojo: el agua que va cayendo aún llega después de soltar. Un solo chorro por vaso.</p>`,'img/bg_reveal.webp');
+  openOv(header('vaso',official)+`<div class="row" style="gap:12px"><span class="tag" id="vs-k"></span><div class="big" id="vs-e" style="font-size:28px">0,0 %</div></div>`+cvHTML(W,H)+``,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;const {c,x}=makeCanvas(W,H);
   let k=0,lvl=0,vol=0,hold=false,used=false,pourT=0,inAir=[],err=0,state='ready',msg='',tbl=null,over=false,fx=0;
   const G=()=>glasses[Math.min(k,N-1)];
@@ -3561,7 +3599,7 @@ function cuerda(official){
   const lv=Array.from({length:N},(_,k)=>{const L={ax:110+r()*120,ay:34,L:120+r()*90,a0:(.7+r()*.5)*(r()<.5?-1:1),my:390+r()*40,mv:k>=4?(40+r()*50)*(r()<.5?-1:1):0};
     {const room=Math.min(L.ax,W-L.ax)-22,m=Math.asin(Math.min(1,room/L.L));if(Math.abs(L.a0)>m)L.a0=Math.sign(L.a0)*m}
     const xs=reach(L);xs.sort((a,b)=>a-b);const lo=xs[0],hi=xs[xs.length-1];L.mx=Math.abs(hi-lo)<30?lo:lo+r()*(hi-lo);return L});
-  openOv(header('cuerda',official)+`<div class="row" style="gap:12px"><span class="tag" id="cr-k"></span><div class="big" id="cr-p" style="font-size:30px">0</div></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">El caramelo se balancea. Toca la pantalla para cortar la cuerda: tiene que caer en la boca del monstruo. Más centrado, más puntos.</p>`,'img/bg_reveal.webp');
+  openOv(header('cuerda',official)+`<div class="row" style="gap:12px"><span class="tag" id="cr-k"></span><div class="big" id="cr-p" style="font-size:30px">0</div></div>`+cvHTML(W,H)+``,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;const {c,x}=makeCanvas(W,H);
   let k=0,pts=0,th=0,om=0,cut=false,cx=0,cy=0,vx=0,vy=0,mx=0,state='swing',msg='',tr=[],eat=0,over=false;
   const setup=()=>{const L=lv[k];th=L.a0;om=0;cut=false;mx=L.mx;state='swing';msg='';tr=[];eat=0;$('#cr-k').textContent=`Caramelo ${k+1} de ${N}`};setup();
@@ -3592,7 +3630,7 @@ function cuerda(official){
 function distancia(official){
   const W=340,H=230,r=rngFor('distancia',official),N=6,M0=22,PXM=18.5,ROAD=170,VIS=[4.5,4,3.5,3,3,2.5];
   const rounds=Array.from({length:N},(_,k)=>({T:8+r()*6.5,v:2.2+r()*2.6+k*.15,vis:VIS[k]}));
-  openOv(header('distancia',official)+`<div class="row" style="gap:12px"><span class="tag" id="ds-k"></span><div class="big" id="ds-e" style="font-size:28px">0 cm</div></div>`+cvHTML(W,H)+`<button class="btn red" id="ds-b" style="font-size:24px;padding:14px 40px">¡PARA!</button><p class="note" style="margin:0">El coche va siempre a la misma velocidad y entra en el túnel. Pulsa «¡Para!» cuando creas que está justo debajo de la bandera.</p>`,'img/bg_reveal.webp');
+  openOv(header('distancia',official)+`<div class="row" style="gap:12px"><span class="tag" id="ds-k"></span><div class="big" id="ds-e" style="font-size:28px">0 cm</div></div>`+cvHTML(W,H)+`<button class="btn red" id="ds-b" style="font-size:24px;padding:14px 40px">¡PARA!</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;const {c,x}=makeCanvas(W,H);
   let k=0,p=0,state='wait',wt=0,err=0,msg='',over=false;const X=m=>M0+m*PXM;
   const setup=()=>{p=0;state='wait';wt=0;msg='';$('#ds-k').textContent=`Ronda ${k+1} de ${N}`};setup();
@@ -3644,7 +3682,7 @@ function color(official){
   openOv(header('color',official)+`<div class="row" style="gap:12px"><span class="tag" id="co-k"></span><div class="big" id="co-e" style="font-size:28px">0</div></div>
     <div class="co-sw"><div><div class="co-box" id="co-t"></div><small>Este</small></div><div><div class="co-box" id="co-m"></div><small>El tuyo</small></div></div>
     <div class="co-sl">${['R','G','B'].map((c,i)=>`<label><b style="color:${['#E63946','#2BB673','#3A86FF'][i]}">${['Rojo','Verde','Azul'][i]}</b><input type="range" min="0" max="255" value="128" id="co-${c}" class="co-r co-${c}"></label>`).join('')}</div>
-    <button class="btn red" id="co-ok">Fijar</button><p class="note" style="margin:0">Mueve las tres barras hasta que tu color sea igual que el de la izquierda. Cuenta la diferencia total (menos es mejor).</p>`,'img/bg_reveal.webp');
+    <button class="btn red" id="co-ok">Fijar</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;let k=0,err=0,live=true;
   const cur=()=>['R','G','B'].map(c=>+$('#co-'+c).value);
   const paint=()=>{const v=cur();$('#co-m').style.background=rgbHex(v);['R','G','B'].forEach((c,i)=>{const a=v.slice(),b=v.slice();a[i]=0;b[i]=255;$('#co-'+c).style.setProperty('--tr',`linear-gradient(90deg,${rgbHex(a)},${rgbHex(b)})`)})};
@@ -3659,7 +3697,7 @@ function color(official){
 // --- Huevo en la cuchara (inclinación) ---
 function huevo(official){
   const W=340,H=520,r=rngFor('huevo',official),BY=H-120,ER=16;const ph=[r()*6,r()*6,r()*6];
-  openOv(header('huevo',official)+`<div class="row" style="gap:12px"><div class="big" id="g-sc" style="font-size:32px">0 m</div><span class="tag" id="hv-v">🥚🥚🥚</span><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Corre por el camino con el huevo en la cuchara. Inclina el móvil para moverte… pero el huevo también rueda hacia donde inclinas. Si se sale de la cuchara o te sales del camino, se rompe. Tienes 3 huevos. Sin giroscopio, arrastra el dedo.</p>`,'img/bg_menu.webp');
+  openOv(header('huevo',official)+`<div class="row" style="gap:12px"><div class="big" id="g-sc" style="font-size:32px">0 m</div><span class="tag" id="hv-v">🥚🥚🥚</span><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);const tilt=tiltControl(c,pos);let on=false,over=false,s=0,spd=110,sx=W/2,vx=0,e=0,ev=0,lives=3,pause=0,splat=0,lastM=-1,jolt=2,msg='';
   const mid=s=>{const a=Math.min(1,s/3000);return W/2+(30+70*a)*Math.sin(s/260+ph[0])+(10+40*a)*Math.sin(s/113+ph[1])};
@@ -3709,7 +3747,7 @@ function ball3d(x,cx,cy,r,M){const W_=v=>[M[0][0]*v[0]+M[0][1]*v[1]+M[0][2]*v[2]
 // --- Pinball de inclinación: agujeros con puntos y agujeros negros ---
 function pinball(official){
   const W=340,H=480,r=rngFor('pinball',official),BR=12,HR=21,DUR=60,SX=W/2,SY=H-34;
-  openOv(header('pinball',official)+`<div class="row" style="gap:12px"><div class="big" id="g-t" style="font-size:30px">60</div><div class="big" id="g-sc" style="font-size:30px;color:var(--green)">0</div><span class="tag" id="pb-v">⚪⚪⚪</span><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+`<p class="note" style="margin:0">Inclina el móvil para llevar la bola a los agujeros con número. Si va muy rápida, pasa por encima. Los agujeros negros se tragan la bola: tienes 3. Sin giroscopio, arrastra el dedo.</p>`,'img/bg_menu.webp');
+  openOv(header('pinball',official)+`<div class="row" style="gap:12px"><div class="big" id="g-t" style="font-size:30px">60</div><div class="big" id="g-sc" style="font-size:30px;color:var(--green)">0</div><span class="tag" id="pb-v">⚪⚪⚪</span><button class="btn red" id="g-go" style="font-size:16px;padding:8px 14px">Empezar</button></div>`+cvHTML(W,H)+``,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const {c,x,pos}=makeCanvas(W,H);const tilt=tiltControl(c,pos);let on=false,over=false,t=0,pts=0,balls=3,bx=SX,by=SY,vx=0,vy=0,pause=0,fall=null,lastS=-1,pop=[],BM=[[1,0,0],[0,.6,-.8],[0,.8,.6]];
   const holes=[];const VALS=[10,10,20,20,30,50];
@@ -3756,7 +3794,7 @@ function artista(official){ytGame('artista')}
 // --- Ordena por año ---
 async function cronologia(official){
   const ROUNDS=5;
-  openOv(header('cronologia',false)+`<div class="say" id="cy-s">Preparando…</div><div class="row" style="gap:12px"><span class="tag" id="cy-k"></span><div class="big" id="cy-p" style="font-size:30px">0</div></div><div class="cy" id="cy-l"></div><button class="btn red" id="cy-ok" disabled>Comprobar</button><p class="note" style="margin:0">Toca las canciones de la <b>más antigua</b> a la <b>más moderna</b> (1, 2, 3, 4). Tócala otra vez para quitarle el número. ▶ pone un trozo.</p>`,'img/bg_reveal.webp');
+  openOv(header('cronologia',false)+`<div class="say" id="cy-s">Preparando…</div><div class="row" style="gap:12px"><span class="tag" id="cy-k"></span><div class="big" id="cy-p" style="font-size:30px">0</div></div><div class="cy" id="cy-l"></div><button class="btn red" id="cy-ok" disabled>Comprobar</button>`,'img/bg_reveal.webp');
   $('#g-close').onclick=closeOv;const S=$('#cy-s');
   const all=(await songsLoad()).filter(s=>s.year&&s.year>=1950);
   if(all.length<8){S.textContent=`Faltan canciones con año: hay ${all.length}.`;return}
@@ -3967,6 +4005,125 @@ Object.assign(HOWTO,{
 });
 Object.assign(GHLAB,{hanoi:v=>`${v} movimientos`,nonograma:v=>`${v}/3 dibujos`,camino:v=>`${v} rondas`,balanza:v=>`${v} puntos`,vaso:v=>`${v} % de error`,cuerda:v=>`${v} puntos`,distancia:v=>`${v} cm`,color:v=>`${v} de diferencia`,huevo:v=>`${v} m`,pinball:v=>`${v} puntos`,cronologia:v=>`${v} puntos`,artista:v=>`${v} puntos`,intro:v=>`${v} puntos`});
 
+// ===== Jugar: filtros y favoritos =====
+let GFILT=store.get('rdm_gfilt','todos');
+const favs=()=>store.get('rdm_favs',[]);
+function toggleFav(id){const f=favs(),i=f.indexOf(id);if(i>=0)f.splice(i,1);else f.push(id);store.set('rdm_favs',f);sfx('tick');renderGames()}
+function renderGames(){const f=favs();
+  const F=[['todos','Todos'],['fav','⭐'],...CATS.map(c=>[c,CATNAME[c]]),['musica','🎵']];
+  if(GFILT==='fav'&&!f.length)GFILT='todos';
+  $('#g-filter').innerHTML=F.map(([k,l])=>`<button class="chip ${GFILT===k?'on':''}" data-f="${k}">${l}</button>`).join('');
+  const list=GAMES.filter(g=>GFILT==='todos'||(GFILT==='fav'?f.includes(g.id):GFILT==='musica'?g.mus:g.cat===GFILT));
+  $('#games').innerHTML=list.map(g=>`<button class="game ${g.play?'':'lock'}" data-g="${g.id}" ${g.play?'':'aria-disabled="true"'}><i class="fav ${f.includes(g.id)?'on':''}" data-fav="${g.id}" aria-label="Favorito">${f.includes(g.id)?'★':'☆'}</i><img src="img/ic_${g.id}.webp" alt=""><span>${g.name}</span></button>`).join('')+(GFILT==='fav'&&!f.length?'':'');
+}
+
+// ===== Hoy: fichas de estado (se tocan y llevan a su sitio en «Grupo») =====
+function renderChips(){const el=$('#hoy-chips');if(!el)return;
+  const s=streakOf(me),B=bossState(),hp=Math.max(0,Math.round(100-B.tot/B.hp*100));
+  const pend=allDuels().filter(d=>d.to===me&&duelLine(d).cls==='in').length;const bet=PLAYERS.length>1?myBet(TOMORROW):null;
+  const ms=weekMissions(),md=ms.filter(m=>m.done).length;
+  const chip=(go,ic,big,small,hot)=>`<button class="hchip ${hot?'hot':''}" data-go="${go}"><span class="hc-i">${ic}</span><b>${big}</b><small>${small}</small></button>`;
+  el.innerHTML=chip('.streak','🔥',s.streak,s.streak===1?'día de racha':'días de racha',!s.today)
+    +chip('.boss',B.dead?'💀':'👹',B.dead?'¡KO!':hp+' %',B.dead?'jefe derrotado':'vida del jefe',false)
+    +chip('#btn-duel','⚔️',pend,pend===1?'duelo pendiente':'duelos pendientes',pend>0)
+    +(PLAYERS.length>1?chip('#hoy-porra','🎯',bet?'✓':'?',bet?'porra hecha':'haz tu porra',!bet):'')
+    +chip('.mis','✅',`${md}/3`,'misiones',false);
+}
+
+// ===== Cada día, al abrir: podio de ayer y ruleta del reto de hoy =====
+function podioHTML(){const y=addDays(TODAY,-1),R=dayRanking(y);if(!R.n)return null;const top=R.rows.filter(r=>r.score!=null).slice(0,3);
+  const pr=progressRanking(y).find(r=>r.score!=null&&r.score>0);
+  const col=(r,i)=>r?`<div class="pd-c p${i+1}"><img src="${exp(r.id,i===0?'victoria':'aura')}" alt="" style="background:${AVC[r.id]||P[r.id].c}"><b>${esc(P[r.id].name)}</b><small>${fmtShort(R.game.id,r.score)}</small><div class="pd-b">${i+1}</div></div>`:'<div class="pd-c"></div>';
+  return `<span class="tag">Reto de ayer · ${R.game.name}</span><h1>¡Gana ${esc(P[top[0].id].name)}!</h1>
+    <div class="podio">${col(top[1],1)}${col(top[0],0)}${col(top[2],2)}</div>
+    ${pr?`<div class="bubble" style="width:100%;text-align:center">🚀 Más mejorado: <b>${esc(P[pr.id].name)}</b> (${fmtDelta(pr.score)} sobre su nivel)</div>`:''}
+    <button class="btn red" id="pd-go" style="font-size:22px;padding:12px 30px">¡Vamos!</button>`}
+function ruleta(){const g=todayGame,pool=GAMES.filter(x=>x.id!==g.id&&!x.yt&&!x.noreto),r=mulberry32(hash('rul'+TODAY));
+  const reel=[...Array(22)].map(()=>pool[Math.floor(r()*pool.length)]).concat([g]);
+  openOv(`<span class="tag">Reto de hoy</span><h1>¿A qué jugamos?</h1>
+    <div class="rul"><div class="rul-win"><div class="rul-reel" id="rl">${reel.map(x=>`<div class="rul-it"><img src="img/ic_${x.id}.webp" alt=""></div>`).join('')}</div></div><div class="rul-arrow">▶</div></div>
+    <h2 id="rl-n" style="min-height:1.3em"></h2><p class="note" id="rl-d" style="margin:0;min-height:1.2em"></p>
+    <div class="row" id="rl-b" style="visibility:hidden;flex-wrap:wrap;justify-content:center"><button class="btn red" id="rl-go" style="font-size:20px;padding:12px 26px">${myOfficial(TODAY)?'Ver':'¡Jugar reto!'}</button><button class="btn ghost" id="rl-x">Luego</button></div>`,'img/bg_reveal.webp');
+  const el=$('#rl'),IT=110,n=reel.length;let t0=null;const D=2600;
+  // tic-tac al pasar cada icono, cada vez más lento
+  let last=-1;const step=ts=>{if(!el.isConnected)return;if(t0==null)t0=ts;const k=Math.min(1,(ts-t0)/D),e=1-Math.pow(1-k,3),y=e*(n-1)*IT;el.style.transform=`translateY(${-y}px)`;
+    const i=Math.floor(y/IT+.5);if(i!==last){last=i;sfx('tick')}
+    if(k<1)raf=requestAnimationFrame(step);else{sfx('perfect');el.lastElementChild.classList.add('win');$('#rl-n').textContent=g.name;$('#rl-d').textContent=g.desc+(todayMod?` · ${todayMod.name}`:'');$('#rl-b').style.visibility='visible'}};
+  raf=requestAnimationFrame(step);
+  $('#rl-x').onclick=closeOv;$('#rl-go').onclick=()=>{closeOv();if(!myOfficial(TODAY))startGame(g.id,true)};
+}
+let DAILY_DONE=0;
+function dailyShow(){if(window.__MUT&&!window.__MUT.daily)return;const t0=Date.now();
+  const tryIt=()=>{if(Date.now()-t0>8000)return;if(!ov.classList.contains('hidden')||needLogin||!me){timers.push(setTimeout(tryIt,700));return}
+    const seen=store.get('rdm_daily',{});if(seen.d===TODAY)return;store.set('rdm_daily',{d:TODAY});
+    const ph=podioHTML();const rul=()=>{if(!myOfficial(TODAY))ruleta();else closeOv()};
+    if(ph){openOv(ph,'img/bg_results.webp');sfx('win');$('#pd-go').onclick=rul}else rul()};
+  setTimeout(tryIt,900)}
+
+// ===== instrucciones cortas (2 pasos como máximo, frases breves) =====
+Object.assign(HOWTO,{
+  simon:['Mira los colores que se encienden.','Repítelos en orden. Cada ronda, uno más.'],
+  parejas:['Toca dos cartas: si son iguales, se quedan.','Encuentra las 8 parejas rápido.'],
+  zip:['Arrastra el dedo del 1 en adelante, en orden.','Pinta TODAS las casillas.'],
+  flood:['Toca un color: la mancha de arriba crece.','Pinta todo con los mínimos toques.'],
+  crono:['El reloj se esconde a los 3 s.','Pulsa Para justo a los 10 s.'],
+  stroop:['Pulsa el COLOR de las letras, no lo que pone.','30 segundos.'],
+  encestar:['Arrastra hacia abajo y suelta, como un tirachinas.','30 segundos.'],
+  apilar:['Toca para soltar el bloque encima del otro.','Lo que sobra se cae.'],
+  laberinto:['Inclina el móvil para mover la canica.','Llévala a la meta verde.'],
+  equilibrio:['Inclina el móvil para que no se caiga la pelota.','El viento sopla cada vez más.'],
+  sopa:['Arrastra el dedo en línea recta sobre cada palabra.','Encuentra las 6.'],
+  lightsout:['Cada toque cambia la luz y sus 4 vecinas.','Apágalas todas.'],
+  tuberias:['Toca una pieza para girarla.','Lleva el agua a todas.'],
+  deslizante:['Toca una ficha junto al hueco para moverla.','Ordénalas del 1 al 8.'],
+  cuantos:['Las estrellas salen un instante.','¿Cuántas había?'],
+  intruso:['Toca la letra distinta.','Cada fallo suma 3 s.'],
+  angulo:['Mueve el brazo azul.','Copia el ángulo de arriba.'],
+  tarta:['Arrastra por el borde para cortar.','Corta justo la parte que pide.'],
+  fruta:['Corta la fruta en la dirección de su flecha.','¡Ojo con las bombas!'],
+  minigolf:['Arrastra hacia atrás y suelta.','Al hoyo con pocos golpes.'],
+  tiles:['Toca las teclas negras al cruzar la línea roja.','Si se escapa una, se acaba.'],
+  cambio:['Memoriza los objetos.','Uno cambia: tócalo.'],
+  sudoku:['Toca una casilla y luego un número.','1, 2, 3 y 4 en cada fila, columna y cuadrado.'],
+  mastermind:['Prueba 4 colores.','✓ sitio correcto · ↔ otro sitio · ✕ no está.'],
+  topos:['Golpea los topos.','¡Los del casco restan!'],
+  flappy:['Toca para saltar.','Pasa entre los bambús.'],
+  arco:['Toca para disparar.','Cuenta con el viento. 10 flechas.'],
+  semaforo:['Toca en cuanto se ponga verde.','Si te adelantas, esa ronda cuenta 1 s.'],
+  tabla:['Toca del 1 al 25 en orden.','Cada fallo suma 1 s.'],
+  montones:['¿Qué lado tenía MÁS estrellas?','Ojo: el tamaño engaña.'],
+  camarero:['Inclina el móvil para que no se caiga nada.','Cada segundo, más propina.'],
+  burbuja:['Inclina el móvil.','Mantén la burbuja en el círculo verde.'],
+  esquiva:['Inclina el móvil a los lados.','Esquiva todo lo que puedas.'],
+  ritmo:['Escucha el ritmo.','Repítelo en el tambor.'],
+  tono:['Suenan dos notas.','¿La segunda sube ▲ o baja ▼?'],
+  ciegas:['Escucha la melodía.','Repítela de oído en el xilófono.'],
+  afina:['Escucha la nota.','Mueve el dedo hasta que suene igual y pulsa Fijar.'],
+  metronomo:['Toca al ritmo de los clics.','Cuando se callen, sigue igual.'],
+  concierto:['Toca cada nota al llegar a la línea.','Tocar a lo loco resta.'],
+  acordes:['Suenan notas a la vez.','¿Cuántas son?'],
+  melodia:['Pulsa «¡La sé!» en cuanto la reconozcas.','Menos notas, más puntos.'],
+  notafalsa:['Una nota está desafinada.','Pulsa «¡Esa!» justo cuando suene.'],
+  ordena:['Escucha los 4 trozos.','Ponlos en orden.'],
+  cancion:['Escucha la canción.','¿Cuál es? Rápido da más puntos.'],
+  decada:['Escucha la canción.','¿De qué década es?'],
+  conecta:['Une cada par de puntos del mismo color.','Las líneas no se pueden cruzar.'],
+  orbita:['Mueve una bola rival, pon la tuya y el tablero gira.','Gana el primer 4 en línea.'],
+  hanoi:['Toca un palo para coger el disco y otro para dejarlo.','Nunca uno grande sobre uno pequeño.'],
+  nonograma:['Los números dicen cuántas casillas seguidas pintar.','Descubre los 3 dibujos.'],
+  camino:['Mira por dónde va el ladrón.','Repite su camino.'],
+  balanza:['El lado que baja pesa más.','¿Qué fruta pesa más?'],
+  vaso:['Mantén pulsado para echar agua.','Suelta en la raya roja.'],
+  cuerda:['Toca para cortar la cuerda.','¡A la boca del monstruo!'],
+  distancia:['El coche entra en el túnel.','Pulsa ¡Para! bajo la bandera.'],
+  color:['Mueve las tres barras.','Copia el color.'],
+  huevo:['Inclina el móvil para correr.','¡Que no se caiga el huevo!'],
+  pinball:['Inclina el móvil.','Mete la bola en los agujeros con número.'],
+  cronologia:['Toca las canciones de la más antigua a la más moderna.','▶ para escuchar.'],
+  artista:['Escucha la canción.','¿Quién la canta?'],
+  intro:['Escucha 1 segundo.','¿No la sabes? Pide más, pero vale menos.']
+});
+
 // ===== sincronización con Supabase (cuenta por email, varios grupos) =====
 var needLogin=false;let sb=null,myPid=null,myUid=null,myEmail='',syncing=false,netErr=null;
 var MEMB=store.get('rdm_memb',[]),GID=store.get('rdm_gid',null),OWNER=store.get('rdm_owner',false);
@@ -4057,6 +4214,7 @@ async function sync(){
     }
   }catch(e){console.warn('sync',e)}
   syncing=false; saveAll(); grpLabel(); try{lvJoinGroup()}catch(e){} renderAll(); net();
+  if(!DAILY_DONE&&ONLINE&&sb&&GID){DAILY_DONE=1;dailyShow()}
   if(netErr){const e=netErr;netErr=null;$('#net-txt').textContent=e.slice(0,60);setTimeout(net,8000)}
 }
 
@@ -4206,7 +4364,7 @@ function openGroups(){
 
 async function boot(){
   try{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
-  if(!ONLINE){renderAll();return}
+  if(!ONLINE){renderAll();DAILY_DONE=1;dailyShow();return}
   document.querySelector('#picker').closest('.panel').hidden=true;
   $('#rank-note').textContent='Ranking del grupo. Los resultados jugados sin conexión aparecen al sincronizar.';
   myUid=store.get('rdm_uid',null);
