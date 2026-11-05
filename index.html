@@ -1544,15 +1544,20 @@ function avatarHTML(id,opt={}){
 const STATE_TXT={oxidado:'Oxidado',momificado:'Momificado',malaracha:'Mala racha',despertar:'¡Despertando!'};
 
 // ---------- pantallas ----------
+// el juego del día se mantiene oculto hasta ver la ruleta (si no, la ruleta no sorprende a nadie)
+const MYST_IC='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 110"><circle cx="55" cy="55" r="48" fill="#FFC93C" stroke="#1A1A1A" stroke-width="6"/><text x="55" y="77" text-anchor="middle" font-family="Dela Gothic One,Arial Black,sans-serif" font-size="64" font-weight="900" fill="#1A1A1A">?</text></svg>');
+function retoOculto(){return !myOfficial(TODAY)&&!(window.__MUT&&!window.__MUT.daily)&&store.get('rdm_daily',{}).d!==TODAY}
+function descubrirReto(){store.set('rdm_daily',{d:TODAY});ruleta()}
 function renderHoy(){
   const d=new Date(TODAY+'T12:00:00');
   $('#today-label').textContent=d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
-  $('#ch-icon').src=`img/ic_${todayGame.id}.webp`; $('#ch-name').textContent=todayGame.name;
-  $('#ch-cat').textContent=CATNAME[todayGame.cat]; $('#ch-desc').textContent=todayGame.desc;
+  const oc=retoOculto();
+  $('#ch-icon').src=oc?MYST_IC:`img/ic_${todayGame.id}.webp`; $('#ch-name').textContent=oc?'¿Qué toca hoy?':todayGame.name;
+  $('#ch-cat').textContent=oc?'Sorpresa':CATNAME[todayGame.cat]; $('#ch-desc').textContent=oc?'Toca para descubrirlo.':todayGame.desc;
   const m=myOfficial(TODAY);
-  $('#btn-reto').disabled=!!m; $('#btn-reto').textContent=m?'Reto hecho':'Jugar reto';
+  $('#btn-reto').disabled=!!m; $('#btn-reto').textContent=m?'Reto hecho':oc?'Descubrir reto':'Jugar reto';$('#btn-practice').hidden=oc;
   $('#reto-status').textContent=m?`Hoy: ${fmt(todayGame.id,m.score)}. Mañana, otro reto.`:'Un intento. El mismo reto para todos.';
-  {const cm=$('#ch-mod');cm.hidden=!todayMod;if(todayMod)cm.innerHTML=`<img class="hic" src="img/mod_${todayMod.k}.webp" alt="" style="width:34px;height:34px;float:left;margin-right:8px"><b>${todayMod.name}</b>${todayMod.desc}`}
+  {const cm=$('#ch-mod');cm.hidden=!todayMod||oc;if(todayMod)cm.innerHTML=`<img class="hic" src="img/mod_${todayMod.k}.webp" alt="" style="width:34px;height:34px;float:left;margin-right:8px"><b>${todayMod.name}</b>${todayMod.desc}`}
   document.querySelectorAll('.ngames').forEach(e=>e.textContent=GAMES.length);
   renderGames();try{renderChips()}catch(e){}
   {const sp=$('#hoy-special');sp.innerHTML=specialHTML();if($('#tn-open2'))$('#tn-open2').onclick=openTorneo}
@@ -2917,11 +2922,11 @@ function finish(gid,score,official){
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.s===id));if(id==='s-mote'){moteIdx=0;renderMote()}window.scrollTo(0,0)}
 function renderAll(){SKC={};BOSSC={};PALC=null;renderHoy();renderNews();renderLive();renderPorra();renderExtras();renderRank();renderPerfil();try{renderChips()}catch(e){}}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>show(t.dataset.s));
-$('#btn-reto').onclick=()=>{if(!myOfficial(TODAY))startGame(todayGame.id,true)};
+$('#btn-reto').onclick=()=>{if(retoOculto())descubrirReto();else if(!myOfficial(TODAY))startGame(todayGame.id,true)};
 $('#btn-practice').onclick=()=>openPractice(todayGame.id);
 $('#games').addEventListener('click',e=>{const f=e.target.closest('[data-fav]');if(f){e.stopPropagation();toggleFav(f.dataset.fav);return}const b=e.target.closest('.game');if(b&&G[b.dataset.g].play)openPractice(b.dataset.g)});
 $('#g-filter').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;GFILT=b.dataset.f;store.set('rdm_gfilt',GFILT);renderGames()});
-$('#ch-icon').style.cursor='pointer';$('#ch-icon').addEventListener('click',()=>ruleta());
+$('#ch-icon').style.cursor='pointer';$('#ch-icon').addEventListener('click',()=>retoOculto()?descubrirReto():ruleta());
 $('#hoy-chips').addEventListener('click',e=>{const pf=e.target.closest('[data-perfil]');if(pf){show('s-perfil');setTimeout(()=>{const t=$(pf.dataset.perfil);t&&t.scrollIntoView({behavior:'smooth',block:'start'})},60);return}const b=e.target.closest('[data-go]');if(!b)return;show('s-grupo');const t=document.querySelector(b.dataset.go);if(t)setTimeout(()=>t.scrollIntoView({behavior:'smooth',block:'center'}),60)});
 document.querySelectorAll('#s-rank .chip').forEach(c=>c.onclick=()=>{rmode=c.dataset.r;document.querySelectorAll('#s-rank .chip').forEach(x=>x.classList.toggle('on',x===c));renderRank()});
 $('#rank-list').addEventListener('click',e=>{const b=e.target.closest('.item');if(!b)return;openPlayer(b.dataset.p)});
@@ -4097,7 +4102,7 @@ function ruleta(){const g=todayGame,pool=GAMES.filter(x=>x.id!==g.id&&!x.yt&&!x.
   // tic-tac al pasar cada icono, cada vez más lento
   let last=-1;const step=ts=>{if(!el.isConnected)return;if(t0==null)t0=ts;const k=Math.min(1,(ts-t0)/D),e=1-Math.pow(1-k,3),y=e*(n-1)*IT;el.style.transform=`translateY(${-y}px)`;
     const i=Math.floor(y/IT+.5);if(i!==last){last=i;sfx('tick')}
-    if(k<1)raf=requestAnimationFrame(step);else{sfx('perfect');el.lastElementChild.classList.add('win');$('#rl-n').textContent=g.name;$('#rl-d').textContent=g.desc+(todayMod?` · ${todayMod.name}`:'');$('#rl-b').style.visibility='visible'}};
+    if(k<1)raf=requestAnimationFrame(step);else{sfx('perfect');try{renderHoy()}catch(_){}el.lastElementChild.classList.add('win');$('#rl-n').textContent=g.name;$('#rl-d').textContent=g.desc+(todayMod?` · ${todayMod.name}`:'');$('#rl-b').style.visibility='visible'}};
   raf=requestAnimationFrame(step);
   $('#rl-x').onclick=closeOv;$('#rl-go').onclick=()=>{closeOv();if(!myOfficial(TODAY))startGame(g.id,true)};
 }
@@ -4105,7 +4110,7 @@ let DAILY_DONE=0;
 function dailyShow(){if(window.__MUT&&!window.__MUT.daily)return;const t0=Date.now();
   const tryIt=()=>{if(Date.now()-t0>8000)return;if(!ov.classList.contains('hidden')||needLogin||!me){timers.push(setTimeout(tryIt,700));return}
     const seen=store.get('rdm_daily',{});if(seen.d===TODAY)return;store.set('rdm_daily',{d:TODAY});
-    const ph=podioHTML();const rul=()=>{if(!myOfficial(TODAY))ruleta();else closeOv()};
+    const ph=podioHTML();const rul=()=>{if(!myOfficial(TODAY))ruleta();else{closeOv();renderHoy()}};
     if(ph){openOv(ph,'img/bg_results.webp');sfx('win');$('#pd-go').onclick=rul}else rul()};
   setTimeout(tryIt,900)}
 
