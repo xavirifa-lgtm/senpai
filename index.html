@@ -549,7 +549,7 @@ const ONLINE=!!(CONFIG.supabaseUrl&&CONFIG.supabaseAnonKey&&!/^PEGA/.test(CONFIG
 const $=s=>document.querySelector(s);
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 // ===== Registro de errores: lo que falle en el móvil de alguien se guarda y se sube a Supabase =====
-const APPVER='v74';let CURGAME=null;const ERRSEEN={};
+const APPVER='v75';let CURGAME=null;const ERRSEEN={};
 function logErr(msg,stack){try{msg=String(msg||'?');if(/ResizeObserver|^Script error\.?$|Load failed|NetworkError|Failed to fetch|AbortError|The play\(\) request|NotAllowedError/i.test(msg))return;
   const k=msg+'|'+CURGAME;if(ERRSEEN[k])return;ERRSEEN[k]=1;const q=store.get('rdm_errq',[]);if(q.length>=30)return;
   q.push({ver:APPVER,game:CURGAME,msg:msg.slice(0,500),stack:String(stack||'').slice(0,1500),ua:navigator.userAgent.slice(0,300),t:Date.now()});store.set('rdm_errq',q);setTimeout(()=>{try{flushErr()}catch(e){}},4000)}catch(e){}}
@@ -909,7 +909,7 @@ function openAdmin(){
 }
 
 // ===== Reacciones =====
-const REACT_KINDS=[['aplauso','victoria','te aplaude'],['burla','burla','se ríe de ti'],['llanto','llanto','llora contigo'],['sospecha','sorpresa','sospecha de tu marca']];
+const REACT_KINDS=[['aplauso','victoria','te aplaude'],['burla','burla','se ríe de ti'],['llanto','llanto','llora contigo'],['sospecha','sospecha','sospecha de tu marca']];
 let reactsRemote=[];
 function demoReacts(){
   const own=store.get('rdm_reacts',[]).filter(r=>r.date>=addDays(TODAY,-1));
