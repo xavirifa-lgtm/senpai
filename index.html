@@ -1704,9 +1704,15 @@ function runGame(gid,official){
   if(gid===todayGame.id&&todayMod)applyMod(todayMod);
   ghBadge();
 }
+// juegos en los que te puedes atascar: botón Rendirse (cuenta como la peor marca, 0 puntos)
+const GU_SET=new Set(['zip','flood','lightsout','tuberias','deslizante','sudoku','mastermind','ordena','conecta','hanoi','nonograma','laberinto','minigolf']);let GAVE=null;
+const guScore=gid=>Math.max(...G[gid].pts.map(q=>q[0]));
+ovIn.addEventListener('click',e=>{const b=e.target.closest('#g-giveup');if(!b)return;
+  if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='¿Seguro?';timers.push(setTimeout(()=>{if(b.isConnected){b.dataset.sure='';b.textContent='Rendirse'}},3000));return}
+  const gid=b.dataset.g,official=b.dataset.o==='1';timers.forEach(clearTimeout);timers=[];if(raf)cancelAnimationFrame(raf);sfx('bad');GAVE=gid;finish(gid,guScore(gid),official)});
 function header(gid,official){try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('portrait').catch(()=>{})}catch(e){}
   const help=official?'':`<button class="btn ghost" id="g-help" data-g="${gid}" aria-label="Cómo se juega" style="font-size:14px;padding:6px 11px;flex:none">?</button>`;
-  return `<div class="row" style="justify-content:space-between;width:100%;gap:8px"><div class="row" style="gap:8px;min-width:0"><img src="img/ic_${gid}.webp" alt="" style="width:40px;height:40px;object-fit:contain;flex:none"><div style="text-align:left;min-width:0"><h2 style="font-size:18px">${G[gid].name}</h2><span class="tag" style="font-size:10px">${official?'Reto oficial':'Práctica'}</span></div></div><div class="row" style="gap:6px;flex:none">${help}<button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px;flex:none">Salir</button></div></div>`}
+  return `<div class="row" style="justify-content:space-between;width:100%;gap:8px"><div class="row" style="gap:8px;min-width:0"><img src="img/ic_${gid}.webp" alt="" style="width:40px;height:40px;object-fit:contain;flex:none"><div style="text-align:left;min-width:0"><h2 style="font-size:18px">${G[gid].name}</h2><span class="tag" style="font-size:10px">${official?'Reto oficial':'Práctica'}</span></div></div><div class="row" style="gap:6px;flex:none">${help}${GU_SET.has(gid)?`<button class="btn ghost" id="g-giveup" data-g="${gid}" data-o="${official?1:0}" style="font-size:13px;padding:6px 9px;flex:none">Rendirse</button>`:''}<button class="btn ghost" id="g-close" style="font-size:14px;padding:6px 10px;flex:none">Salir</button></div></div>`}
 function simon(official){
   const sr=rngFor('simon',official),seq=Array.from({length:40},()=>Math.floor(sr()*4));
   openOv(header('simon',official)+`<div class="say" id="sm-say">Mira bien…</div><div class="simon" id="pads">${[0,1,2,3].map(i=>`<button class="pad" data-i="${i}" aria-label="Color ${i+1}" disabled></button>`).join('')}</div><div class="big" id="sm-n">0</div><p class="note" style="margin:0">rondas completadas</p>`,'img/bg_reveal.webp');
@@ -1966,18 +1972,19 @@ function equilibrio(official){
 function cellAtXY(e,sel){const el=document.elementFromPoint(e.clientX,e.clientY);const c=el&&el.closest(sel);return c?+c.dataset.i:null}
 
 // --- Sopa de letras ---
-const SOPA_W=['SOL','PLAYA','TIENDA','MAR','BICI','PELOTA','HELADO','PISCINA','CAMPING','ARENA','GAFAS','TOALLA','BARCO','PERRO','LUNA','NUBE','FUEGO','GORRA','SIESTA','LINTERNA'];
+// cada sopa es de un tema, que se da como pista (sin Ñ ni tildes para que el relleno no la delate)
+const SOPA_T={"Animales":["PERRO","GATO","LEON","TIGRE","ZORRO","OVEJA","CABRA","CEBRA","JIRAFA","CABALLO","CONEJO","RATON","BURRO","LOBO","OSO"],"Frutas":["MANZANA","PERA","PLATANO","UVA","MELON","SANDIA","FRESA","LIMON","NARANJA","CEREZA","MANGO"],"En la playa":["SOL","ARENA","TOALLA","OLAS","MAR","GAFAS","SOMBRILLA","CUBO","PALA","HELADO","CONCHA","BARCO"],"De camping":["TIENDA","LINTERNA","FUEGO","SACO","MOCHILA","MAPA","BRUJULA","ESTRELLAS","RIO","SILLA"],"Deportes":["FUTBOL","TENIS","GOLF","JUDO","SURF","REMO","VELA","PADEL","NATACION","CICLISMO","ESGRIMA","ATLETISMO"],"En la cocina":["OLLA","SARTEN","PLATO","VASO","TENEDOR","CUCHARA","HORNO","NEVERA","CAZO","TAZA","JARRA","MANTEL"],"Colores":["ROJO","AZUL","VERDE","AMARILLO","NEGRO","BLANCO","ROSA","GRIS","MARRON","VIOLETA","NARANJA","DORADO"],"Profesiones":["MEDICO","BOMBERO","POLICIA","PROFESOR","PILOTO","COCINERO","CARTERO","JUEZ","PINTOR","ACTOR","PANADERO"],"Instrumentos":["PIANO","GUITARRA","FLAUTA","TAMBOR","VIOLIN","ARPA","TROMPETA","BATERIA","BAJO","OBOE","TUBA"],"Ropa":["CAMISA","FALDA","ABRIGO","GORRA","BUFANDA","CALCETIN","VESTIDO","BOTAS","GUANTES","PIJAMA"],"Transportes":["COCHE","AVION","BARCO","TREN","MOTO","BICI","BUS","METRO","CAMION","TRANVIA","COHETE"],"El cuerpo":["MANO","PIE","OJO","NARIZ","BOCA","OREJA","BRAZO","PIERNA","RODILLA","CODO","DEDO","CUELLO","ESPALDA"],"Países":["FRANCIA","ITALIA","JAPON","CHINA","BRASIL","PERU","CHILE","CUBA","INDIA","RUSIA","EGIPTO"],"En el cole":["LAPIZ","GOMA","LIBRO","MOCHILA","PIZARRA","RECREO","REGLA","TIZA","CUADERNO","PUPITRE","PROFE","CLASE"],"En casa":["SOFA","CAMA","MESA","SILLA","LAMPARA","ESPEJO","PUERTA","VENTANA","DUCHA","ARMARIO","ALFOMBRA","COJIN"],"El tiempo":["LLUVIA","NIEVE","VIENTO","NUBE","TRUENO","NIEBLA","GRANIZO","CALOR","FRIO","TORMENTA","ARCOIRIS"],"Bajo el mar":["PEZ","PULPO","TIBURON","DELFIN","BALLENA","MEDUSA","CANGREJO","ALGA","CORAL","FOCA","ESTRELLA","CALAMAR"],"En el bosque":["ARBOL","HOJA","SETA","ARDILLA","BUHO","MUSGO","RAMA","TRONCO","HELECHO","CIERVO","JABALI"],"Comida":["PIZZA","PAELLA","TORTILLA","SOPA","ARROZ","PASTA","HUEVO","PAN","SALCHICHA","FLAN"],"Fiesta":["GLOBO","TARTA","VELAS","REGALO","MUSICA","BAILE","DISFRAZ","CONFETI","ZUMO","AMIGOS","RISAS"],"Espacio":["LUNA","SOL","MARTE","PLANETA","COHETE","ESTRELLA","COMETA","SATURNO","ORBITA","NAVE"],"Fantasía":["DRAGON","HADA","BRUJA","MAGO","CASTILLO","PRINCESA","OGRO","DUENDE","ESPADA","POCION","VARITA","UNICORNIO"]};
 function sopa(official){
   const N=9,r=rngFor('sopa',official); const D=[[1,0],[0,1],[1,1],[1,-1]];
-  let grid,words,wpos;
-  for(let tries=0;tries<50;tries++){grid=Array(N*N).fill('');words=[];wpos={};const pool=shuffle(SOPA_W.slice(),r);
+  let grid,words,wpos;const TK=Object.keys(SOPA_T),tema=TK[Math.floor(r()*TK.length)];
+  for(let tries=0;tries<50;tries++){grid=Array(N*N).fill('');words=[];wpos={};const pool=shuffle(SOPA_T[tema].slice(),r);
     for(const w of pool){if(words.length===6)break;if(w.length>N)continue;let ok=false;
       for(let k=0;k<80&&!ok;k++){const [dx,dy]=D[Math.floor(r()*D.length)];const x0=Math.floor(r()*N),y0=Math.floor(r()*N);const x1=x0+dx*(w.length-1),y1=y0+dy*(w.length-1);
         if(x1<0||x1>=N||y1<0||y1>=N)continue;let fit=true;for(let i=0;i<w.length;i++){const c=grid[(y0+dy*i)*N+x0+dx*i];if(c&&c!==w[i]){fit=false;break}}
         if(fit){for(let i=0;i<w.length;i++)grid[(y0+dy*i)*N+x0+dx*i]=w[i];wpos[w]=Array.from({length:w.length},(_,i)=>(y0+dy*i)*N+x0+dx*i);words.push(w);ok=true}}}
     if(words.length===6)break}
   const AB='ABCDEFGHIJLMNOPRSTUVZ';grid=grid.map(c=>c||AB[Math.floor(r()*AB.length)]);
-  openOv(header('sopa',official)+`<div class="row" style="gap:12px">${clockEl()}<button class="btn ghost" id="sp-giveup" style="font-size:14px;padding:6px 12px">🏳️ Rendirse</button></div><div class="words" id="sp-w">${words.map(w=>`<span data-w="${w}">${'_ '.repeat(w.length).trim()} <small>${w.length}</small></span>`).join('')}</div><div class="sopa" id="sp" style="grid-template-columns:repeat(${N},1fr);grid-template-rows:repeat(${N},1fr)">${grid.map((c,i)=>`<div class="sc" data-i="${i}">${c}</div>`).join('')}</div>`,'img/bg_menu.webp');
+  openOv(header('sopa',official)+`<div class="row" style="gap:12px">${clockEl()}<button class="btn ghost" id="sp-giveup" style="font-size:14px;padding:6px 12px">🏳️ Rendirse</button></div><div class="tag" style="font-size:14px;padding:5px 12px">Tema: ${tema}</div><div class="words" id="sp-w">${words.map(w=>`<span data-w="${w}">${'_ '.repeat(w.length).trim()} <small>${w.length}</small></span>`).join('')}</div><div class="sopa" id="sp" style="grid-template-columns:repeat(${N},1fr);grid-template-rows:repeat(${N},1fr)">${grid.map((c,i)=>`<div class="sc" data-i="${i}">${c}</div>`).join('')}</div>`,'img/bg_menu.webp');
   $('#g-close').onclick=closeOv;
   const el=$('#sp'),cells=[...el.children],sw=stopwatch();let a=null,sel=[],found=new Set(),done=false;
   const line=(i,j)=>{const x0=i%N,y0=(i/N)|0,x1=j%N,y1=(j/N)|0,dx=x1-x0,dy=y1-y0;if(!(dx===0||dy===0||Math.abs(dx)===Math.abs(dy)))return null;const n=Math.max(Math.abs(dx),Math.abs(dy));const sx=Math.sign(dx),sy=Math.sign(dy);return Array.from({length:n+1},(_,k)=>(y0+sy*k)*N+x0+sx*k)};
@@ -2893,10 +2900,11 @@ function pos0(gid,score){const R=dayRanking(TODAY);const g=G[gid];const better=R
 function finish(gid,score,official){
   const medB=medalOf(gid);
   const prev=results.filter(r=>r.game===gid).map(r=>r.score); const better=G[gid].better==='high';
-  const prevBest=prev.length?(better?Math.max(...prev):Math.min(...prev)):null; const isBest=prevBest==null||(better?score>prevBest:score<prevBest);
+  const gave=GAVE===gid;GAVE=null;
+  const prevBest=prev.length?(better?Math.max(...prev):Math.min(...prev)):null; const isBest=!gave&&(prevBest==null||(better?score>prevBest:score<prevBest));
   sfx((official&&pos0(gid,score)===1)||(isBest&&prevBest!=null)?'win':'done');
   BOSSC={};const bossBefore=bossState();const progBefore=official?null:0;
-  try{ghSave(gid,score)}catch(e){}
+  if(!gave)try{ghSave(gid,score)}catch(e){}
   const inRace=!official&&lvFinish(gid,score);
   const rec={date:TODAY,game:gid,score,official,ts:Date.now(),cid:uuid()}; results.push(rec); pending.push(rec); saveAll(); sync();
   BOSSC={};SKC={};const bossAfter=bossState();const hit=(bossAfter.per[me]||0)-(bossBefore.per[me]||0);
@@ -2904,7 +2912,7 @@ function finish(gid,score,official){
   let pos=null,n=null;
   if(official){const R=dayRanking(TODAY);n=R.n;pos=R.rows.findIndex(r=>r.id===me)+1}
   const e=official?(pos===1?'victoria':pos===n?'llanto':isBest&&prevBest!=null?'sorpresa':'burla'):(isBest&&prevBest!=null?'sorpresa':'aura');
-  const msg=official?piques(me,pos,n,gid,score,isBest,prevBest):(isBest&&prevBest!=null?'Récord personal en práctica. Guárdalo para el reto.':'Práctica guardada. Cuenta para tu perfil, no para el ranking.');
+  const msg=gave?'Te has rendido: cuenta como la peor marca del juego (0 puntos).':official?piques(me,pos,n,gid,score,isBest,prevBest):(isBest&&prevBest!=null?'Récord personal en práctica. Guárdalo para el reto.':'Práctica guardada. Cuenta para tu perfil, no para el ranking.');
   openOv(`<div class="row" style="justify-content:space-between;width:100%"><span class="tag">${official?'Resultado oficial':'Práctica'}</span></div>
     ${(official&&pos===1)||(isBest&&prevBest!=null)?'<img class="confeti" src="img/sp_confeti.webp" alt="">':''}
     <div class="panel" style="width:100%;position:relative">${official&&pos===1?'<img src="img/sp_trofeo.webp" alt="Primero" style="position:absolute;right:10px;top:-26px;width:64px">':''}<div class="res-hero"><img src="${exp(me,e)}" alt="" style="background:${P[me].c}"><div class="stack" style="gap:8px;min-width:0"><div class="big" style="font-size:40px">${fmtShort(gid,score)}</div><span class="note" style="margin:0">${fmt(gid,score)}${official?` · ${pos}.º de ${n}`:''}</span></div></div></div>
@@ -4905,7 +4913,7 @@ function salto(official){
   $('#g-go').onclick=()=>{enableGyro(tilt,c);on=true;$('#g-go').hidden=true;ghMark(0)};
   fixedLoop(dt=>{if(over)return false;if(!on)return;vx+=(tilt.x*1400-vx*4)*dt;px+=vx*dt;if(px<-14)px=W+14;if(px>W+14)px=-14;
     const oy=py;vy+=G*dt;py+=vy*dt;
-    if(vy>0)for(const p of plats){if(p.br)continue;if(oy<=p.y-12&&py>=p.y-12&&px>p.x-8&&px<p.x+PW+8){if(p.t==='rompe'){p.br=1;sfx('cut');continue}py=p.y-12;vy=p.t==='muelle'?JV*1.6:JV;sfx(p.t==='muelle'?'swish':'pop');break}}
+    if(vy>0)for(const p of plats){if(p.br)continue;if(oy<=p.y-12&&py>=p.y-12&&px>p.x-8&&px<p.x+PW+8){py=p.y-12;vy=p.t==='muelle'?JV*1.6:JV;if(p.t==='rompe'){p.br=1;sfx('cut')}else sfx(p.t==='muelle'?'swish':'pop');break}}
     plats.forEach(p=>{if(p.t==='move'){p.x+=p.d*70*dt;if(p.x<4||p.x>W-PW-4)p.d*=-1}if(p.br)p.y+=300*dt});
     const want=py-H*.45;if(want<cam)cam=want;
     while(top>cam-80){top-=Math.min(110,60+r()*30+(-top)/400);add(top)}plats=plats.filter(p=>p.y<cam+H+60);
