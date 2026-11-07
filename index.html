@@ -549,7 +549,7 @@ const ONLINE=!!(CONFIG.supabaseUrl&&CONFIG.supabaseAnonKey&&!/^PEGA/.test(CONFIG
 const $=s=>document.querySelector(s);
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 // ===== Registro de errores: lo que falle en el móvil de alguien se guarda y se sube a Supabase =====
-const APPVER='v75';let CURGAME=null;const ERRSEEN={};
+const APPVER='v76';let CURGAME=null;const ERRSEEN={};
 function logErr(msg,stack){try{msg=String(msg||'?');if(/ResizeObserver|^Script error\.?$|Load failed|NetworkError|Failed to fetch|AbortError|The play\(\) request|NotAllowedError/i.test(msg))return;
   const k=msg+'|'+CURGAME;if(ERRSEEN[k])return;ERRSEEN[k]=1;const q=store.get('rdm_errq',[]);if(q.length>=30)return;
   q.push({ver:APPVER,game:CURGAME,msg:msg.slice(0,500),stack:String(stack||'').slice(0,1500),ua:navigator.userAgent.slice(0,300),t:Date.now()});store.set('rdm_errq',q);setTimeout(()=>{try{flushErr()}catch(e){}},4000)}catch(e){}}
@@ -3570,11 +3570,12 @@ async function ytIntro(gid){const box=$('#yt-intro');if(!box)return;const isDec=
 // --- Duelo: adivina la canción (melodías de la app o canciones del grupo) ---
 function duoCancion(A,B){
   const yt=songsSync().length>=4&&navigator.onLine;
-  duoShell('cancion',A,B,`<div class="duo-msg" id="du-m">Tocad vuestro lado para empezar</div>${yt?`<div class="row" id="du-src" style="gap:6px"><button class="btn ghost on" data-src="mel" style="font-size:13px;padding:5px 9px">Melodías clásicas</button><button class="btn ghost" data-src="yt" style="font-size:13px;padding:5px 9px">Canciones</button></div>`:''}<div id="du-yt" hidden>${ytBoxHTML('du-c')}</div>`);
-  let src='mel',sa=0,sb2=0,st='idle',ready={a:0,b:0},lock={},Q=null,bus=null,t0=0,heard=0,rid=0,p=null,ctl=null,tmo=null;const M=$('#du-m'),used=new Set();
+  duoShell('cancion',A,B,`<div class="duo-msg" id="du-m">Tocad vuestro lado para empezar</div>${yt?`<div class="row" id="du-src" style="gap:6px"><button class="btn ghost on" data-src="yt" style="font-size:13px;padding:5px 9px">Canciones de verdad</button><button class="btn ghost" data-src="mel" style="font-size:13px;padding:5px 9px">Melodías clásicas</button></div>`:''}<div id="du-yt" hidden>${ytBoxHTML('du-c')}</div>`);
+  // por defecto, canciones de verdad (fragmentos de Deezer / Apple Music); sin conexión, las melodías que toca la app
+  let fails=0,src=yt?'yt':'mel',sa=0,sb2=0,st='idle',ready={a:0,b:0},lock={},Q=null,bus=null,t0=0,heard=0,rid=0,p=null,ctl=null,tmo=null;const M=$('#du-m'),used=new Set();
   if(yt)$('#du-src').onclick=e=>{const b=e.target.closest('[data-src]');if(!b||st!=='idle')return;src=b.dataset.src;$('#du-src').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
   const zone=(who,html)=>{$(who==='a'?'#du-za':'#du-zb').innerHTML=html};
-  const buzzer=who=>zone(who,lock[who]?'<div class="duo-q" style="font-size:22px">Sin turno</div>':`<button class="mu-buzz" data-z="1">${muArt('pulsador',90)}<b>¡La sé!</b></button>`);
+  const buzzer=who=>zone(who,lock[who]?'<div class="duo-q" style="font-size:26px;color:#E63946">✗ Fallo</div>':`<button class="mu-buzz" data-z="1">${muArt('pulsador',90)}<b>¡La sé!</b></button>`);
   const score=()=>{$('#du-sa').textContent=sa;$('#du-sb').textContent=sb2;if(sa>=5||sb2>=5){st='end';ytStop();timers.push(setTimeout(()=>duoEnd('cancion',A,B,sa,sb2),1200));return true}return false};
   const stopPlay=()=>{if(bus){bus.stop();bus=null}if(ctl)ctl.stop()};
   const reveal=()=>{st='wait';stopPlay();clearTimeout(tmo);M.innerHTML=`Era <b>${esc(Q.title)}</b>`;zone('a','');zone('b','');if(!score())timers.push(setTimeout(next,1800))};
@@ -3585,7 +3586,7 @@ function duoCancion(A,B){
     if(src==='yt'){const list=(await songsLoad()).filter(s=>!used.has(s.yt));if(list.length<4)used.clear();const pool=(await songsLoad()).filter(s=>!used.has(s.yt));const s=pool[Math.floor(Math.random()*pool.length)];used.add(s.yt);
       const R=Math.random;Q={title:s.title,id:s.yt,opts:songOpts(R,s,SONGS).map(o=>({id:o.yt,l:songLab(o)}))};
       $('#du-yt').hidden=false;
-      ctl=songPlay(s,{secs:30,cover:$('#du-c'),onPlay:()=>{},onFail:()=>{M.textContent='Esa no se puede poner. Otra…';timers.push(setTimeout(next,1200))}});timers.push(tmo=setTimeout(()=>{if(st==='play')reveal()},36000))}
+      ctl=songPlay(s,{secs:30,cover:$('#du-c'),onPlay:()=>{fails=0},onFail:()=>{if(st!=='play')return;clearTimeout(tmo);if(++fails>=3){src='mel';$('#du-yt').hidden=true;M.textContent='No cargan las canciones (¿sin cobertura?). Seguimos con melodías.';timers.push(setTimeout(next,2000));return}M.textContent='Esa no se puede poner. Otra…';timers.push(setTimeout(next,1200))}});timers.push(tmo=setTimeout(()=>{if(st==='play')reveal()},36000))}
     else{const pool=MEL.filter(x=>!used.has(x.id));if(pool.length<4)used.clear();const m=MEL.filter(x=>!used.has(x.id))[Math.floor(Math.random()*MEL.filter(x=>!used.has(x.id)).length)];used.add(m.id);
       Q={title:m.t,id:m.id,ev:m.ev.slice(0,24),opts:muOpts(Math.random,m).map(o=>({id:o.id,l:o.t}))};playMel(0)}
     buzzer('a');buzzer('b')}
@@ -3603,7 +3604,7 @@ function duoCancion(A,B){
   duoTap($('#du-bot'),e=>tap('a',e));duoTap($('#du-top'),e=>tap('b',e));
 }
 if(MUT){MUT.openSongs=b=>openSongs(b);MUT.openDuo=()=>openDuo()}
-DUO.push({id:'cancion',name:'Adivina la canción',desc:'Suena una melodía (o una canción del grupo). Quien la reconozca, que pulse y conteste. Si falla, sigue sonando para el otro.',win:5});
+DUO.push({id:'cancion',name:'Adivina la canción',desc:'Suena un trozo de una canción de verdad (sin conexión, una melodía clásica). Quien la reconozca, que pulse y conteste. Si falla, sigue sonando para el otro.',win:5});
 DUO.push({id:'orbita',name:'Órbita',desc:'4 en raya en un tablero que gira. Mueve una bola del rival, coloca la tuya y… ¡gira! Gana quien gane 2 partidas.',win:2});
 Object.assign(HOWTO,{
   ritmo:['Suena un ritmo de tambor.','Repítelo tocando el tambor: mismos golpes, mismo ritmo.','10 rondas, cada vez más largas. Puntúa lo exacto que lo clavas.'],
@@ -4056,7 +4057,7 @@ function duoDecadas(A,B){
   const DEC=[1960,1970,1980,1990,2000,2010,2020];
   const opts=y=>{const c=decOf(y);let a=c-10*Math.floor(Math.random()*4);a=Math.max(1960,Math.min(a,1990));return [0,1,2,3].map(i=>a+i*10)};
   let ops=[];
-  const btns=(w,dis)=>zone(w,lock[w]?'<div class="duo-q" style="font-size:22px">Sin turno</div>':`<div class="duo-ops du-dec">${ops.map(d=>`<button data-d="${d}" ${dis?'disabled':''}>${decLab(d)}</button>`).join('')}</div>`);
+  const btns=(w,dis)=>zone(w,lock[w]?'<div class="duo-q" style="font-size:26px;color:#E63946">✗ Fallo</div>':`<div class="duo-ops du-dec">${ops.map(d=>`<button data-d="${d}" ${dis?'disabled':''}>${decLab(d)}</button>`).join('')}</div>`);
   const score=()=>{$('#du-sa').textContent=sa;$('#du-sb').textContent=sb2;if(sa>=WIN||sb2>=WIN){st='end';ytStop();timers.push(setTimeout(()=>duoEnd('decadas',A,B,sa,sb2),1300));return true}return false};
   const reveal=(txt)=>{st='wait';clearTimeout(tmo);ctl&&ctl.stop();M.innerHTML=`${txt||''}<b>${esc(cur.title)}</b> · ${cur.year}`;zone('a','');zone('b','');if(!score())timers.push(setTimeout(next,2200))};
   function next(){lock={};st='load';let pool=list().filter(s=>!used.has(s.yt));if(pool.length<1){used.clear();pool=list()}cur=pool[Math.floor(Math.random()*pool.length)];used.add(cur.yt);ops=opts(cur.year);
