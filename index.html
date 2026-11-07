@@ -311,7 +311,7 @@ input[type=range]{accent-color:var(--red)}
 .inp{font:700 16px var(--body);border:3px solid var(--ink);padding:8px;width:100%;background:var(--paper);color:var(--ink);min-width:0}
 .mu-buzz{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--display);font-size:24px;color:var(--ink);cursor:pointer}
 .mu-dops{flex-direction:column;width:100%}.mu-dops button{font-size:15px!important;text-align:left;width:100%}
-.duo-mid .yt-box{width:200px}
+.duo-mid .yt-box{width:200px}.duo-mid .yt-cover{gap:2px;padding:4px}.duo-mid .yt-cover .mu-art{--s:58px!important}.duo-mid .yt-cover b{font-size:14px}.duo-mid .yt-src{font-size:10px}.yt-cover{overflow:hidden}
 #du-src .btn.on{background:var(--ink);color:var(--yellow)}
 .gpick{display:flex;flex-direction:column;gap:6px;max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border:3px solid var(--ink);background:var(--paper2);padding:6px}
 .gp{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:3px solid var(--ink);background:var(--paper);padding:6px 8px;font:inherit;color:var(--ink);cursor:pointer;flex:none}.gp img{width:38px;height:38px;object-fit:contain;flex:none}.gp span{display:flex;flex-direction:column;min-width:0}.gp small{color:var(--ink2);font-size:12px}.gp.on{background:var(--yellow);outline:3px solid var(--red)}
@@ -549,7 +549,7 @@ const ONLINE=!!(CONFIG.supabaseUrl&&CONFIG.supabaseAnonKey&&!/^PEGA/.test(CONFIG
 const $=s=>document.querySelector(s);
 const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 // ===== Registro de errores: lo que falle en el móvil de alguien se guarda y se sube a Supabase =====
-const APPVER='v76';let CURGAME=null;const ERRSEEN={};
+const APPVER='v77';let CURGAME=null;const ERRSEEN={};
 function logErr(msg,stack){try{msg=String(msg||'?');if(/ResizeObserver|^Script error\.?$|Load failed|NetworkError|Failed to fetch|AbortError|The play\(\) request|NotAllowedError/i.test(msg))return;
   const k=msg+'|'+CURGAME;if(ERRSEEN[k])return;ERRSEEN[k]=1;const q=store.get('rdm_errq',[]);if(q.length>=30)return;
   q.push({ver:APPVER,game:CURGAME,msg:msg.slice(0,500),stack:String(stack||'').slice(0,1500),ua:navigator.userAgent.slice(0,300),t:Date.now()});store.set('rdm_errq',q);setTimeout(()=>{try{flushErr()}catch(e){}},4000)}catch(e){}}
